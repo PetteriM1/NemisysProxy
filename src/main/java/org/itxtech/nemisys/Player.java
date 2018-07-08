@@ -329,7 +329,7 @@ public class Player implements CommandSender {
     }
 
     public void close() {
-        this.close("Generic Reason");
+        this.close("generic reason");
     }
 
     public void close(String reason) {
@@ -449,14 +449,14 @@ public class Player implements CommandSender {
             return;
         }
         if (this.server.getMaxPlayers() <= this.server.getOnlinePlayers().size()) {
-            this.close("[Synapse server] " + TextFormat.RED + "Synapse server is full!");
+            this.close(TextFormat.RED + "Synapse server is full!");
             return;
         }
 
         Client client = this.server.getClient(ev.getClientHash());
 
         if (client == null) {
-            this.close("[Synapse server] " + TextFormat.RED + "All lobby servers are offline!");
+            this.close(TextFormat.RED + "All lobby servers are offline!");
             return;
         }
 

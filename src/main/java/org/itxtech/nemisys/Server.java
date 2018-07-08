@@ -341,7 +341,7 @@ public class Server {
 
             for (Client client : new ArrayList<>(this.clients.values())) {
                 for (Player player : new ArrayList<>(client.getPlayers().values())) {
-                    player.close((String) this.getConfig("settings.shutdown-message", "§cMaster server closed!"));
+                    player.close("§cMaster server closed!");
                 }
                 client.close("§cMaster server closed!");
             }
