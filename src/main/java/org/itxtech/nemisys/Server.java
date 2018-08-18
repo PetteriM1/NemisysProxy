@@ -118,7 +118,7 @@ public class Server {
                 put("async-workers", "auto");
                 put("enable-profiling", false);
                 put("profile-report-trigger", 20);
-                put("max-players", 20);
+                put("max-players", 50);
                 put("plus-one-max-count", false);
                 put("players-per-thread", 50);
                 put("enable-query", true);
