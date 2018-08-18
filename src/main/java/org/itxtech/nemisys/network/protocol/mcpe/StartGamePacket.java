@@ -28,6 +28,7 @@ public class StartGamePacket extends DataPacket {
     public boolean hasAchievementsDisabled = true;
     public int dayCycleStopTime = -1;
     public boolean eduMode = false;
+    public boolean hasEduFeaturesEnabled = false;
     public float rainLevel;
     public float lightningLevel;
     public boolean multiplayerGame = true;
@@ -39,6 +40,13 @@ public class StartGamePacket extends DataPacket {
     public boolean trustPlayers = false;
     public int permissionLevel = 1;
     public int gamePublish = 4;
+    public int serverChunkTickRange = 4;
+    public boolean broadcastToPlatform;
+    public int platformBroadcastMode = 4;
+    public boolean xblBroadcastIntent = true;
+    public boolean hasLockedBehaviorPack = false;
+    public boolean hasLockedResourcePack = false;
+    public boolean isFromLockedWorldTemplate = false;
     public String levelId = "";
     public String worldName;
     public String premiumWorldTemplateId = "";
@@ -70,6 +78,7 @@ public class StartGamePacket extends DataPacket {
         this.putBoolean(this.hasAchievementsDisabled);
         this.putVarInt(this.dayCycleStopTime);
         this.putBoolean(this.eduMode);
+        this.putBoolean(this.hasEduFeaturesEnabled);
         this.putLFloat(this.rainLevel);
         this.putLFloat(this.lightningLevel);
         this.putBoolean(this.multiplayerGame);
@@ -82,6 +91,13 @@ public class StartGamePacket extends DataPacket {
         this.putBoolean(this.trustPlayers);
         this.putVarInt(this.permissionLevel);
         this.putVarInt(this.gamePublish);
+        this.putLInt(this.serverChunkTickRange);
+        this.putBoolean(this.broadcastToPlatform);
+        this.putUnsignedVarInt(this.platformBroadcastMode);
+        this.putBoolean(this.xblBroadcastIntent);
+        this.putBoolean(this.hasLockedBehaviorPack);
+        this.putBoolean(this.hasLockedResourcePack);
+        this.putBoolean(this.isFromLockedWorldTemplate);
         this.putString(this.levelId);
         this.putString(this.worldName);
         this.putString(this.premiumWorldTemplateId);

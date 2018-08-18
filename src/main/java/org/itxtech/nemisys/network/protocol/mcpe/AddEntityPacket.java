@@ -23,6 +23,7 @@ public class AddEntityPacket extends DataPacket {
     public float speedZ = 0f;
     public float yaw;
     public float pitch;
+    public float headYaw;
 
     @Override
     public void decode() {
@@ -41,5 +42,6 @@ public class AddEntityPacket extends DataPacket {
         this.putVector3f(this.speedX, this.speedY, this.speedZ);
         this.putLFloat(this.pitch);
         this.putLFloat(this.yaw);
+        this.putLFloat(this.headYaw);
     }
 }
