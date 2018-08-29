@@ -19,13 +19,10 @@ public class LoginPacket extends DataPacket {
     public int protocol;
     public UUID clientUUID;
     public long clientId;
-
     public Skin skin;
     public String skinGeometryName;
     public byte[] skinGeometry;
-
     public byte[] capeData;
-
     public byte[] cacheBuffer;
 
     @Override
@@ -36,23 +33,14 @@ public class LoginPacket extends DataPacket {
     @Override
     public void decode() {
         this.cacheBuffer = this.getBuffer();
-
         this.protocol = this.getInt();
-        if (protocol >= 0xffff) {
-            this.offset -= 6;
-            this.protocol = this.getInt();
-            this.offset += 1;
-        }
-
         this.setBuffer(this.getByteArray(), 0);
-
         decodeChainData();
         decodeSkinData();
     }
 
     @Override
     public void encode() {
-
     }
 
     public int getProtocol() {

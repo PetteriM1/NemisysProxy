@@ -20,16 +20,11 @@ import java.util.Set;
 public class Network {
 
     private Class<? extends DataPacket>[] packetPool = new Class[256];
-
     private Server server;
-
     private Set<SourceInterface> interfaces = new HashSet<>();
-
     private Set<AdvancedSourceInterface> advancedInterfaces = new HashSet<>();
-
     private double upload = 0;
     private double download = 0;
-
     private String name;
 
     public Network(Server server) {
@@ -130,7 +125,7 @@ public class Network {
                 DataPacket pk;
 
                 if ((pk = this.getPacket(buf[0])) != null) {
-                    pk.setBuffer(buf, 3);
+                    pk.setBuffer(buf, 1);
 
                     pk.decode();
 

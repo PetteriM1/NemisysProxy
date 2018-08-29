@@ -8,7 +8,6 @@ public class ResourcePacksInfoPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override

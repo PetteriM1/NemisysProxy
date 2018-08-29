@@ -9,10 +9,10 @@ public interface ProtocolInfo {
     /**
      * Actual Minecraft: PE protocol version
      */
-    int CURRENT_PROTOCOL = Integer.valueOf("274");
+    int CURRENT_PROTOCOL = Integer.valueOf("282");
 
-    String MINECRAFT_VERSION = "v1.5";
-    String MINECRAFT_VERSION_NETWORK = "1.5";
+    String MINECRAFT_VERSION = "v1.6";
+    String MINECRAFT_VERSION_NETWORK = "1.6";
 
     byte LOGIN_PACKET = 0x01;
     byte PLAY_STATUS_PACKET = 0x02;
@@ -119,5 +119,15 @@ public interface ProtocolInfo {
     byte SERVER_SETTINGS_RESPONSE_PACKET = 0x67;
     byte SHOW_PROFILE_PACKET = 0x68;
     byte SET_DEFAULT_GAME_TYPE_PACKET = 0x69;
+    byte REMOVE_OBJECTIVE_PACKET = 0x6a;
+    byte SET_DISPLAY_OBJECTIVE_PACKET = 0x6b;
+    byte SET_SCORE_PACKET = 0x6c;
+    byte LAB_TABLE_PACKET = 0x6d;
+    byte UPDATE_BLOCK_SYNCED_PACKET = 0x6e;
+    byte MOVE_ENTITY_DELTA_PACKET = 0x6f;
+    byte SET_SCOREBOARD_IDENTITY_PACKET = 0x70;
+    byte SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET = 0x71;
+    byte UPDATE_SOFT_ENUM_PACKET = 0x72;
+    byte NETWORK_STACK_LATENCY_PACKET = 0x73;
     byte BATCH_PACKET = (byte) 0xff;
 }

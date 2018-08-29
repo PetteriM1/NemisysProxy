@@ -52,12 +52,11 @@ public class StartGamePacket extends DataPacket {
     public String premiumWorldTemplateId = "";
     public boolean unknown = false;
     public long currentTick;
-
     public int enchantmentSeed;
+    public String multiplayerCorrelationId = "";
 
     @Override
     public void decode() {
-
     }
 
     @Override
@@ -104,6 +103,7 @@ public class StartGamePacket extends DataPacket {
         this.putBoolean(this.unknown);
         this.putLLong(this.currentTick);
         this.putVarInt(this.enchantmentSeed);
+        this.putUnsignedVarInt(0);
+        this.putString(this.multiplayerCorrelationId);
     }
-
 }
