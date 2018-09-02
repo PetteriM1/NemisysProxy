@@ -6,7 +6,7 @@ import org.itxtech.nemisys.math.Vector3f;
  * author: MagicDroidX
  * Nukkit Project
  */
-public class MoveEntityPacket extends DataPacket {
+public class MoveEntityAbsolutePacket extends DataPacket {
     public static final byte NETWORK_ID = ProtocolInfo.MOVE_ENTITY_PACKET;
 
     public long eid;

@@ -163,7 +163,7 @@ public class Client {
                             send = new GenericPacket();
                         }
 
-                        send.setBuffer(buffer, 3);
+                        send.setBuffer(buffer, 1);
                     }
 
                     send.decode();

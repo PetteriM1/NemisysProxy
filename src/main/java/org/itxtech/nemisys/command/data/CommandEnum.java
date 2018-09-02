@@ -1,17 +1,25 @@
 package org.itxtech.nemisys.command.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.util.List;
 
 /**
  * @author CreeperFace
  */
-@AllArgsConstructor
-@Getter
-public class CommandEnum {
-
-    private String name;
-    private List<String> values;
-}
+ public class CommandEnum {
+ 
+     private String name;
+     private List<String> values;
+ 
+     public CommandEnum(String name, List<String> values) {
+         this.name = name;
+         this.values = values;
+     }
+ 
+     public String getName() {
+         return name;
+     }
+ 
+     public List<String> getValues() {
+         return values;
+     }
+ }
