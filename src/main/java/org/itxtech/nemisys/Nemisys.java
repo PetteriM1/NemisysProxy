@@ -8,7 +8,7 @@ import org.itxtech.nemisys.utils.ServerKiller;
 public class Nemisys {
 
     public final static String VERSION = "";
-    public final static String API_VERSION = "1.0.6";
+    public final static String API_VERSION = "";
     public final static String CODENAME = "";
 
     @Deprecated
@@ -22,6 +22,7 @@ public class Nemisys {
     public final static String PLUGIN_PATH = DATA_PATH + "plugins";
     public static final long START_TIME = System.currentTimeMillis();
     public static boolean ANSI = true;
+    public static boolean TITLE = true;
     public static boolean shortTitle = false;
     public static int DEBUG = 1;
 

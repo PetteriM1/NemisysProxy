@@ -177,34 +177,6 @@ public class PluginManager {
                                 continue;
                             }
 
-                            boolean compatible = false;
-
-                            for (String version : description.getCompatibleAPIs()) {
-
-                                if (!Pattern.matches("[0-9]\\.[0-9]\\.[0-9]", version)) {
-                                    this.server.getLogger().error(this.server.getLanguage().translateString("nemisys.plugin.loadError", new String[]{name, "Wrong API format"}));
-                                    continue;
-                                }
-
-                                String[] versionArray = version.split("\\.");
-                                String[] apiVersion = this.server.getApiVersion().split("\\.");
-
-                                if (!Objects.equals(Integer.valueOf(versionArray[0]), Integer.valueOf(apiVersion[0]))) {
-                                    continue;
-                                }
-
-                                if (Integer.valueOf(versionArray[1]) > Integer.valueOf(apiVersion[1])) {
-                                    continue;
-                                }
-
-                                compatible = true;
-                                break;
-                            }
-
-                            if (!compatible) {
-                                this.server.getLogger().error(this.server.getLanguage().translateString("nemisys.plugin.loadError", new String[]{name, "%nemisys.plugin.incompatibleAPI"}));
-                            }
-
                             plugins.put(name, file);
 
                             softDependencies.put(name, description.getSoftDepend());

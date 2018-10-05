@@ -126,8 +126,11 @@ public class Server {
                 put("rcon.password", Base64.getEncoder().encodeToString(UUID.randomUUID().toString().replace("-", "").getBytes()).substring(3, 13));
                 put("debug", 1);
                 put("enable-synapse-client", false);
+                put("ansi-title", true);
             }
         });
+
+        if (!this.getPropertyBoolean("ansi-title", true)) Nemisys.TITLE = false;
 
         this.baseLang = new BaseLang((String) this.getConfig("lang", BaseLang.FALLBACK_LANGUAGE));
 
@@ -511,9 +514,7 @@ public class Server {
     }
 
     public void titleTick() {
-        if (!Nemisys.ANSI) {
-            return;
-        }
+        if (!Nemisys.TITLE) return;
 
         Runtime runtime = Runtime.getRuntime();
         double used = NemisysMath.round((double) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024, 2);
