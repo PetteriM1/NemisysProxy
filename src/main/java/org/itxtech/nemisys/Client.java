@@ -140,7 +140,7 @@ public class Client {
                     pk.message = InformationPacket.INFO_LOGIN_FAILED;
                     this.server.getLogger().emergency("Client " + this.getIp() + ":" + this.getPort() + " tried to connect with wrong password!");
                     this.sendDataPacket(pk);
-                    this.close("Auth failed!");
+                    this.close("Authentication failed!");
                 }
                 this.server.getPluginManager().callEvent(new ClientAuthEvent(this, connectPacket.password));
                 break;
@@ -346,7 +346,7 @@ public class Client {
     }
 
     public void closeAllPlayers(String reason, Client fallback) {
-        String msg = fallback == null ? "§cAll lobby servers are offline!" + (reason.equals("") ? "" : ": " + TextFormat.YELLOW + reason) : TextFormat.RED + "The server you were previously on went down and you have been connected to a fallback server";
+        String msg = fallback == null ? "§cAll lobby servers are offline!" + (reason.equals("") ? "" : "\n" + TextFormat.YELLOW + reason) : TextFormat.RED + "The server you were previously on went down and you have been connected to a fallback server";
 
         for (Player player : new ArrayList<>(this.players.values())) {
             if (fallback == null) {

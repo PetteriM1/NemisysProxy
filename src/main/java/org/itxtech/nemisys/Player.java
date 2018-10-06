@@ -289,7 +289,7 @@ public class Player implements CommandSender {
         this.server.getPluginManager().callEvent(ev = new PlayerTransferEvent(this, client));
         if (!ev.isCancelled()) {
             if (this.client != null) {
-                this.client.removePlayer(this, "Player has been transferred");
+                this.client.removePlayer(this, "");
                 this.removeAllPlayers();
                 this.despawnEntities();
             }
