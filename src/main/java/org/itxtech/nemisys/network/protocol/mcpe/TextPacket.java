@@ -34,15 +34,11 @@ public class TextPacket extends DataPacket {
             case TYPE_WHISPER:
             case TYPE_ANNOUNCEMENT:
                 this.source = this.getString();
-
-                getString();
-                getVarInt();
             case TYPE_RAW:
             case TYPE_TIP:
             case TYPE_SYSTEM:
                 this.message = this.getString();
                 break;
-
             case TYPE_TRANSLATION:
                 this.message = this.getString();
                 int count = (int) this.getUnsignedVarInt();
@@ -52,7 +48,7 @@ public class TextPacket extends DataPacket {
                 }
         }
 
-        getString();
+        this.getString();
     }
 
     @Override
@@ -66,9 +62,6 @@ public class TextPacket extends DataPacket {
             case TYPE_WHISPER:
             case TYPE_ANNOUNCEMENT:
                 this.putString(this.source);
-
-                putString("");
-                putVarInt(0);
             case TYPE_RAW:
             case TYPE_TIP:
             case TYPE_SYSTEM:
@@ -82,8 +75,6 @@ public class TextPacket extends DataPacket {
                     this.putString(parameter);
                 }
         }
-
-        putString("");
+        this.putString("");
     }
-
 }
