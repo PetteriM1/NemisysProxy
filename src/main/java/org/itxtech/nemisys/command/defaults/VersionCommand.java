@@ -26,14 +26,8 @@ public class VersionCommand extends VanillaCommand {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(new TranslationContainer("nemisys.server.info.extended", new String[]{
-                    sender.getServer().getName(),
-                    sender.getServer().getNemisysVersion(),
-                    sender.getServer().getCodename(),
-                    sender.getServer().getApiVersion(),
-                    sender.getServer().getVersion(),
-                    String.valueOf(ProtocolInfo.CURRENT_PROTOCOL)
-            }));
+            sender.sendMessage("\u00A7bNemisys Proxy");
+            sender.sendMessage("\u00A76PetteriM1 Edition");
         } else {
             String pluginName = "";
             for (String arg : args) pluginName += arg + " ";

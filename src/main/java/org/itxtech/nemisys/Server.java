@@ -164,8 +164,7 @@ public class Server {
         this.network = new Network(this);
         this.network.setName(this.getMotd());
 
-        this.logger.info(this.getLanguage().translateString("nemisys.server.info", new String[]{this.getName(), TextFormat.YELLOW + this.getNemisysVersion() + TextFormat.WHITE, TextFormat.AQUA + this.getCodename() + TextFormat.WHITE, this.getApiVersion()}));
-
+        this.logger.info("-- Nemisys PetteriM1 Edition --");
 
         this.consoleSender = new ConsoleCommandSender();
         this.commandMap = new SimpleCommandMap(this);

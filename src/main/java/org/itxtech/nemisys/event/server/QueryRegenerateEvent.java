@@ -4,7 +4,6 @@ import org.itxtech.nemisys.Player;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.event.HandlerList;
 import org.itxtech.nemisys.plugin.Plugin;
-import org.itxtech.nemisys.plugin.PluginDescription;
 import org.itxtech.nemisys.utils.Binary;
 
 import java.nio.ByteBuffer;
@@ -144,14 +143,6 @@ public class QueryRegenerateEvent extends ServerEvent {
     public byte[] getLongQuery() {
         ByteBuffer query = ByteBuffer.allocate(65536);
         String plist = this.server_engine;
-        if (this.plugins.length > 0 && this.listPlugins) {
-            plist += ":";
-            for (Plugin p : this.plugins) {
-                PluginDescription d = p.getDescription();
-                plist += " " + d.getName().replace(";", "").replace(":", "").replace(" ", "_") + " " + d.getVersion().replace(";", "").replace(":", "").replace(" ", "_") + ";";
-            }
-            plist = plist.substring(0, plist.length() - 2);
-        }
 
         query.put("splitnum".getBytes());
         query.put((byte) 0x00);
@@ -207,5 +198,4 @@ public class QueryRegenerateEvent extends ServerEvent {
         query.put((byte) 0x00);
         return Arrays.copyOf(query.array(), query.position());
     }
-
 }
