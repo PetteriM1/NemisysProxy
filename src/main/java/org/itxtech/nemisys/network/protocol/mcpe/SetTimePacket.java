@@ -16,7 +16,6 @@ public class SetTimePacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override
@@ -24,5 +23,4 @@ public class SetTimePacket extends DataPacket {
         this.reset();
         this.putVarInt(this.time);
     }
-
 }

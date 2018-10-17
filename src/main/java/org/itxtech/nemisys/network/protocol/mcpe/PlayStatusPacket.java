@@ -22,7 +22,6 @@ public class PlayStatusPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override

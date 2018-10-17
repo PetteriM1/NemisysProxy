@@ -26,10 +26,8 @@ public class PlayerSkinPacket extends DataPacket {
         this.serializeName = this.getString();
         byte[] data = this.getByteArray();
         byte[] cape = this.getByteArray();
-
         this.skin = new Skin(data, skinId);
         this.skin.setCape(this.skin.new Cape(cape));
-
         this.geometryModel = this.getString();
         this.geometryData = this.getString();
     }

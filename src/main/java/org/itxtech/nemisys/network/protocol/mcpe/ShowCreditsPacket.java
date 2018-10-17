@@ -17,7 +17,6 @@ public class ShowCreditsPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override

@@ -27,8 +27,6 @@ public class PlayerListPacket extends DataPacket {
             if (type == TYPE_ADD) {
                 entry.entityId = getVarLong();
                 entry.name = getString();
-                this.getString();
-                this.getVarInt();
                 entry.skin = getSkin();
                 entry.geometryModel = getString();
                 entry.geometryData = getByteArray();

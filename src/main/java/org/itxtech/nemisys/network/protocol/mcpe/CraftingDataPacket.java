@@ -28,7 +28,6 @@ public class CraftingDataPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override
@@ -39,5 +38,4 @@ public class CraftingDataPacket extends DataPacket {
     public byte pid() {
         return NETWORK_ID;
     }
-
 }

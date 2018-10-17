@@ -18,7 +18,6 @@ public class PlaySoundPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override

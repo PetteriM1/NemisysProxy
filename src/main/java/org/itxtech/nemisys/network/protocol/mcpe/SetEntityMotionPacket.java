@@ -19,7 +19,6 @@ public class SetEntityMotionPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override

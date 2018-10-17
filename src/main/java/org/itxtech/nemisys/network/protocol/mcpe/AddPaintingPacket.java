@@ -35,5 +35,4 @@ public class AddPaintingPacket extends DataPacket {
     public byte pid() {
         return NETWORK_ID;
     }
-
 }

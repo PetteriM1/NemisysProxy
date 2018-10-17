@@ -18,7 +18,6 @@ public class SetSpawnPositionPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override
@@ -33,5 +32,4 @@ public class SetSpawnPositionPacket extends DataPacket {
     public byte pid() {
         return NETWORK_ID;
     }
-
 }

@@ -9,16 +9,13 @@ public class ChangeDimensionPacket extends DataPacket {
     public static final byte NETWORK_ID = ProtocolInfo.CHANGE_DIMENSION_PACKET;
 
     public int dimension;
-
     public float x;
     public float y;
     public float z;
-
     public boolean respawn;
 
     @Override
     public void decode() {
-
     }
 
     @Override

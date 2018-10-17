@@ -24,7 +24,6 @@ public class CommandRequestPacket extends DataPacket {
 
     public String command;
     public CommandOriginData data;
-
     public int type;
     public String requestId;
     public long playerUniqueId;
@@ -42,5 +41,4 @@ public class CommandRequestPacket extends DataPacket {
     @Override
     public void encode() {
     }
-
 }

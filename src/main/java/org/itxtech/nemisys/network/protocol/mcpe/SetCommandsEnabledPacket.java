@@ -13,7 +13,6 @@ public class SetCommandsEnabledPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override

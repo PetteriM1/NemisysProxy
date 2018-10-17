@@ -13,7 +13,6 @@ public class SetHealthPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override

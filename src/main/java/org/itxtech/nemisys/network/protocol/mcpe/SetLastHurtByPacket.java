@@ -9,7 +9,6 @@ public class SetLastHurtByPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override

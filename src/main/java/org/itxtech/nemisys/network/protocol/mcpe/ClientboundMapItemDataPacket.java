@@ -40,7 +40,6 @@ public class ClientboundMapItemDataPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override

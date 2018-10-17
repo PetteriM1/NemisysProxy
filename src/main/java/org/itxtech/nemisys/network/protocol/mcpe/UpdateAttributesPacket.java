@@ -15,7 +15,6 @@ public class UpdateAttributesPacket extends DataPacket {
     }
 
     public void decode() {
-
     }
 
     public void encode() {
@@ -23,5 +22,4 @@ public class UpdateAttributesPacket extends DataPacket {
 
         this.putEntityRuntimeId(this.entityId);
     }
-
 }

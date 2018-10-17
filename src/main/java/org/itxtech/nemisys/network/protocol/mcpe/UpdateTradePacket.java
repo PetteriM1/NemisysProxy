@@ -21,7 +21,6 @@ public class UpdateTradePacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override
@@ -37,5 +36,4 @@ public class UpdateTradePacket extends DataPacket {
         this.putString(displayName);
         this.put(this.offers);
     }
-
 }

@@ -7,7 +7,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 public class EntityEventPacket extends DataPacket {
     public static final int NETWORK_ID = ProtocolInfo.ENTITY_EVENT_PACKET;
 
-
     public static final int HURT_ANIMATION = 2;
     public static final int DEATH_ANIMATION = 3;
 

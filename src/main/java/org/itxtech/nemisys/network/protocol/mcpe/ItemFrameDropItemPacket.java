@@ -23,7 +23,6 @@ public class ItemFrameDropItemPacket extends DataPacket {
 
     @Override
     public void encode() {
-
     }
 
     @Override

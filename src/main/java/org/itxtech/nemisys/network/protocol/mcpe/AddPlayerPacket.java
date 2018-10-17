@@ -32,10 +32,6 @@ public class AddPlayerPacket extends DataPacket {
     public void decode() {
         uuid = getUUID();
         username = getString();
-
-        getString();
-        getVarInt();
-
         entityUniqueId = getEntityUniqueId();
         entityRuntimeId = getEntityRuntimeId();
     }

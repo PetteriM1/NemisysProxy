@@ -15,7 +15,6 @@ public class SetEntityLinkPacket extends DataPacket {
 
     @Override
     public void decode() {
-
     }
 
     @Override
