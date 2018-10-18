@@ -305,13 +305,15 @@ public class Client {
                         MainLogger.getLogger().logException(e);
                     }
                 } else if (channel.equals("NemisysChat")) {
-                    String message = input.readUTF();
+                    try {
+                        String message = input.readUTF();
 
-                    TextPacket textPacket2 = new TextPacket();
-                    textPacket2.type = TextPacket.TYPE_RAW;
-                    textPacket2.message = message;
+                        TextPacket textPacket2 = new TextPacket();
+                        textPacket2.type = TextPacket.TYPE_RAW;
+                        textPacket2.message = message;
 
-                    Server.broadcastPacket(this.server.getOnlinePlayers().values(), textPacket2);
+                        Server.broadcastPacket(this.server.getOnlinePlayers().values(), textPacket2);
+                    } catch (Exception e) {}
                 }
                 break;
             default:
