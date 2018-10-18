@@ -20,6 +20,7 @@ import org.itxtech.nemisys.utils.TextFormat;
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -305,15 +306,13 @@ public class Client {
                         MainLogger.getLogger().logException(e);
                     }
                 } else if (channel.equals("NemisysChat")) {
-                    try {
-                        String message = input.readUTF();
+                    String message = new String(messagePacket.data, StandardCharsets.UTF_8);
 
-                        TextPacket textPacket2 = new TextPacket();
-                        textPacket2.type = TextPacket.TYPE_RAW;
-                        textPacket2.message = message;
+                    TextPacket textPacket2 = new TextPacket();
+                    textPacket2.type = TextPacket.TYPE_RAW;
+                    textPacket2.message = message;
 
-                        Server.broadcastPacket(this.server.getOnlinePlayers().values(), textPacket2);
-                    } catch (Exception e) {}
+                    Server.broadcastPacket(this.server.getOnlinePlayers().values(), textPacket2);
                 }
                 break;
             default:
