@@ -313,6 +313,9 @@ public class Client {
                     textPacket2.message = message;
 
                     Server.broadcastPacket(this.server.getOnlinePlayers().values(), textPacket2);
+                    for (Player player : this.getPlayers().values()) {
+                        player.sendMessage(message);
+                    }
                 }
                 break;
             default:
