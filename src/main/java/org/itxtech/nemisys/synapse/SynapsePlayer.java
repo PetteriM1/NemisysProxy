@@ -59,5 +59,4 @@ public class SynapsePlayer extends Player {
             super.sendDataPacket(pk, direct, needACK);
         }
     }
-
 }

@@ -20,6 +20,7 @@ import org.itxtech.nemisys.utils.TextFormat;
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -118,7 +119,7 @@ public class Client {
             case SynapseInfo.CONNECT_PACKET:
                 ConnectPacket connectPacket = (ConnectPacket) packet;
                 if (connectPacket.protocol != SynapseInfo.CURRENT_PROTOCOL) {
-                    this.close("Incompatible SPP version! Require SPP version: " + SynapseInfo.CURRENT_PROTOCOL, true, org.itxtech.nemisys.network.protocol.spp.DisconnectPacket.TYPE_WRONG_PROTOCOL);
+                    this.close("Incompatible SPP version! Required SPP version: " + SynapseInfo.CURRENT_PROTOCOL, true, org.itxtech.nemisys.network.protocol.spp.DisconnectPacket.TYPE_WRONG_PROTOCOL);
                     return;
                 }
                 pk = new InformationPacket();
@@ -182,16 +183,16 @@ public class Client {
 
                 if (hash.equals("lobby") && !server.getLobbyClients().isEmpty()) {
                     List<String> clnts = new ArrayList<>(server.getLobbyClients().keySet());
-                    hash = clnts.get(new Random().nextInt(clnts.size()));
+                    hash = clnts.get(0);
                 }
 
-            {
-                Client c = clients.get(hash);
-                if (c != null) {
-                    this.players.get(uuid0).transfer(c);
+                {
+                    Client c = clients.get(hash);
+                    if (c != null) {
+                        this.players.get(uuid0).transfer(c);
+                    }
                 }
-            }
-            break;
+                break;
             case SynapseInfo.PLUGIN_MESSAGE_PACKET:
                 PluginMessagePacket messagePacket = (PluginMessagePacket) packet;
                 DataInput input = new DataInputStream(new ByteArrayInputStream(messagePacket.data));
@@ -306,6 +307,12 @@ public class Client {
                     }
                 }
                 break;
+            case SynapseInfo.CHAT_PACKET:
+                String message = ((ChatPacket) packet).text;
+                for (Player player : this.getPlayers().values()) {
+                    player.sendMessage(message);
+                }
+                break;
             default:
                 this.server.getLogger().error("Client " + this.getIp() + ":" + this.getPort() + " has sent an unknown packet " + packet.pid());
         }
@@ -395,6 +402,13 @@ public class Client {
         PluginMessagePacket pk = new PluginMessagePacket();
         pk.channel = channel;
         pk.data = data;
+        this.sendDataPacket(pk);
+    }
+
+    public void sendChat(String text) {
+        ChatPacket pk = new ChatPacket();
+        pk.text = text;
+
         this.sendDataPacket(pk);
     }
 }
