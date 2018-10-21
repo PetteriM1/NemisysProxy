@@ -183,7 +183,7 @@ public class Client {
 
                 if (hash.equals("lobby") && !server.getLobbyClients().isEmpty()) {
                     List<String> clnts = new ArrayList<>(server.getLobbyClients().keySet());
-                    hash = clnts.get(new Random().nextInt(clnts.size()));
+                    hash = clnts.get(0);
                 }
 
             {
