@@ -119,7 +119,7 @@ public class Client {
             case SynapseInfo.CONNECT_PACKET:
                 ConnectPacket connectPacket = (ConnectPacket) packet;
                 if (connectPacket.protocol != SynapseInfo.CURRENT_PROTOCOL) {
-                    this.close("Incompatible SPP version! Require SPP version: " + SynapseInfo.CURRENT_PROTOCOL, true, org.itxtech.nemisys.network.protocol.spp.DisconnectPacket.TYPE_WRONG_PROTOCOL);
+                    this.close("Incompatible SPP version! Required SPP version: " + SynapseInfo.CURRENT_PROTOCOL, true, org.itxtech.nemisys.network.protocol.spp.DisconnectPacket.TYPE_WRONG_PROTOCOL);
                     return;
                 }
                 pk = new InformationPacket();
@@ -186,13 +186,13 @@ public class Client {
                     hash = clnts.get(0);
                 }
 
-            {
-                Client c = clients.get(hash);
-                if (c != null) {
-                    this.players.get(uuid0).transfer(c);
+                {
+                    Client c = clients.get(hash);
+                    if (c != null) {
+                        this.players.get(uuid0).transfer(c);
+                    }
                 }
-            }
-            break;
+                break;
             case SynapseInfo.PLUGIN_MESSAGE_PACKET:
                 PluginMessagePacket messagePacket = (PluginMessagePacket) packet;
                 DataInput input = new DataInputStream(new ByteArrayInputStream(messagePacket.data));
@@ -305,17 +305,12 @@ public class Client {
                     } catch (Exception e) {
                         MainLogger.getLogger().logException(e);
                     }
-                } else if (channel.equals("NemisysChat")) {
-                    String message = new String(messagePacket.data, StandardCharsets.UTF_8);
-
-                    TextPacket textPacket2 = new TextPacket();
-                    textPacket2.type = TextPacket.TYPE_RAW;
-                    textPacket2.message = message;
-
-                    Server.broadcastPacket(this.server.getOnlinePlayers().values(), textPacket2);
-                    for (Player player : this.getPlayers().values()) {
-                        player.sendMessage(message);
-                    }
+                }
+                break;
+            case SynapseInfo.CHAT_PACKET:
+                String message = ((ChatPacket) packet).text;
+                for (Player player : this.getPlayers().values()) {
+                    player.sendMessage(message);
                 }
                 break;
             default:
@@ -407,6 +402,13 @@ public class Client {
         PluginMessagePacket pk = new PluginMessagePacket();
         pk.channel = channel;
         pk.data = data;
+        this.sendDataPacket(pk);
+    }
+
+    public void sendChat(String text) {
+        ChatPacket pk = new ChatPacket();
+        pk.text = text;
+
         this.sendDataPacket(pk);
     }
 }
