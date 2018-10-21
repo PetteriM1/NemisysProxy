@@ -20,6 +20,7 @@ import org.itxtech.nemisys.utils.TextFormat;
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -182,7 +183,7 @@ public class Client {
 
                 if (hash.equals("lobby") && !server.getLobbyClients().isEmpty()) {
                     List<String> clnts = new ArrayList<>(server.getLobbyClients().keySet());
-                    hash = clnts.get(new Random().nextInt(clnts.size()));
+                    hash = clnts.get(0);
                 }
 
             {
@@ -303,6 +304,17 @@ public class Client {
                         }
                     } catch (Exception e) {
                         MainLogger.getLogger().logException(e);
+                    }
+                } else if (channel.equals("NemisysChat")) {
+                    String message = new String(messagePacket.data, StandardCharsets.UTF_8);
+
+                    TextPacket textPacket2 = new TextPacket();
+                    textPacket2.type = TextPacket.TYPE_RAW;
+                    textPacket2.message = message;
+
+                    Server.broadcastPacket(this.server.getOnlinePlayers().values(), textPacket2);
+                    for (Player player : this.getPlayers().values()) {
+                        player.sendMessage(message);
                     }
                 }
                 break;
