@@ -44,7 +44,7 @@ public class SessionManager {
 
     public boolean portChecking = true;
 
-    public long serverId;
+    public final long serverId;
 
     protected String currentSource = "";
 
