@@ -197,6 +197,7 @@ public class RakNetInterface implements ServerInstance, AdvancedSourceInterface 
                         ProtocolInfo.MINECRAFT_VERSION_NETWORK + ";" +
                         info.getPlayerCount() + ";" +
                         info.getMaxPlayerCount() + ";" +
+                        server.getServerUniqueId().toString() +
                         "" + ";" +
                         "" + ";");
     }
