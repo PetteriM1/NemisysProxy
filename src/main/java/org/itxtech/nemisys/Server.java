@@ -60,6 +60,7 @@ public class Server {
     private SimpleCommandMap commandMap;
     private ConsoleCommandSender consoleSender;
     private int maxPlayers;
+    private boolean chatSync;
     private RCON rcon;
     private Network network;
     private BaseLang baseLang;
@@ -116,8 +117,6 @@ public class Server {
                 put("password", "1234567890123456");
                 put("lang", "eng");
                 put("async-workers", "auto");
-                put("enable-profiling", false);
-                put("profile-report-trigger", 20);
                 put("max-players", 50);
                 put("plus-one-max-count", false);
                 put("players-per-thread", 50);
@@ -126,11 +125,12 @@ public class Server {
                 put("rcon.password", Base64.getEncoder().encodeToString(UUID.randomUUID().toString().replace("-", "").getBytes()).substring(3, 13));
                 put("debug", 1);
                 put("enable-synapse-client", false);
-                put("ansi-title", true);
+                put("ansi", true);
+                put("sync-chat", false);
             }
         });
 
-        if (!this.getPropertyBoolean("ansi-title", true)) Nemisys.TITLE = false;
+        if (!this.getPropertyBoolean("ansi", true)) Nemisys.ANSI = false;
 
         this.baseLang = new BaseLang((String) this.getConfig("lang", BaseLang.FALLBACK_LANGUAGE));
 
@@ -152,6 +152,8 @@ public class Server {
         }
 
         this.maxPlayers = this.getPropertyInt("max-players", 20);
+        
+        this.chatSync = this.getPropertyBoolean("sync-chat", false);
 
         Nemisys.DEBUG = this.getPropertyInt("debug", 1);
         if (this.logger instanceof MainLogger) {
@@ -513,7 +515,7 @@ public class Server {
     }
 
     public void titleTick() {
-        if (!Nemisys.TITLE) return;
+        if (!Nemisys.ANSI) return;
 
         Runtime runtime = Runtime.getRuntime();
         double used = NemisysMath.round((double) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024, 2);
@@ -880,5 +882,9 @@ public class Server {
         if (playerTicker.getMaximumPoolSize() != threads) {
             playerTicker.setMaximumPoolSize(threads);
         }
+    }
+
+    public boolean chatSync() {
+        return chatSync;
     }
 }

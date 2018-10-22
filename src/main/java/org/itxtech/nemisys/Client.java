@@ -308,9 +308,11 @@ public class Client {
                 }
                 break;
             case SynapseInfo.CHAT_PACKET:
-                String message = ((ChatPacket) packet).text;
-                for (Player player : this.getPlayers().values()) {
-                    player.sendMessage(message);
+                if (Server.getInstance().chatSync()) {
+                    String message = ((ChatPacket) packet).text;
+                    for (Player player : this.getPlayers().values()) {
+                        player.sendMessage(message);
+                    }
                 }
                 break;
             default:
