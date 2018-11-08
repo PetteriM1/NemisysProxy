@@ -94,7 +94,6 @@ public class TaskHandler {
         this.cancelled = true;
     }
 
-    @Deprecated
     public void remove() {
         this.cancelled = true;
     }
@@ -115,5 +114,4 @@ public class TaskHandler {
     public boolean isAsynchronous() {
         return asynchronous;
     }
-
 }

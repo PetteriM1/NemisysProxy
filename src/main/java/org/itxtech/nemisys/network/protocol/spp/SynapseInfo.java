@@ -2,7 +2,7 @@ package org.itxtech.nemisys.network.protocol.spp;
 
 public interface SynapseInfo {
 
-    int CURRENT_PROTOCOL = 12;
+    int CURRENT_PROTOCOL = 0;
 
     byte HEARTBEAT_PACKET = 0x01;
     byte CONNECT_PACKET = 0x02;
@@ -14,5 +14,4 @@ public interface SynapseInfo {
     byte TRANSFER_PACKET = 0x08;
     byte BROADCAST_PACKET = 0x09;
     byte PLUGIN_MESSAGE_PACKET = 0x0a;
-    byte CHAT_PACKET = 0x0b;
 }

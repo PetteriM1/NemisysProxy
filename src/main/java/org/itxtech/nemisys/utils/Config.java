@@ -84,7 +84,6 @@ public class Config {
         this(file.toString(), type, new ConfigSection());
     }
 
-    @Deprecated
     public Config(String file, int type, LinkedHashMap<String, Object> defaultMap) {
         this.load(file, type, new ConfigSection(defaultMap));
     }
@@ -93,7 +92,6 @@ public class Config {
         this.load(file, type, defaultMap);
     }
 
-    @Deprecated
     public Config(File file, int type, LinkedHashMap<String, Object> defaultMap) {
         this(file.toString(), type, new ConfigSection(defaultMap));
     }
@@ -490,35 +488,19 @@ public class Config {
         }
     }
 
-    /**
-     * @deprecated use {@link #get(String)} instead
-     */
-    @Deprecated
     public Object getNested(String key) {
         return get(key);
     }
 
-    /**
-     * @deprecated use {@link #get(String, T)} instead
-     */
-    @Deprecated
     public <T> T getNested(String key, T defaultValue) {
         return get(key, defaultValue);
     }
 
-    /**
-     * @deprecated use {@link #get(String)} instead
-     */
-    @Deprecated
     @SuppressWarnings("unchecked")
     public <T> T getNestedAs(String key, Class<T> type) {
         return (T) get(key);
     }
 
-    /**
-     * @deprecated use {@link #remove(String)} instead
-     */
-    @Deprecated
     public void removeNested(String key) {
         remove(key);
     }

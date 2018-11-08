@@ -176,7 +176,6 @@ public class Player implements CommandSender {
         }
 
         try {
-
             Long entityId = null;
 
             switch (pk.pid()) {

@@ -48,11 +48,9 @@ public abstract class Task implements Runnable {
 
     @Override
     public final void run() {
-
     }
 
     public void onCancel() {
-
     }
 
     public void cancel() {
@@ -62,5 +60,4 @@ public abstract class Task implements Runnable {
             Server.getInstance().getLogger().critical("Exception while invoking onCancel", ex);
         }
     }
-
 }

@@ -127,6 +127,5 @@ public class SynapseInterface {
         registerPacket(SynapseInfo.TRANSFER_PACKET, new TransferPacket());
         registerPacket(SynapseInfo.BROADCAST_PACKET, new BroadcastPacket());
         registerPacket(SynapseInfo.PLUGIN_MESSAGE_PACKET, new PluginMessagePacket());
-        registerPacket(SynapseInfo.CHAT_PACKET, new ChatPacket());
     }
 }

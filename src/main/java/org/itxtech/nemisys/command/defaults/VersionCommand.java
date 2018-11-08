@@ -26,8 +26,10 @@ public class VersionCommand extends VanillaCommand {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (args.length == 0) {
+            sender.sendMessage("\u00A7c-");
             sender.sendMessage("\u00A7bNemisys Proxy");
             sender.sendMessage("\u00A76PetteriM1 Edition");
+            sender.sendMessage("\u00A7c-");
         } else {
             String pluginName = "";
             for (String arg : args) pluginName += arg + " ";

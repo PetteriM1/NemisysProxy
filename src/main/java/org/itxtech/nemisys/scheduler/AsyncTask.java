@@ -79,5 +79,4 @@ public abstract class AsyncTask implements Runnable {
         this.taskId = 0;
         this.finished = false;
     }
-
 }

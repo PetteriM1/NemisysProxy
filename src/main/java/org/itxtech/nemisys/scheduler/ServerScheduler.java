@@ -51,7 +51,6 @@ public class ServerScheduler {
         return addTask(null, task, 0, 0, true);
     }
 
-    @Deprecated
     public void scheduleAsyncTaskToWorker(AsyncTask task, int worker) {
         scheduleAsyncTask(task);
     }
@@ -223,5 +222,4 @@ public class ServerScheduler {
     private int nextTaskId() {
         return currentTaskId.incrementAndGet();
     }
-
 }

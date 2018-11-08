@@ -1,7 +1,6 @@
 package org.itxtech.nemisys.command.defaults;
 
 import org.itxtech.nemisys.command.CommandSender;
-import org.itxtech.nemisys.event.TranslationContainer;
 
 /**
  * author: MagicDroidX
@@ -16,7 +15,7 @@ public class StopCommand extends VanillaCommand {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
 
-        sender.sendMessage(new TranslationContainer("commands.stop.start"));
+        sender.sendMessage("\u00A7cStopping the proxy...");
 
         sender.getServer().shutdown();
 

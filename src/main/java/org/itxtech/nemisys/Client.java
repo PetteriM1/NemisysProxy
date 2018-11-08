@@ -307,14 +307,6 @@ public class Client {
                     }
                 }
                 break;
-            case SynapseInfo.CHAT_PACKET:
-                if (Server.getInstance().chatSync()) {
-                    String message = ((ChatPacket) packet).text;
-                    for (Player player : this.getPlayers().values()) {
-                        player.sendMessage(message);
-                    }
-                }
-                break;
             default:
                 this.server.getLogger().error("Client " + this.getIp() + ":" + this.getPort() + " has sent an unknown packet " + packet.pid());
         }
@@ -355,7 +347,7 @@ public class Client {
     }
 
     public void closeAllPlayers(String reason, Client fallback) {
-        String msg = fallback == null ? "§cAll lobby servers are offline!" + (reason.equals("") ? "" : "\n" + TextFormat.YELLOW + reason) : TextFormat.RED + "The server you were previously on went down and you have been connected to a fallback server";
+        String msg = fallback == null ? "§cAll lobby servers are offline!" + (reason.equals("") ? "" : "\n" + TextFormat.YELLOW + reason) : TextFormat.RED + "The server you were previously on went down and you have been connected to lobby";
 
         for (Player player : new ArrayList<>(this.players.values())) {
             if (fallback == null) {
@@ -404,13 +396,6 @@ public class Client {
         PluginMessagePacket pk = new PluginMessagePacket();
         pk.channel = channel;
         pk.data = data;
-        this.sendDataPacket(pk);
-    }
-
-    public void sendChat(String text) {
-        ChatPacket pk = new ChatPacket();
-        pk.text = text;
-
         this.sendDataPacket(pk);
     }
 }

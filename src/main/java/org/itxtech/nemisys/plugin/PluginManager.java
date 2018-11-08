@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
  */
 public class PluginManager {
 
-    public static boolean useTimings = false;
     protected Map<String, Plugin> plugins = new LinkedHashMap<>();
     protected Map<String, PluginLoader> fileAssociations = new HashMap<>();
     private Server server;
@@ -565,14 +564,6 @@ public class PluginManager {
                 ret.put(eventClass, eventSet);
             }
 
-            for (Class<?> clazz = eventClass; Event.class.isAssignableFrom(clazz); clazz = clazz.getSuperclass()) {
-                if (clazz.getAnnotation(Deprecated.class) != null) {
-                    if (Boolean.valueOf(String.valueOf(this.server.getConfig("settings.deprecated-verbpse", true)))) {
-                        this.server.getLogger().warning(this.server.getLanguage().translateString("nemisys.plugin.deprecatedEvent", new String[]{plugin.getName(), clazz.getName(), listener.getClass().getName() + "." + method.getName() + "()"}));
-                    }
-                    break;
-                }
-            }
             this.registerEvent(eventClass, listener, eh.priority(), new MethodEventExecutor(method), plugin, eh.ignoreCancelled());
         }
     }
@@ -616,13 +607,4 @@ public class PluginManager {
             }
         }
     }
-
-    public boolean useTimings() {
-        return useTimings;
-    }
-
-    public void setUseTimings(boolean use) {
-        useTimings = use;
-    }
-
 }

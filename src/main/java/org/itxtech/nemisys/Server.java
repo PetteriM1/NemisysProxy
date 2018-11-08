@@ -60,7 +60,6 @@ public class Server {
     private SimpleCommandMap commandMap;
     private ConsoleCommandSender consoleSender;
     private int maxPlayers;
-    private boolean chatSync;
     private RCON rcon;
     private Network network;
     private BaseLang baseLang;
@@ -106,7 +105,6 @@ public class Server {
         this.console = new CommandReader();
         this.console.start();
 
-        this.logger.info("Loading server properties...");
         this.properties = new Config(this.dataPath + "server.properties", Config.PROPERTIES, new ConfigSection() {
             {
                 put("motd", "Nemisys Proxy");
@@ -126,7 +124,6 @@ public class Server {
                 put("debug", 1);
                 put("enable-synapse-client", false);
                 put("ansi", true);
-                put("sync-chat", false);
             }
         });
 
@@ -152,21 +149,17 @@ public class Server {
         }
 
         this.maxPlayers = this.getPropertyInt("max-players", 20);
-        
-        this.chatSync = this.getPropertyBoolean("sync-chat", false);
 
         Nemisys.DEBUG = this.getPropertyInt("debug", 1);
         if (this.logger instanceof MainLogger) {
             this.logger.setLogDebug(Nemisys.DEBUG > 1);
         }
 
-        this.logger.info(this.getLanguage().translateString("nemisys.server.networkStart", new String[]{this.getIp().equals("") ? "*" : this.getIp(), String.valueOf(this.getPort())}));
+        this.logger.info(this.getLanguage().translateString("\u00A7a[Nemisys PetteriM1 Edition] Proxy started on {%0}:{%1}", new String[]{this.getIp().equals("") ? "*" : this.getIp(), String.valueOf(this.getPort())}));
         this.serverID = UUID.randomUUID();
 
         this.network = new Network(this);
         this.network.setName(this.getMotd());
-
-        this.logger.info("-- Nemisys PetteriM1 Edition --");
 
         this.consoleSender = new ConsoleCommandSender();
         this.commandMap = new SimpleCommandMap(this);
@@ -185,7 +178,7 @@ public class Server {
             try {
                 this.synapse = new Synapse(this);
             } catch (Exception e) {
-                this.logger.warning("Failed.");
+                this.logger.warning("Failed!");
                 this.logger.logException(e);
             }
         }
@@ -312,7 +305,7 @@ public class Server {
         }
 
         if (notify)
-            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.notFound"));
+            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.unknown"));
 
         return false;
     }
@@ -392,8 +385,6 @@ public class Server {
         }
 
         this.tickCounter = 0;
-
-        this.getLogger().info(this.getLanguage().translateString("nemisys.server.startFinished", String.valueOf((double) (System.currentTimeMillis() - Nemisys.START_TIME) / 1000)));
 
         this.tickProcessor();
         this.forceShutdown();
@@ -523,20 +514,10 @@ public class Server {
         String usage = Math.round(used / max * 100) + "%";
         String title = (char) 0x1b + "]0;Nemisys Proxy Server " +
                 this.getNemisysVersion() +
-                " | Online " + this.players.size() + "/" + this.getMaxPlayers() +
-                " | Clients " + this.clients.size() +
-                " | Memory " + usage;
-        if (!Nemisys.shortTitle) {
-            title += " | U " + NemisysMath.round((this.network.getUpload() / 1024 * 1000), 2)
-                    + " D " + NemisysMath.round((this.network.getDownload() / 1024 * 1000), 2) + " kB/s";
-
-            if (this.synapseInterface.getInterface().getSessionManager() != null) {
-                title += " | SynLibTPS " + this.synapseInterface.getInterface().getSessionManager().getTicksPerSecond() +
-                        " | SynLibLoad " + this.synapseInterface.getInterface().getSessionManager().getTickUsage() + "%";
-            }
-        }
-
-        title += " | TPS " + this.getTicksPerSecond() +
+                " | Players " + this.players.size() + "/" + this.getMaxPlayers() +
+                " | Servers " + this.clients.size() +
+                " | Memory " + usage +
+                " | TPS " + this.getTicksPerSecond() +
                 " | Load " + this.getTickUsage() + "%" + (char) 0x07;
 
         System.out.print(title);
@@ -882,9 +863,5 @@ public class Server {
         if (playerTicker.getMaximumPoolSize() != threads) {
             playerTicker.setMaximumPoolSize(threads);
         }
-    }
-
-    public boolean chatSync() {
-        return chatSync;
     }
 }
