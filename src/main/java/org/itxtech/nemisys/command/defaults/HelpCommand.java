@@ -34,11 +34,6 @@ public class HelpCommand extends VanillaCommand {
                 String[] newargs = new String[args.length - 1];
                 System.arraycopy(args, 0, newargs, 0, newargs.length);
                 args = newargs;
-                /*if (args.length > 1) {
-                    args = Arrays.copyOfRange(args, 0, args.length - 2);
-                } else {
-                    args = new String[0];
-                }*/
                 for (String arg : args) {
                     if (!command.equals("")) {
                         command += " ";

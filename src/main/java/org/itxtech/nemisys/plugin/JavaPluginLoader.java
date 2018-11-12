@@ -3,7 +3,6 @@ package org.itxtech.nemisys.plugin;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.event.plugin.PluginDisableEvent;
 import org.itxtech.nemisys.event.plugin.PluginEnableEvent;
-import org.itxtech.nemisys.plugin.certification.PluginCertificateTask;
 import org.itxtech.nemisys.utils.PluginException;
 import org.itxtech.nemisys.utils.Utils;
 
@@ -52,12 +51,6 @@ public class JavaPluginLoader implements PluginLoader {
 
                     plugin = pluginClass.newInstance();
                     this.initPlugin(plugin, description, dataFolder, file);
-
-                    if (plugin != null && description.isSigned()) {
-                        PluginCertificateTask task = new PluginCertificateTask(plugin);
-                        boolean result = task.run();
-
-                    }
 
                     return plugin;
                 } catch (ClassCastException e) {

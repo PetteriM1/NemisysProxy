@@ -67,5 +67,4 @@ public class CommandParameter {
     public CommandParameter(String name, String[] enumValues) {
         this(name, false, enumValues);
     }
-
 }
