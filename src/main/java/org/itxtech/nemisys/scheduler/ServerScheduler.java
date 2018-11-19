@@ -5,6 +5,7 @@ import org.itxtech.nemisys.plugin.Plugin;
 import org.itxtech.nemisys.utils.PluginException;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -202,7 +203,7 @@ public class ServerScheduler {
                 pending.offer(taskHandler);
             } else {
                 try {
-                    taskMap.remove(taskHandler.getTaskId()).cancel();
+                    Optional.ofNullable(taskMap.remove(taskHandler.getTaskId())).ifPresent(TaskHandler::cancel);
                 } catch (RuntimeException ex) {
                     Server.getInstance().getLogger().critical("Exception while invoking onCancel", ex);
                 }

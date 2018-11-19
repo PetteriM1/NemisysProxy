@@ -20,62 +20,65 @@ public class CommandReader extends Thread implements InterruptibleThread {
 
     private boolean running = true;
 
+    public static CommandReader getInstance() {
+        return instance;
+    }
+
     public CommandReader() {
         if (instance != null) {
-            throw new RuntimeException("Command Reader is already exist");
+            throw new RuntimeException("CommandReader is already initialized!");
         }
         try {
             this.reader = new ConsoleReader();
             reader.setPrompt("> ");
             instance = this;
         } catch (IOException e) {
-            Server.getInstance().getLogger().error("Unable to start Console Reader", e);
+            Server.getInstance().getLogger().error("Unable to start ConsoleReader", e);
         }
         this.setName("Console");
     }
 
-    public static CommandReader getInstance() {
-        return instance;
-    }
-
     public String readLine() {
         try {
-            reader.resetPromptLine("", "", 0);
-            return this.reader.readLine("> ");
+            return reader.readLine();
         } catch (IOException e) {
-            Server.getInstance().getLogger().logException(e);
-            return "";
+            e.printStackTrace();
         }
+        return null;
     }
 
     public void run() {
         Long lastLine = System.currentTimeMillis();
-        while (this.running) {
-            if (Server.getInstance().getConsoleSender() == null || Server.getInstance().getPluginManager() == null) {
-                continue;
-            }
+        String line;
 
-            String line = readLine();
+        try {
+            while ((line = reader.readLine()) != null) {
+                if (Server.getInstance().getConsoleSender() == null || Server.getInstance().getPluginManager() == null) {
+                    continue;
+                }
 
-            if (line != null && !line.trim().equals("")) {
-                try {
-                    ServerCommandEvent event = new ServerCommandEvent(Server.getInstance().getConsoleSender(), line);
-                    Server.getInstance().getPluginManager().callEvent(event);
-                    if (!event.isCancelled()) {
-                        Server.getInstance().dispatchCommand(event.getSender(), event.getCommand());
+                if (!line.trim().isEmpty()) {
+                    try {
+                        ServerCommandEvent event = new ServerCommandEvent(Server.getInstance().getConsoleSender(), line);
+                        Server.getInstance().getPluginManager().callEvent(event);
+                        if (!event.isCancelled()) {
+                            Server.getInstance().getScheduler().scheduleTask(() -> Server.getInstance().dispatchCommand(event.getSender(), event.getCommand()));
+                        }
+                    } catch (Exception e) {
+                        Server.getInstance().getLogger().logException(e);
                     }
-                } catch (Exception e) {
-                    Server.getInstance().getLogger().logException(e);
-                }
 
-            } else if (System.currentTimeMillis() - lastLine <= 1) {
-                try {
-                    sleep(40);
-                } catch (InterruptedException e) {
-                    Server.getInstance().getLogger().logException(e);
+                } else if (System.currentTimeMillis() - lastLine <= 1) {
+                    try {
+                        sleep(250);
+                    } catch (InterruptedException e) {
+                        Server.getInstance().getLogger().logException(e);
+                    }
                 }
+                lastLine = System.currentTimeMillis();
             }
-            lastLine = System.currentTimeMillis();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -106,5 +109,4 @@ public class CommandReader extends Thread implements InterruptibleThread {
             e.printStackTrace();
         }
     }
-
 }

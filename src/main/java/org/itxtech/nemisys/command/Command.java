@@ -61,14 +61,6 @@ public abstract class Command {
         this.commandParameters.put("default", new CommandParameter[]{new CommandParameter("args", CommandParamType.RAWTEXT, true)});
     }
 
-    /*public CommandData getCommandData() {
-        if (commandData == null) {
-            commandData = generateCustomCommandData();
-        }
-
-        return commandData;
-    }*/
-
     public abstract boolean execute(CommandSender sender, String commandLabel, String[] args);
 
     public String getName() {
@@ -231,5 +223,4 @@ public abstract class Command {
     public String toString() {
         return this.name;
     }
-
 }

@@ -137,5 +137,4 @@ public class Utils {
         result |= ((int) a & 0xff) << 24;
         return result & 0xFFFFFFFFL;
     }
-
 }

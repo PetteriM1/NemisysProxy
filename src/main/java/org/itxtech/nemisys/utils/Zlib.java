@@ -57,5 +57,4 @@ public abstract class Zlib {
     public static byte[] inflate(byte[] data, int maxSize) throws IOException {
         return inflate(new ByteArrayInputStream(data, 0, maxSize));
     }
-
 }

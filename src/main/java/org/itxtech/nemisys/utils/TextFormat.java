@@ -162,11 +162,20 @@ public enum TextFormat {
      * @return A copy of the input string, without any formatting.
      */
     public static String clean(final String input) {
+        return clean(input, false);
+    }
+
+    public static String clean(final String input, final boolean recursive) {
         if (input == null) {
             return null;
         }
 
-        return CLEAN_PATTERN.matcher(input).replaceAll("");
+        String result = CLEAN_PATTERN.matcher(input).replaceAll("");
+
+        if (recursive && CLEAN_PATTERN.matcher(result).find()) {
+            return clean(result, true);
+        }
+        return result;
     }
 
     /**
@@ -175,7 +184,7 @@ public enum TextFormat {
      * character. The alternate format code character will only be replaced if
      * it is immediately followed by 0-9, A-F, a-f, K-O, k-o, R or r.
      *
-     * @param altFormatChar   The alternate format code character to replace. Ex: &
+     * @param altFormatChar   The alternate format code character to replace. Ex: &amp;amp;
      * @param textToTranslate Text containing the alternate format code character.
      * @return Text containing the TextFormat.ESCAPE format code character.
      */
@@ -191,7 +200,7 @@ public enum TextFormat {
     }
 
     /**
-     * Translates a string, using an ampersand (&) as an alternate format code
+     * Translates a string, using an ampersand (&amp;) as an alternate format code
      * character, into a string that uses the internal TextFormat.ESCAPE format
      * code character. The alternate format code character will only be replaced if
      * it is immediately followed by 0-9, A-F, a-f, K-O, k-o, R or r.
@@ -213,6 +222,7 @@ public enum TextFormat {
         String result = "";
         int length = input.length();
 
+        // Search backwards from the end as it is faster
         for (int index = length - 1; index > -1; index--) {
             char section = input.charAt(index);
             if (section == ESCAPE && index < length - 1) {
@@ -222,6 +232,7 @@ public enum TextFormat {
                 if (color != null) {
                     result = color.toString() + result;
 
+                    // Once we find a color or reset we can stop searching
                     if (color.isColor() || color.equals(RESET)) {
                         break;
                     }
