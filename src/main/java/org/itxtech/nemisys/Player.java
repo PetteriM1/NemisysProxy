@@ -479,7 +479,8 @@ public class Player implements CommandSender {
                 TextFormat.AQUA + this.name + TextFormat.WHITE,
                 this.ip,
                 String.valueOf(this.port),
-                "" + TextFormat.GREEN + this.getRandomClientId() + TextFormat.WHITE,
+                String.valueOf(this.protocol),
+                String.valueOf(this.getRandomClientId())
         }));
 
         Map<String, Client> c = this.server.getMainClients();

@@ -6,10 +6,10 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public interface ProtocolInfo {
 
-    int CURRENT_PROTOCOL = 291;
+    int CURRENT_PROTOCOL = 313;
 
-    String MINECRAFT_VERSION = "v1.7.0";
-    String MINECRAFT_VERSION_NETWORK = "1.7.0";
+    String MINECRAFT_VERSION = "v1.8.0";
+    String MINECRAFT_VERSION_NETWORK = "1.8.0";
 
     byte LOGIN_PACKET = 0x01;
     byte PLAY_STATUS_PACKET = 0x02;
@@ -126,5 +126,11 @@ public interface ProtocolInfo {
     byte SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET = 0x71;
     byte UPDATE_SOFT_ENUM_PACKET = 0x72;
     byte NETWORK_STACK_LATENCY_PACKET = 0x73;
+    byte SCRIPT_CUSTOM_EVENT_PACKET = 0x75;
+    byte SPAWN_PARTICLE_EFFECT_PACKET = 0x76;
+    byte AVAILABLE_ENTITY_IDENTIFIERS_PACKET = 0x77;
+    byte LEVEL_SOUND_EVENT_PACKET_V2 = 0x78;
+    byte NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET = 0x79;
+    byte BIOME_DEFINITION_LIST_PACKET = 0x7a;
     byte BATCH_PACKET = (byte) 0xff;
 }
