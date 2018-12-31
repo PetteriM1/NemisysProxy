@@ -5,8 +5,6 @@ package org.itxtech.nemisys.network.protocol.spp;
  */
 public class ConnectPacket extends SynapseDataPacket {
 
-    public static final byte NETWORK_ID = SynapseInfo.CONNECT_PACKET;
-
     public int protocol = SynapseInfo.CURRENT_PROTOCOL;
     public int maxPlayers;
     public boolean isLobbyServer;
@@ -16,7 +14,7 @@ public class ConnectPacket extends SynapseDataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return SynapseInfo.CONNECT_PACKET;
     }
 
     @Override

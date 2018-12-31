@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -21,8 +22,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  
      protected final String logPath;
      protected final ConcurrentLinkedQueue<String> logBuffer = new ConcurrentLinkedQueue<>();
-     protected boolean shutdown = false;
-     private boolean isShutdown = false;
+     protected AtomicBoolean shutdown = new AtomicBoolean(false);
+     protected AtomicBoolean isShutdown = new AtomicBoolean(false);
      protected LogLevel logLevel = LogLevel.DEFAULT_LEVEL;
      private final Map<TextFormat, String> replacements = new EnumMap<>(TextFormat.class);
      private final TextFormat[] colors = TextFormat.values();
@@ -41,7 +42,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
          }
          logger = this;
          this.logPath = logFile;
-         this.setName("Logger");
+         this.setName("MainLogger");
          this.initialize();
          this.start();
      }
@@ -116,15 +117,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
      }
  
      public void shutdown() {
-         synchronized (this) {
-             this.shutdown = true;
-             this.interrupt();
-             while (!this.isShutdown) {
+         if (shutdown.compareAndSet(false, true)) {
+            while (!isShutdown.get()) {
                  try {
-                     wait(1000);
-                 } catch (InterruptedException e) {
-                     return;
-                 }
+                     Thread.sleep(1000);
+                 } catch (InterruptedException e) {}
              }
          }
      }
@@ -163,12 +160,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
          do {
              waitForMessage();
              flushBuffer(logFile);
-         } while (!this.shutdown);
+         } while (!shutdown.get());
  
-         flushBuffer(logFile);
-         synchronized (this) {
-             this.isShutdown = true;
-             this.notify();
+         if (!isShutdown.compareAndSet(false, true)) {
+            throw new IllegalStateException("MainLogger has already shutdown");
          }
      }
  
@@ -217,9 +212,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
      }
  
      private synchronized void flushBuffer(File logFile) {
-         Writer writer = null;
-         try {
-             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile, true), StandardCharsets.UTF_8), 1024);
+         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile, true), StandardCharsets.UTF_8), 1024)) {
              Date now = new Date();
              String consoleDateFormat = new SimpleDateFormat("HH:mm:ss ").format(now);
              String fileDateFormat = new SimpleDateFormat("Y-M-d HH:mm:ss ").format(now);
@@ -235,16 +228,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
                  }
              }
              writer.flush();
-         } catch (Exception e) {
+         } catch (IOException e) {
              this.logException(e);
-         } finally {
-             try {
-                 if (writer != null) {
-                     writer.close();
-                 }
-             } catch (IOException e) {
-                 this.logException(e);
-             }
          }
      }
  

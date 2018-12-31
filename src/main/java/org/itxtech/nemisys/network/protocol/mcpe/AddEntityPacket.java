@@ -5,11 +5,10 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  * Nukkit Project
  */
 public class AddEntityPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.ADD_ENTITY_PACKET;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ADD_ENTITY_PACKET;
     }
 
     public long entityUniqueId;

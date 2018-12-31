@@ -5,7 +5,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  * Nukkit Project
  */
 public class SetEntityMotionPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.SET_ENTITY_MOTION_PACKET;
 
     public long eid;
     public float motionX;
@@ -14,7 +13,7 @@ public class SetEntityMotionPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_ENTITY_MOTION_PACKET;
     }
 
     @Override

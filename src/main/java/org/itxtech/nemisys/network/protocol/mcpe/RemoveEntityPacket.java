@@ -5,13 +5,12 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  * Nukkit Project
  */
 public class RemoveEntityPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.REMOVE_ENTITY_PACKET;
 
     public long eid;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.REMOVE_ENTITY_PACKET;
     }
 
     @Override

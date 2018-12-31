@@ -2,11 +2,9 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 
 public class StartGamePacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.START_GAME_PACKET;
-
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.START_GAME_PACKET;
     }
 
     public long entityUniqueId;

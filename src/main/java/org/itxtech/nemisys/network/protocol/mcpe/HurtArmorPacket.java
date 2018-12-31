@@ -5,8 +5,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public class HurtArmorPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.HURT_ARMOR_PACKET;
-
     public int health;
 
     @Override
@@ -21,6 +19,6 @@ public class HurtArmorPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.HURT_ARMOR_PACKET;
     }
 }

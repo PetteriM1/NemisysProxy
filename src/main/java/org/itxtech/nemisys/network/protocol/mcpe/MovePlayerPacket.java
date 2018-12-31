@@ -4,8 +4,6 @@ import org.itxtech.nemisys.math.Vector3f;
 
 public class MovePlayerPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.MOVE_PLAYER_PACKET;
-
     public static final int MODE_NORMAL = 0;
     public static final int MODE_RESET = 1;
     public static final int MODE_TELEPORT = 2;
@@ -62,6 +60,6 @@ public class MovePlayerPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.MOVE_PLAYER_PACKET;
     }
 }

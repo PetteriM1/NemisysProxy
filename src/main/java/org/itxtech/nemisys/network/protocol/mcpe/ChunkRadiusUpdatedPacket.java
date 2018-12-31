@@ -6,8 +6,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public class ChunkRadiusUpdatedPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.CHUNK_RADIUS_UPDATED_PACKET;
-
     public int radius;
 
     @Override
@@ -23,6 +21,6 @@ public class ChunkRadiusUpdatedPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.CHUNK_RADIUS_UPDATED_PACKET;
     }
 }

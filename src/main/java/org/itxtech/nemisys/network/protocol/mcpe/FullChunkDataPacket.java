@@ -5,11 +5,10 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  * Nukkit Project
  */
 public class FullChunkDataPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.FULL_CHUNK_DATA_PACKET;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.FULL_CHUNK_DATA_PACKET;
     }
 
     public int chunkX;

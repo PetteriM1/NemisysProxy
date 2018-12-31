@@ -18,8 +18,6 @@ public class CommandReader extends Thread implements InterruptibleThread {
     private ConsoleReader reader;
     private CursorBuffer stashed;
 
-    private boolean running = true;
-
     public static CommandReader getInstance() {
         return instance;
     }
@@ -80,10 +78,6 @@ public class CommandReader extends Thread implements InterruptibleThread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void shutdown() {
-        this.running = false;
     }
 
     public synchronized void stashLine() {

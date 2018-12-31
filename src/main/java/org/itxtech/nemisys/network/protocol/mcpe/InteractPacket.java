@@ -5,8 +5,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public class InteractPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.INTERACT_PACKET;
-
     public static final int ACTION_VEHICLE_EXIT = 3;
     public static final int ACTION_MOUSEOVER = 4;
     public static final int ACTION_OPEN_INVENTORY = 6;
@@ -29,6 +27,6 @@ public class InteractPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.INTERACT_PACKET;
     }
 }

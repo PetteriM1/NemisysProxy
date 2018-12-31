@@ -1,7 +1,6 @@
 package org.itxtech.nemisys.network.protocol.mcpe;
 
 public class TransferPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.TRANSFER_PACKET;
 
     public String address;
     public int port = 19132;

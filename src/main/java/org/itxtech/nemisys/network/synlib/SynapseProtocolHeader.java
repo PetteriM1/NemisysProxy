@@ -38,5 +38,4 @@ public class SynapseProtocolHeader {
     public void bodyLength(int bodyLength) {
         this.bodyLength = bodyLength;
     }
-
 }

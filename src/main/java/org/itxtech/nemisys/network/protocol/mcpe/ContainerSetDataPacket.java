@@ -5,7 +5,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  * Nukkit Project
  */
 public class ContainerSetDataPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.CONTAINER_SET_DATA_PACKET;
 
     public static final int PROPERTY_FURNACE_TICK_COUNT = 0;
     public static final int PROPERTY_FURNACE_LIT_TIME = 1;
@@ -18,7 +17,7 @@ public class ContainerSetDataPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.CONTAINER_SET_DATA_PACKET;
     }
 
     public int windowId;

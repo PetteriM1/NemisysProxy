@@ -7,11 +7,10 @@ import java.util.UUID;
  * Nukkit Project
  */
 public class AddPlayerPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.ADD_PLAYER_PACKET;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ADD_PLAYER_PACKET;
     }
 
     public UUID uuid;

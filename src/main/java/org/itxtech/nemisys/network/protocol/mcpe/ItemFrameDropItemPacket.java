@@ -7,8 +7,6 @@ import org.itxtech.nemisys.math.BlockVector3;
  */
 public class ItemFrameDropItemPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.ITEM_FRAME_DROP_ITEM_PACKET;
-
     public int x;
     public int y;
     public int z;
@@ -27,6 +25,6 @@ public class ItemFrameDropItemPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ITEM_FRAME_DROP_ITEM_PACKET;
     }
 }

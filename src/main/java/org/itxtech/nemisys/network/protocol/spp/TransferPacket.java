@@ -7,13 +7,12 @@ import java.util.UUID;
  */
 public class TransferPacket extends SynapseDataPacket {
 
-    public static final byte NETWORK_ID = SynapseInfo.TRANSFER_PACKET;
     public UUID uuid;
     public String clientHash;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return SynapseInfo.TRANSFER_PACKET;
     }
 
     @Override

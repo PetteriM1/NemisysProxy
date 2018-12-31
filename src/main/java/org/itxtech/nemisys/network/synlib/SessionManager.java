@@ -49,9 +49,7 @@ public class SessionManager {
             }
             try {
                 Thread.sleep(1);
-            } catch (InterruptedException e) {
-                Server.getInstance().getLogger().logException(e);
-            }
+            } catch (InterruptedException e) {}
         }
         this.server.bossGroup.shutdownGracefully();
         this.server.workerGroup.shutdownGracefully();
@@ -165,5 +163,4 @@ public class SessionManager {
         }
         return ((float) Math.round(sum / count * 100)) / 100;
     }
-
 }

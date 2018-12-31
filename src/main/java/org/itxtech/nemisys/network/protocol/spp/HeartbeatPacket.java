@@ -5,14 +5,13 @@ package org.itxtech.nemisys.network.protocol.spp;
  */
 public class HeartbeatPacket extends SynapseDataPacket {
 
-    public static final byte NETWORK_ID = SynapseInfo.HEARTBEAT_PACKET;
     public float tps;
     public float load;
     public long upTime;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return SynapseInfo.HEARTBEAT_PACKET;
     }
 
     @Override

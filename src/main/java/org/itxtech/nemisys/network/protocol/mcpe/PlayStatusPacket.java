@@ -2,11 +2,9 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 
 public class PlayStatusPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.PLAY_STATUS_PACKET;
-
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.PLAY_STATUS_PACKET;
     }
 
     public static final int LOGIN_SUCCESS = 0;
@@ -29,5 +27,4 @@ public class PlayStatusPacket extends DataPacket {
         this.reset();
         this.putInt(this.status);
     }
-
 }

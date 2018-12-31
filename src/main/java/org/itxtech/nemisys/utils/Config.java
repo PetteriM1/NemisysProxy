@@ -112,7 +112,6 @@ public class Config {
         return this.load(file, type, new ConfigSection());
     }
 
-    @SuppressWarnings("unchecked")
     public boolean load(String file, int type, ConfigSection defaultMap) {
         this.correct = true;
         this.type = type;

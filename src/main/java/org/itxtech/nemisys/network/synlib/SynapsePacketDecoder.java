@@ -66,5 +66,4 @@ public class SynapsePacketDecoder extends ReplayingDecoder<SynapsePacketDecoder.
     enum State {
         HEADER_MAGIC, HEADER_ID, HEADER_BODY_LENGTH, BODY
     }
-
 }

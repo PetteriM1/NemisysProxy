@@ -38,7 +38,6 @@ public class RakNetInterface implements ServerInstance, AdvancedSourceInterface 
     private final Map<String, Integer> identifiersACK = new ConcurrentHashMap<>();
     private final ServerHandler handler;
     private Network network;
-    private int[] channelCounts = new int[256];
 
     public RakNetInterface(Server server) {
         this.server = server;

@@ -2,11 +2,9 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 
 public class TextPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.TEXT_PACKET;
-
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.TEXT_PACKET;
     }
 
     public static final byte TYPE_RAW = 0;

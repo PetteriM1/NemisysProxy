@@ -24,5 +24,4 @@ public class SynapseContextException extends Exception {
     public SynapseContextException(Throwable cause) {
         super(cause);
     }
-
 }

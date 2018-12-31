@@ -8,6 +8,7 @@ import java.util.Map;
  * @author CreeperFace
  */
 public interface Permissible extends ServerOperator {
+
     boolean isPermissionSet(String name);
 
     boolean isPermissionSet(Permission permission);

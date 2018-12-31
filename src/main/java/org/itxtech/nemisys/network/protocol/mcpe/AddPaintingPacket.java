@@ -5,8 +5,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public class AddPaintingPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.ADD_PAINTING_PACKET;
-
     public long entityUniqueId;
     public long entityRuntimeId;
     public int x;
@@ -33,6 +31,6 @@ public class AddPaintingPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ADD_PAINTING_PACKET;
     }
 }

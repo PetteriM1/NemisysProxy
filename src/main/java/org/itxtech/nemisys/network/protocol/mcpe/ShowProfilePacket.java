@@ -5,13 +5,12 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  * Nukkit Project
  */
 public class ShowProfilePacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.SHOW_PROFILE_PACKET;
 
     public String xuid;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SHOW_PROFILE_PACKET;
     }
 
     @Override

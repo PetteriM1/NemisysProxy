@@ -23,5 +23,4 @@ public class SynapsePacketEncoder extends MessageToByteEncoder<SynapseDataPacket
                 .writeInt(body.length)
                 .writeBytes(body);
     }
-
 }

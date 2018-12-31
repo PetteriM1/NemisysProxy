@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
  * Nukkit Project
  */
  public class AvailableCommandsPacket extends DataPacket {
- 
-     public static final byte NETWORK_ID = ProtocolInfo.AVAILABLE_COMMANDS_PACKET;
+
      public Map<String, CommandDataVersions> commands;
      public final Map<String, List<String>> softEnums = new HashMap<>();
 
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
 
      @Override
      public byte pid() {
-         return NETWORK_ID;
+         return ProtocolInfo.AVAILABLE_COMMANDS_PACKET;
      }
  
      @Override

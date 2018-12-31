@@ -27,7 +27,7 @@ public class Session {
     public final static int MAX_SPLIT_SIZE = 128;
     public final static int MAX_SPLIT_COUNT = 4;
 
-    public static int WINDOW_SIZE = 2048;
+    public final static int WINDOW_SIZE = 2048;
     
     private static final int MAX_MTU_SIZE = 1492;
     private static final int MIN_MTU_SIZE = 400;

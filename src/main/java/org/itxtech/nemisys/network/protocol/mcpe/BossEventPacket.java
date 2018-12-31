@@ -5,8 +5,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public class BossEventPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.BOSS_EVENT_PACKET;
-
     public static final int TYPE_SHOW = 0;
     public static final int TYPE_REGISTER_PLAYER = 1;
     public static final int TYPE_UPDATE = 1;
@@ -28,7 +26,7 @@ public class BossEventPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.BOSS_EVENT_PACKET;
     }
 
     @Override

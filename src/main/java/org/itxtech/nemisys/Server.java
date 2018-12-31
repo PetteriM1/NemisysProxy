@@ -29,6 +29,7 @@ import org.itxtech.nemisys.utils.*;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -45,7 +46,7 @@ public class Server {
 
     private static Server instance = null;
     public int uptime = 0;
-    private boolean isRunning = true;
+    private AtomicBoolean isRunning = new AtomicBoolean(true);
     private boolean hasStopped = false;
     private PluginManager pluginManager = null;
     private ServerScheduler scheduler = null;
@@ -155,7 +156,7 @@ public class Server {
             this.logger.setLogDebug(Nemisys.DEBUG > 1);
         }
 
-        this.logger.info(this.getLanguage().translateString("\u00A7a[Nemisys PetteriM1 Edition] Proxy started on {%0}:{%1}", new String[]{this.getIp().equals("") ? "*" : this.getIp(), String.valueOf(this.getPort())}));
+        this.logger.info(this.getLanguage().translateString("\u00A7b[\u00A7cNemisys \u00A7aPetteriM1 Edition\u00A7b] Proxy started on {%0}:{%1}", new String[]{this.getIp().equals("") ? "*" : this.getIp(), String.valueOf(this.getPort())}));
         this.serverID = UUID.randomUUID();
 
         this.network = new Network(this);
@@ -195,7 +196,7 @@ public class Server {
     }
 
     public static void broadcastPacket(Collection<Player> players, DataPacket packet) {
-        broadcastPacket(players.stream().toArray(Player[]::new), packet);
+        broadcastPacket(players.toArray(new Player[0]), packet);
     }
 
     public static void broadcastPacket(Player[] players, DataPacket packet) {
@@ -315,11 +316,9 @@ public class Server {
     }
 
     public void shutdown() {
-        if (this.isRunning) {
-            ServerKiller killer = new ServerKiller(90);
-            killer.start();
+        if (!isRunning.compareAndSet(true, false)) {
+            throw new IllegalStateException("Server has already shutdown");
         }
-        this.isRunning = false;
     }
 
     public void forceShutdown() {
@@ -328,13 +327,9 @@ public class Server {
         }
 
         try {
-
-            this.console.shutdown();
+            isRunning.compareAndSet(true, false);
 
             this.hasStopped = true;
-
-            this.shutdown();
-
 
             for (Client client : new ArrayList<>(this.clients.values())) {
                 for (Player player : new ArrayList<>(client.getPlayers().values())) {
@@ -371,7 +366,6 @@ public class Server {
                 }
             }
             this.synapseInterface.getInterface().shutdown();
-
         } catch (Exception e) {
             this.logger.logException(e);
             this.logger.emergency("Exception happened while shutting down, exit the process");
@@ -404,7 +398,7 @@ public class Server {
 
     public void tickProcessor() {
         this.nextTick = System.currentTimeMillis();
-        while (this.isRunning) {
+        while (this.isRunning.get()) {
             try {
                 this.tick();
             } catch (RuntimeException e) {
@@ -512,7 +506,7 @@ public class Server {
         double used = NemisysMath.round((double) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024, 2);
         double max = NemisysMath.round(((double) runtime.maxMemory()) / 1024 / 1024, 2);
         String usage = Math.round(used / max * 100) + "%";
-        String title = (char) 0x1b + "]0;Nemisys Proxy Server " +
+        String title = (char) 0x1b + "]0;Nemisys Proxy " +
                 this.getNemisysVersion() +
                 " | Players " + this.players.size() + "/" + this.getMaxPlayers() +
                 " | Servers " + this.clients.size() +
@@ -534,7 +528,7 @@ public class Server {
     }
 
     public boolean isRunning() {
-        return isRunning;
+        return isRunning.get();
     }
 
     public String getNemisysVersion() {
@@ -689,7 +683,7 @@ public class Server {
             }
         }
 
-        return matchedPlayer.toArray(new Player[matchedPlayer.size()]);
+        return matchedPlayer.toArray(new Player[0]);
     }
 
     public void removePlayer(Player player) {

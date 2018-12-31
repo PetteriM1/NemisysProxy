@@ -10,8 +10,6 @@ import java.util.List;
  */
 public class SetScorePacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.SET_SCORE_PACKET;
-
     public Action action;
     public List<ScoreInfo> infos;
 
@@ -54,7 +52,7 @@ public class SetScorePacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_SCORE_PACKET;
     }
 
     public enum Action {

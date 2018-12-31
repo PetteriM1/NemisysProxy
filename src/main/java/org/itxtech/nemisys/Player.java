@@ -216,8 +216,6 @@ public class Player implements CommandSender {
                     SetDisplayObjectivePacket sdop = (SetDisplayObjectivePacket) pk;
                     scoreboards.putIfAbsent(sdop.objective, new HashSet<>());
                     break;
-                case ProtocolInfo.REMOVE_OBJECTIVE_PACKET:
-                    break;
                 case ProtocolInfo.SET_SCORE_PACKET:
                     SetScorePacket ssp = (SetScorePacket) pk;
                     SetScorePacket.Action act = ssp.action;

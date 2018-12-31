@@ -7,14 +7,13 @@ import java.util.UUID;
  */
 public class RedirectPacket extends SynapseDataPacket {
 
-    public static final byte NETWORK_ID = SynapseInfo.REDIRECT_PACKET;
     public UUID uuid;
     public boolean direct;
     public byte[] mcpeBuffer;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return SynapseInfo.REDIRECT_PACKET;
     }
 
     @Override

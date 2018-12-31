@@ -5,13 +5,11 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public class SetDisplayObjectivePacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.SET_DISPLAY_OBJECTIVE_PACKET;
-
     public String objective;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_DISPLAY_OBJECTIVE_PACKET;
     }
 
     @Override

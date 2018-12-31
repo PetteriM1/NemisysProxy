@@ -5,11 +5,10 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  * Nukkit Project
  */
 public class InventoryContentPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.INVENTORY_CONTENT_PACKET;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.INVENTORY_CONTENT_PACKET;
     }
 
     public static final int SPECIAL_INVENTORY = 0;

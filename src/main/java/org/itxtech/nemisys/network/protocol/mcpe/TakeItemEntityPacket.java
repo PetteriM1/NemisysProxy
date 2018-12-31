@@ -2,8 +2,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 
 public class TakeItemEntityPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.TAKE_ITEM_ENTITY_PACKET;
-
     public long entityId;
     public long target;
 
@@ -22,6 +20,6 @@ public class TakeItemEntityPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.TAKE_ITEM_ENTITY_PACKET;
     }
 }

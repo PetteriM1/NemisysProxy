@@ -7,7 +7,6 @@ import java.util.UUID;
  */
 public class PlayerLoginPacket extends SynapseDataPacket {
 
-    public static final byte NETWORK_ID = SynapseInfo.PLAYER_LOGIN_PACKET;
     public UUID uuid;
     public String address;
     public int port;
@@ -16,7 +15,7 @@ public class PlayerLoginPacket extends SynapseDataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return SynapseInfo.PLAYER_LOGIN_PACKET;
     }
 
     @Override

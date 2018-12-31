@@ -6,6 +6,7 @@ import org.itxtech.nemisys.Server;
  * @author CreeperFace
  */
 public abstract class DefaultPermissions {
+
     public static final String ROOT = "nemisys";
 
     public static Permission registerPermission(Permission perm) {

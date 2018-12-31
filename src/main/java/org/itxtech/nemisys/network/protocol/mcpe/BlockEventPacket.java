@@ -5,11 +5,10 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  * Nukkit Project
  */
 public class BlockEventPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.BLOCK_EVENT_PACKET;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.BLOCK_EVENT_PACKET;
     }
 
     public int x;

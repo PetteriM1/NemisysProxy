@@ -2,8 +2,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 
 public class UpdateTradePacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.UPDATE_TRADE_PACKET;
-
     public byte windowId;
     public byte windowType = 15;
     public int unknownVarInt1;
@@ -16,7 +14,7 @@ public class UpdateTradePacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.UPDATE_TRADE_PACKET;
     }
 
     @Override

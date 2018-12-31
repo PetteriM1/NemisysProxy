@@ -9,7 +9,6 @@ import java.util.UUID;
  * Nemisys Project
  */
 public class BroadcastPacket extends SynapseDataPacket {
-    public static final byte NETWORK_ID = SynapseInfo.BROADCAST_PACKET;
 
     public List<UUID> entries;
     public boolean direct;
@@ -17,7 +16,7 @@ public class BroadcastPacket extends SynapseDataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return SynapseInfo.BROADCAST_PACKET;
     }
 
     @Override

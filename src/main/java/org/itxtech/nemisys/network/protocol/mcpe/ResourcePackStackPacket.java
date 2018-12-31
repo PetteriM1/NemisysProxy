@@ -2,8 +2,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 
 public class ResourcePackStackPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.RESOURCE_PACK_STACK_PACKET;
-
     public boolean mustAccept = false;
 
     @Override
@@ -18,6 +16,6 @@ public class ResourcePackStackPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.RESOURCE_PACK_STACK_PACKET;
     }
 }

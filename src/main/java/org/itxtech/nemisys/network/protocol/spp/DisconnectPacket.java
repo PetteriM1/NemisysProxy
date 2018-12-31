@@ -5,7 +5,6 @@ package org.itxtech.nemisys.network.protocol.spp;
  */
 public class DisconnectPacket extends SynapseDataPacket {
 
-    public static final byte NETWORK_ID = SynapseInfo.DISCONNECT_PACKET;
     public static final byte TYPE_WRONG_PROTOCOL = 0;
     public static final byte TYPE_GENERIC = 1;
     public byte type;
@@ -13,7 +12,7 @@ public class DisconnectPacket extends SynapseDataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return SynapseInfo.DISCONNECT_PACKET;
     }
 
     @Override

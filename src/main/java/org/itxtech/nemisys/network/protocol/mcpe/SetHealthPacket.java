@@ -2,13 +2,11 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 
 public class SetHealthPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.SET_HEALTH_PACKET;
-
     public int health;
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_HEALTH_PACKET;
     }
 
     @Override

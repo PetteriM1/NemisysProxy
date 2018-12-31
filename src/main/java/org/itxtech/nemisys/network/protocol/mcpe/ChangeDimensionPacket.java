@@ -6,8 +6,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public class ChangeDimensionPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.CHANGE_DIMENSION_PACKET;
-
     public int dimension;
     public float x;
     public float y;
@@ -28,6 +26,6 @@ public class ChangeDimensionPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.CHANGE_DIMENSION_PACKET;
     }
 }

@@ -5,8 +5,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public class PlayerInputPacket extends DataPacket {
 
-    public static final byte NETWORK_ID = ProtocolInfo.PLAYER_INPUT_PACKET;
-
     public float motionX;
     public float motionY;
 
@@ -27,7 +25,6 @@ public class PlayerInputPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.PLAYER_INPUT_PACKET;
     }
-
 }

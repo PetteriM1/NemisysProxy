@@ -3,7 +3,6 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 import org.itxtech.nemisys.math.Vector3f;
 
 public class LevelSoundEventPacket extends DataPacket {
-    public static final byte NETWORK_ID = ProtocolInfo.LEVEL_SOUND_EVENT_PACKET;
 
     public static final int SOUND_ITEM_USE_ON = 0;
     public static final int SOUND_HIT = 1;
@@ -202,6 +201,6 @@ public class LevelSoundEventPacket extends DataPacket {
 
     @Override
     public byte pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.LEVEL_SOUND_EVENT_PACKET;
     }
 }
