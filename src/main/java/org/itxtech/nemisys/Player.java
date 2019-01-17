@@ -476,9 +476,7 @@ public class Player implements CommandSender {
         this.server.getLogger().info(this.getServer().getLanguage().translateString("nemisys.player.logIn", new String[]{
                 TextFormat.AQUA + this.name + TextFormat.WHITE,
                 this.ip,
-                String.valueOf(this.port),
-                String.valueOf(this.protocol),
-                String.valueOf(this.getRandomClientId())
+                String.valueOf(this.port)
         }));
 
         Map<String, Client> c = this.server.getMainClients();
