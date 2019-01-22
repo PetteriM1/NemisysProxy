@@ -29,8 +29,11 @@ public class SynapsePacketDecoder extends ReplayingDecoder<SynapsePacketDecoder.
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         switch (state()) {
             case HEADER_MAGIC:
-                checkMagic(in.readShort());
-                checkpoint(State.HEADER_ID);
+                if (checkMagic(in.readShort())) {
+                    checkpoint(State.HEADER_ID);
+                } else {
+                    return;
+                }
             case HEADER_ID:
                 header.pid(in.readByte());
                 checkpoint(State.HEADER_BODY_LENGTH);
@@ -56,11 +59,12 @@ public class SynapsePacketDecoder extends ReplayingDecoder<SynapsePacketDecoder.
         return bodyLength;
     }
 
-    private void checkMagic(short magic) throws SynapseContextException {
+    private boolean checkMagic(short magic) {
         if (SynapseProtocolHeader.MAGIC != magic) {
-            MainLogger.getLogger().error("Magic is not match");
-            throw new SynapseContextException("magic value is not equal " + SynapseProtocolHeader.MAGIC);
+            MainLogger.getLogger().debug("Magic value does not match");
+            return false;
         }
+        return true;
     }
 
     enum State {
