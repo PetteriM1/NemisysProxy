@@ -28,7 +28,6 @@ public class AddEntityPacket extends DataPacket {
     public void decode() {
         entityUniqueId = getEntityUniqueId();
         entityRuntimeId = getEntityRuntimeId();
-        type = (int) getUnsignedVarInt();
     }
 
     @Override

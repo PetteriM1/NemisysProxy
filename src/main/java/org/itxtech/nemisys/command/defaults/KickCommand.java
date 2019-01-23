@@ -24,7 +24,7 @@ public class KickCommand extends VanillaCommand {
 
         String name = args[0];
 
-        String reason = "Kicked by admin";
+        String reason = "Kicked!";
         for (int i = 1; i < args.length; i++) {
             reason += args[i] + " ";
         }

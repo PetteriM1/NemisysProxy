@@ -17,6 +17,7 @@ import java.util.Set;
  * author: MagicDroidX
  * Nukkit Project
  */
+@SuppressWarnings("unchecked")
 public class Network {
 
     private Class<? extends DataPacket>[] packetPool = new Class[256];

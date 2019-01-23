@@ -222,7 +222,6 @@ public enum TextFormat {
         String result = "";
         int length = input.length();
 
-        // Search backwards from the end as it is faster
         for (int index = length - 1; index > -1; index--) {
             char section = input.charAt(index);
             if (section == ESCAPE && index < length - 1) {
@@ -232,7 +231,6 @@ public enum TextFormat {
                 if (color != null) {
                     result = color.toString() + result;
 
-                    // Once we find a color or reset we can stop searching
                     if (color.isColor() || color.equals(RESET)) {
                         break;
                     }
