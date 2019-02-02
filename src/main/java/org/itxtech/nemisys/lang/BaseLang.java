@@ -15,6 +15,7 @@ import java.util.Map;
  * Nukkit Project
  */
 public class BaseLang {
+
     public static final String FALLBACK_LANGUAGE = "eng";
 
     protected String langName;

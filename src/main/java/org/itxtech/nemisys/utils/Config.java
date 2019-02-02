@@ -225,7 +225,6 @@ public class Config {
             }
             if (async) {
                 Server.getInstance().getScheduler().scheduleAsyncTask(new FileWriteTask(this.file, content));
-
             } else {
                 try {
                     Utils.writeFile(this.file, content);
@@ -247,7 +246,6 @@ public class Config {
         return this.get(key, null);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T get(String key, T defaultValue) {
         return this.correct ? this.config.get(key, defaultValue) : defaultValue;
     }

@@ -12,6 +12,7 @@ import java.util.Arrays;
  * Nukkit Project
  */
 public class Skin {
+
     private static final int PIXEL_SIZE = 4;
 
     public static final int SINGLE_SKIN_SIZE = 64 * 32 * PIXEL_SIZE;

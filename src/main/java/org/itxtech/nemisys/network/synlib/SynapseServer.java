@@ -6,7 +6,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.itxtech.nemisys.InterruptibleThread;
-import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.network.SynapseInterface;
 import org.itxtech.nemisys.utils.ThreadedLogger;
@@ -27,8 +26,6 @@ public class SynapseServer extends Thread implements InterruptibleThread {
     private String interfaz;
     private int port;
     private boolean shutdown = false;
-    private String mainPath;
-    private SynapseInterface server;
     private SessionManager sessionManager;
 
     public SynapseServer(ThreadedLogger logger, SynapseInterface server, int port) {
@@ -37,7 +34,6 @@ public class SynapseServer extends Thread implements InterruptibleThread {
 
     public SynapseServer(ThreadedLogger logger, SynapseInterface server, int port, String interfaz) {
         this.logger = logger;
-        this.server = server;
         this.interfaz = interfaz;
         this.port = port;
         if (port < 1 || port > 65536) {
@@ -49,7 +45,6 @@ public class SynapseServer extends Thread implements InterruptibleThread {
         this.clientOpenQueue = new ConcurrentLinkedQueue<>();
         this.internalClientCloseQueue = new ConcurrentLinkedQueue<>();
         this.externalClientCloseQueue = new ConcurrentLinkedQueue<>();
-        this.mainPath = Nemisys.PATH;
         this.start();
     }
 

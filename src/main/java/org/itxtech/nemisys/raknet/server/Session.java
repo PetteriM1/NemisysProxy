@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Nukkit Project
  */
 public class Session {
+
     public final static int STATE_UNCONNECTED = 0;
     public final static int STATE_CONNECTING_1 = 1;
     public final static int STATE_CONNECTING_2 = 2;
@@ -47,7 +48,6 @@ public class Session {
     private int lastSeqNumber = -1;
 
     private long lastUpdate;
-    private long startTime;
 
     private boolean isTemporal = true;
 
@@ -81,7 +81,6 @@ public class Session {
         this.port = port;
         this.sendQueue = new DATA_PACKET_4();
         this.lastUpdate = System.currentTimeMillis();
-        this.startTime = System.currentTimeMillis();
         this.isActive = false;
         this.windowStart = -1;
         this.windowEnd = WINDOW_SIZE;
@@ -298,6 +297,7 @@ public class Session {
         }
     }
 
+    @SuppressWarnings("serial")
     private void handleSplit(EncapsulatedPacket packet) throws Exception {
         if (packet.splitCount >= MAX_SPLIT_SIZE || packet.splitIndex >= MAX_SPLIT_SIZE || packet.splitIndex < 0) {
             return;

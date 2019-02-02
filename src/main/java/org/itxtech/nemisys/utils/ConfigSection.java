@@ -5,6 +5,7 @@ import java.util.*;
 /**
  * Created by fromgate on 26.04.2016.
  */
+@SuppressWarnings("serial")
 public class ConfigSection extends LinkedHashMap<String, Object> {
 
     /**
@@ -81,6 +82,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public <T> T get(String key, T defaltValue) {
         if (key == null || key.isEmpty()) return defaltValue;
         if (super.containsKey(key)) return (T) super.get(key);
@@ -633,6 +635,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
      * @param key - key (inside) current section
      * @return
      */
+    @SuppressWarnings("unchecked")
     public List<Map> getMapList(String key) {
         List<Map> list = getList(key);
         List<Map> result = new ArrayList<>();

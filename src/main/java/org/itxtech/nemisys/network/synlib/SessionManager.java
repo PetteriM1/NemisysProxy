@@ -14,6 +14,7 @@ import java.util.Map;
  * Nemisys Project
  */
 public class SessionManager {
+
     private SynapseServer server;
     private Map<String, Channel> sessions = new HashMap<>();
     private long nextTick;

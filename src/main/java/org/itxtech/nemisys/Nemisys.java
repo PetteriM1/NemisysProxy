@@ -7,10 +7,6 @@ import org.itxtech.nemisys.utils.ServerKiller;
 
 public class Nemisys {
 
-    public final static String VERSION = "";
-    public final static String API_VERSION = "";
-    public final static String CODENAME = "";
-
     public final static String MINECRAFT_VERSION = ProtocolInfo.MINECRAFT_VERSION;
     public final static String MINECRAFT_VERSION_NETWORK = ProtocolInfo.MINECRAFT_VERSION_NETWORK;
 

@@ -20,6 +20,5 @@ public class BatchPacket extends DataPacket {
 
     @Override
     public void encode() {
-
     }
 }

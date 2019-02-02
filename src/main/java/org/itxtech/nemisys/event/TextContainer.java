@@ -7,6 +7,7 @@ import org.itxtech.nemisys.Server;
  * Nukkit Project
  */
 public class TextContainer implements Cloneable {
+
     protected String text;
 
     public TextContainer(String text) {

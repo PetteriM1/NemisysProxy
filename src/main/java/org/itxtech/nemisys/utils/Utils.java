@@ -9,6 +9,7 @@ import java.util.UUID;
  * Nukkit Project
  */
 public class Utils {
+
     public static byte[] writeClientHash(String hash) {
         return Binary.appendBytes(
                 new byte[]{(byte) (hash.length() & 0xff)},

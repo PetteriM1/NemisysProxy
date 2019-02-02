@@ -32,8 +32,6 @@ public abstract class Command {
     private String[] activeAliases = new String[0];
     private CommandMap commandMap = null;
 
-    protected Map<String, CommandParameter[]> commandParameters = new ConcurrentHashMap<>();
-
     @Getter
     @Setter
     private boolean global;
@@ -58,7 +56,6 @@ public abstract class Command {
         this.usageMessage = usageMessage == null ? "/" + name : usageMessage;
         this.aliases = aliases;
         this.activeAliases = aliases;
-        this.commandParameters.put("default", new CommandParameter[]{new CommandParameter("args", CommandParamType.RAWTEXT, true)});
     }
 
     public abstract boolean execute(CommandSender sender, String commandLabel, String[] args);
@@ -167,11 +164,6 @@ public abstract class Command {
         }
 
         customData.description = player.getServer().getLanguage().translateString(this.getDescription());
-        this.commandParameters.forEach((key, par) -> {
-            CommandOverload overload = new CommandOverload();
-            overload.input.parameters = par;
-            customData.overloads.put(key, overload);
-        });
         if (customData.overloads.size() == 0) customData.overloads.put("default", new CommandOverload());
 
         CommandDataVersions versions = new CommandDataVersions();

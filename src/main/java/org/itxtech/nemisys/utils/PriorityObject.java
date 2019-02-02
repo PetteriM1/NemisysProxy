@@ -5,6 +5,7 @@ package org.itxtech.nemisys.utils;
  * Nukkit Project
  */
 public class PriorityObject {
+
     public int priority;
     public Object data;
 

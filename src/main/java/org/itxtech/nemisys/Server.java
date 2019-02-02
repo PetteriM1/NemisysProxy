@@ -454,7 +454,9 @@ public class Server {
         }
 
         if ((this.tickCounter & 0b1111) == 0) {
-            this.titleTick();
+            this.getScheduler().scheduleTask(() -> {
+                this.titleTick();
+            }, true);
             this.maxTick = 20;
             this.maxUse = 0;
 
@@ -507,8 +509,7 @@ public class Server {
         double used = NemisysMath.round((double) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024, 2);
         double max = NemisysMath.round(((double) runtime.maxMemory()) / 1024 / 1024, 2);
         String usage = Math.round(used / max * 100) + "%";
-        String title = (char) 0x1b + "]0;Nemisys Proxy " +
-                this.getNemisysVersion() +
+        String title = (char) 0x1b + "]0;Nemisys Proxy" +
                 " | Players " + this.players.size() + "/" + this.getMaxPlayers() +
                 " | Servers " + this.clients.size() +
                 " | Memory " + usage +
@@ -532,20 +533,8 @@ public class Server {
         return isRunning.get();
     }
 
-    public String getNemisysVersion() {
-        return Nemisys.VERSION;
-    }
-
-    public String getCodename() {
-        return Nemisys.CODENAME;
-    }
-
     public String getVersion() {
         return Nemisys.MINECRAFT_VERSION;
-    }
-
-    public String getApiVersion() {
-        return Nemisys.API_VERSION;
     }
 
     public String getFilePath() {

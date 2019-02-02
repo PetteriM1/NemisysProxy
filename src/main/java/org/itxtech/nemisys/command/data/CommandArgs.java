@@ -7,5 +7,6 @@ import java.util.HashMap;
 /**
  * @author CreeperFace
  */
+@SuppressWarnings("serial")
 public class CommandArgs extends HashMap<String, JsonElement> {
 }

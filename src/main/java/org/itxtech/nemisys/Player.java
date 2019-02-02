@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
  * Nemisys Project
  */
 public class Player implements CommandSender {
+
     public boolean closed;
     @Getter
     protected UUID uuid;
@@ -50,7 +51,6 @@ public class Player implements CommandSender {
     @Getter
     private int protocol = -1;
     @Getter
-
     private SourceInterface interfaz;
     @Getter
     private Client client;
@@ -146,12 +146,6 @@ public class Player implements CommandSender {
                     this.getServer().getScheduler().scheduleAsyncTask(this.loginTask);
 
                     return;
-                case ProtocolInfo.COMMAND_REQUEST_PACKET:
-                    CommandRequestPacket commandRequestPacket = (CommandRequestPacket) packet;
-
-                    if (this.server.dispatchCommand(this, commandRequestPacket.command.substring(1), false))
-                        return;
-                    break;
                 case ProtocolInfo.TEXT_PACKET:
                     TextPacket textPacket = (TextPacket) packet;
 
@@ -206,12 +200,6 @@ public class Player implements CommandSender {
                         playerList.removeAll(Arrays.stream(playerListPacket.entries).map((e) -> e.uuid).collect(Collectors.toList()));
                     }
                     break;
-                case ProtocolInfo.AVAILABLE_COMMANDS_PACKET:
-                    AvailableCommandsPacket commandsPacket = (AvailableCommandsPacket) pk;
-
-                    this.clientCommands = new HashMap<>(commandsPacket.commands);
-                    sendCommandData();
-                    return;
                 case ProtocolInfo.SET_DISPLAY_OBJECTIVE_PACKET:
                     SetDisplayObjectivePacket sdop = (SetDisplayObjectivePacket) pk;
                     scoreboards.putIfAbsent(sdop.objective, new HashSet<>());
@@ -599,36 +587,11 @@ public class Player implements CommandSender {
         if (this.hasPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE)) {
             this.server.getPluginManager().subscribeToPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this);
         }
-
-        this.sendCommandData();
     }
 
     @Override
     public Map<String, PermissionAttachmentInfo> getEffectivePermissions() {
         return this.perm.getEffectivePermissions();
-    }
-
-    public void sendCommandData() {
-        AvailableCommandsPacket pk = new AvailableCommandsPacket();
-        Map<String, CommandDataVersions> data = new HashMap<>(this.clientCommands);
-
-        for (Command command : getServer().getCommandMap().getCommands().values()) {
-            if (!command.isGlobal() || !command.testPermissionSilent(this)) {
-                continue;
-            }
-
-            CommandDataVersions data0 = command.generateCustomCommandData(this);
-            if (data0 != null) {
-                data.put(command.getName(), data0);
-            }
-        }
-
-        pk.commands = data;
-
-        pk.encode();
-        pk.isEncoded = true;
-
-        this.sendDataPacket(pk);
     }
 
     public int rawHashCode() {

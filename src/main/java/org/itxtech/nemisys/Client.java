@@ -71,7 +71,6 @@ public class Client {
         this.ip = ip;
         this.port = port;
         this.lastUpdate = System.currentTimeMillis();
-
         this.server.getPluginManager().callEvent(new ClientConnectEvent(this));
     }
 

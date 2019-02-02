@@ -6,8 +6,7 @@ import java.io.OutputStream;
 
 public class VarInt {
 
-    private VarInt() {
-    }
+    private VarInt() {}
 
     /**
      * @param v Signed int

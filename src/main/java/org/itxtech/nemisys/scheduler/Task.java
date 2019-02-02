@@ -20,6 +20,7 @@ import org.itxtech.nemisys.Server;
  * @since Nukkit 1.0 | Nukkit API 1.0.0
  */
 public abstract class Task implements Runnable {
+
     private TaskHandler taskHandler = null;
 
     public final TaskHandler getHandler() {

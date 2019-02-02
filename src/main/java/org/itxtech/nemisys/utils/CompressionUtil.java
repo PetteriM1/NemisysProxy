@@ -13,6 +13,7 @@ import java.util.zip.Deflater;
  */
 @UtilityClass
 public class CompressionUtil {
+
     private static final ThreadLocal<BungeeZlib> zlibInflaterLocal = ThreadLocal.withInitial(() -> {
         BungeeZlib zlib = NativeCodeFactory.zlib.newInstance();
         zlib.init(false, Deflater.DEFAULT_COMPRESSION);

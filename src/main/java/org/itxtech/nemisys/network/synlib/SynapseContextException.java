@@ -7,6 +7,7 @@ package org.itxtech.nemisys.network.synlib;
  * Nemisys Project
  * ===============
  */
+@SuppressWarnings("serial")
 public class SynapseContextException extends Exception {
 
     public SynapseContextException() {

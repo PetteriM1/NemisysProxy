@@ -4,7 +4,8 @@ package org.itxtech.nemisys.utils;
  * author: MagicDroidX
  * Nukkit Project
  */
- public enum LogLevel implements Comparable<LogLevel> {
+public enum LogLevel implements Comparable<LogLevel> {
+
      NONE {
          @Override
          public void log(MainLogger logger, String message) {

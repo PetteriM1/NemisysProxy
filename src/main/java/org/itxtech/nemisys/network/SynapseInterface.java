@@ -16,15 +16,11 @@ public class SynapseInterface {
 
     private static Map<Byte, SynapseDataPacket> packetPool = new HashMap<>();
     private Server server;
-    private String ip;
-    private int port;
     private Map<String, Client> clients = new HashMap<>();
     private SynapseServer interfaz;
 
     public SynapseInterface(Server server, String ip, int port) {
         this.server = server;
-        this.ip = ip;
-        this.port = port;
         this.registerPackets();
         this.interfaz = new SynapseServer(server.getLogger(), this, port, ip);
     }

@@ -31,7 +31,6 @@ public class SynapseEntry {
     private SynapseInterface synapseInterface;
     private boolean verified = false;
     private long lastUpdate;
-    private long lastRecvInfo;
     private Map<UUID, SynapsePlayer> players = new HashMap<>();
     private SynLibInterface synLibInterface;
     private ClientData clientData;
@@ -54,19 +53,7 @@ public class SynapseEntry {
         this.synapseInterface = new SynapseInterface(this, this.serverIp, this.port);
         this.synLibInterface = new SynLibInterface(this.synapseInterface);
         this.lastUpdate = System.currentTimeMillis();
-        this.lastRecvInfo = System.currentTimeMillis();
         this.getSynapse().getServer().getScheduler().scheduleRepeatingTask(new Ticker(), 5);
-    }
-
-    public static String getRandomString(int length) {
-        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
-        }
-        return sb.toString();
     }
 
     public Synapse getSynapse() {
@@ -186,7 +173,6 @@ public class SynapseEntry {
         }
 
         long finalTime = System.currentTimeMillis();
-        long usedTime = finalTime - time;
         if (((finalTime - this.lastUpdate) >= 30000) && this.synapseInterface.isConnected()) {
             this.synapseInterface.reconnect();
         }
@@ -229,7 +215,6 @@ public class SynapseEntry {
                         break;
                     case InformationPacket.TYPE_CLIENT_DATA:
                         this.clientData = new Gson().fromJson(informationPacket.message, ClientData.class);
-                        this.lastRecvInfo = System.currentTimeMillis();
                         break;
                 }
                 break;
