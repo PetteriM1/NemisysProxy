@@ -1,14 +1,10 @@
 package org.itxtech.nemisys;
 
 import org.itxtech.nemisys.command.CommandReader;
-import org.itxtech.nemisys.network.protocol.mcpe.ProtocolInfo;
 import org.itxtech.nemisys.utils.MainLogger;
 import org.itxtech.nemisys.utils.ServerKiller;
 
 public class Nemisys {
-
-    public final static String MINECRAFT_VERSION = ProtocolInfo.MINECRAFT_VERSION;
-    public final static String MINECRAFT_VERSION_NETWORK = ProtocolInfo.MINECRAFT_VERSION_NETWORK;
 
     public final static String PATH = System.getProperty("user.dir") + "/";
     public final static String DATA_PATH = System.getProperty("user.dir") + "/";

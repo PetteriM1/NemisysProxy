@@ -16,6 +16,7 @@ import org.itxtech.nemisys.network.SourceInterface;
 import org.itxtech.nemisys.network.SynapseInterface;
 import org.itxtech.nemisys.network.protocol.mcpe.BatchPacket;
 import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
+import org.itxtech.nemisys.network.protocol.mcpe.ProtocolInfo;
 import org.itxtech.nemisys.network.query.QueryHandler;
 import org.itxtech.nemisys.network.rcon.RCON;
 import org.itxtech.nemisys.permission.DefaultPermissions;
@@ -534,7 +535,7 @@ public class Server {
     }
 
     public String getVersion() {
-        return Nemisys.MINECRAFT_VERSION;
+        return ProtocolInfo.MINECRAFT_VERSION_NETWORK;
     }
 
     public String getFilePath() {
