@@ -6,12 +6,12 @@ import org.itxtech.nemisys.utils.TextFormat;
 
 /**
  * Created on 2015/11/11 by xtypr.
- * Package org.itxtech.nemisys.command.defaults in project Nukkit .
+ * Package org.itxtech.nemisys.command.defaults in project Nukkit.
  */
 public class GarbageCollectorCommand extends VanillaCommand {
 
     public GarbageCollectorCommand(String name) {
-        super(name, "%nemisys.command.gc.description", "%nemisys.command.gc.usage");
+        super(name, "Fire garbage collection tasks", "/gc");
     }
 
     @Override

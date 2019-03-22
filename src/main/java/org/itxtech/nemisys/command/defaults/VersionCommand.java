@@ -10,14 +10,14 @@ import java.util.List;
 
 /**
  * Created on 2015/11/12 by xtypr.
- * Package org.itxtech.nemisys.command.defaults in project Nukkit .
+ * Package org.itxtech.nemisys.command.defaults in project Nukkit.
  */
 public class VersionCommand extends VanillaCommand {
 
     public VersionCommand(String name) {
         super(name,
-                "%nemisys.command.version.description",
-                "%nemisys.command.version.usage",
+                "Get the version of this proxy or plugins",
+                "/version [plugin name]",
                 new String[]{"ver", "about"}
         );
     }

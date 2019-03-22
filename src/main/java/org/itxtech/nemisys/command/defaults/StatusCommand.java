@@ -8,12 +8,12 @@ import org.itxtech.nemisys.utils.TextFormat;
 
 /**
  * Created on 2015/11/11 by xtypr.
- * Package org.itxtech.nemisys.command.defaults in project Nukkit .
+ * Package org.itxtech.nemisys.command.defaults in project Nukkit.
  */
 public class StatusCommand extends VanillaCommand {
 
     public StatusCommand(String name) {
-        super(name, "%nemisys.command.status.description", "%nemisys.command.status.usage");
+        super(name, "Read back the server's performance", "/status");
     }
 
     @Override

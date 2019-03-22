@@ -46,11 +46,10 @@ public class Server {
     public static final String BROADCAST_CHANNEL_USERS = "nukkit.broadcast.user";
 
     private static Server instance = null;
-    public int uptime = 0;
     private AtomicBoolean isRunning = new AtomicBoolean(true);
     private boolean hasStopped = false;
-    private PluginManager pluginManager = null;
-    private ServerScheduler scheduler = null;
+    private PluginManager pluginManager;
+    private ServerScheduler scheduler;
     private int tickCounter;
     private long nextTick;
     private float[] tickAverage = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
@@ -116,7 +115,6 @@ public class Server {
                 put("synapse-ip", "0.0.0.0");
                 put("synapse-port", 10305);
                 put("password", "1234567890123456");
-                put("lang", "eng");
                 put("async-workers", "auto");
                 put("max-players", 50);
                 put("plus-one-max-count", false);
@@ -132,7 +130,7 @@ public class Server {
 
         if (!this.getPropertyBoolean("ansi", true)) Nemisys.ANSI = false;
 
-        this.baseLang = new BaseLang((String) this.getConfig("lang", BaseLang.FALLBACK_LANGUAGE));
+        this.baseLang = new BaseLang("eng");
 
         Object poolSize = this.getConfig("async-workers", "auto");
         if (!(poolSize instanceof Integer)) {
@@ -154,9 +152,7 @@ public class Server {
         this.maxPlayers = this.getPropertyInt("max-players", 20);
 
         Nemisys.DEBUG = this.getPropertyInt("debug", 1);
-        if (this.logger instanceof MainLogger) {
-            this.logger.setLogDebug(Nemisys.DEBUG > 1);
-        }
+        this.logger.setLogDebug(Nemisys.DEBUG > 1);
 
         this.logger.info(this.getLanguage().translateString("\u00A7b[\u00A7cNemisys \u00A7aPetteriM1 Edition\u00A7b] Proxy started on {%0}:{%1}", new String[]{this.getIp().equals("") ? "*" : this.getIp(), String.valueOf(this.getPort())}));
         this.serverID = UUID.randomUUID();

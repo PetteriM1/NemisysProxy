@@ -6,12 +6,12 @@ import org.itxtech.nemisys.event.TranslationContainer;
 
 /**
  * Created on 2015/11/11 by xtypr.
- * Package org.itxtech.nemisys.command.defaults in project Nukkit .
+ * Package org.itxtech.nemisys.command.defaults in project Nukkit.
  */
 public class ListCommand extends VanillaCommand {
 
     public ListCommand(String name) {
-        super(name, "%nemisys.command.list.description", "%commands.players.usage");
+        super(name, "Get a list of all online players", "/list");
     }
 
     @Override

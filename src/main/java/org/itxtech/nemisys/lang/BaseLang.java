@@ -16,8 +16,6 @@ import java.util.Map;
  */
 public class BaseLang {
 
-    public static final String FALLBACK_LANGUAGE = "eng";
-
     protected String langName;
 
     protected Map<String, String> lang = new HashMap<>();
@@ -29,26 +27,23 @@ public class BaseLang {
     }
 
     public BaseLang(String lang, String path) {
-        this(lang, path, FALLBACK_LANGUAGE);
+        this(lang, path, "eng");
     }
 
     public BaseLang(String lang, String path, String fallback) {
         this.langName = lang.toLowerCase();
 
         if (path == null) {
-            path = "lang/";
-            this.lang = this.loadLang(this.getClass().getClassLoader().getResourceAsStream(path + this.langName + "/lang.ini"));
-            this.fallbackLang = this.loadLang(this.getClass().getClassLoader().getResourceAsStream(path + fallback + "/lang.ini"));
+            this.lang = this.loadLang(this.getClass().getClassLoader().getResourceAsStream("lang.ini"));
+            this.fallbackLang = this.loadLang(this.getClass().getClassLoader().getResourceAsStream("lang.ini"));
         } else {
             this.lang = this.loadLang(path + this.langName + "/lang.ini");
             this.fallbackLang = this.loadLang(path + fallback + "/lang.ini");
         }
-
-
     }
 
     public String getName() {
-        return this.get("language.name");
+        return "English";
     }
 
     public String getLang() {

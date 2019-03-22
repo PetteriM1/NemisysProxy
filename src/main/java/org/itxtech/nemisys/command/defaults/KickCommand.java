@@ -7,12 +7,12 @@ import org.itxtech.nemisys.utils.TextFormat;
 
 /**
  * Created on 2015/11/11 by xtypr.
- * Package org.itxtech.nemisys.command.defaults in project Nukkit .
+ * Package org.itxtech.nemisys.command.defaults in project Nukkit.
  */
 public class KickCommand extends VanillaCommand {
 
     public KickCommand(String name) {
-        super(name, "%nemisys.command.kick.description", "%commands.kick.usage");
+        super(name, "Remove the specified player from the network", "/kick <player> [reason ...]");
     }
 
     @Override

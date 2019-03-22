@@ -16,7 +16,7 @@ import java.util.TreeMap;
 public class HelpCommand extends VanillaCommand {
 
     public HelpCommand(String name) {
-        super(name, "%nemisys.command.help.description", "%commands.help.usage", new String[]{"?"});
+        super(name, "Get a list of all available commands and their usage", "/help [page|command name]", new String[]{"?"});
     }
 
     @Override

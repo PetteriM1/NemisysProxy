@@ -9,6 +9,7 @@ import org.itxtech.nemisys.event.HandlerList;
  * @author Tee7even
  */
 public class RemoteServerCommandEvent extends ServerCommandEvent {
+
     private static final HandlerList handlers = new HandlerList();
 
     public RemoteServerCommandEvent(CommandSender sender, String command) {

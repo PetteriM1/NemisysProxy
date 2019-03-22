@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Nukkit Project
  */
 public class SimpleCommandMap implements CommandMap {
+
     protected Map<String, Command> knownCommands = new ConcurrentHashMap<>();
 
     private Server server;
@@ -26,14 +27,14 @@ public class SimpleCommandMap implements CommandMap {
     }
 
     private void setDefaultCommands() {
-        this.register("nukkit", new VersionCommand("version"));
-        this.register("nukkit", new PluginsCommand("plugins"));
-        this.register("nukkit", new HelpCommand("help"));
-        this.register("nukkit", new StopCommand("stop"));
-        this.register("nukkit", new ListCommand("list"));
-        this.register("nukkit", new KickCommand("kick"));
-        this.register("nukkit", new StatusCommand("status"));
-        this.register("nukkit", new GarbageCollectorCommand("gc"));
+        this.register("nemisys", new VersionCommand("version"));
+        this.register("nemisys", new PluginsCommand("plugins"));
+        this.register("nemisys", new HelpCommand("help"));
+        this.register("nemisys", new StopCommand("stop"));
+        this.register("nemisys", new ListCommand("list"));
+        this.register("nemisys", new KickCommand("kick"));
+        this.register("nemisys", new StatusCommand("status"));
+        this.register("nemisys", new GarbageCollectorCommand("gc"));
     }
 
     @Override
