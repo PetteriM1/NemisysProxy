@@ -82,6 +82,7 @@ public class Server {
     private Map<String, Client> mainClients = new ConcurrentHashMap<>();
     private Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
     private Synapse synapse;
+    public int uptime = 0;
 
     @Getter
     @Setter
