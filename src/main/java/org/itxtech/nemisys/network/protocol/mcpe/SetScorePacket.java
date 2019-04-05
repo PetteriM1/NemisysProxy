@@ -35,16 +35,18 @@ public class SetScorePacket extends DataPacket {
         List<ScoreInfo> infos = new ArrayList<>(length);
 
         for (int i = 0; i < length; i++) {
-            long id = getVarLong();
-            String obj = getString();
-            int score = getLInt();
+            try {
+                long id = getVarLong();
+                String obj = getString();
+                int score = getLInt();
 
-            getByte();
+                getByte();
 
-            String name = getString();
+                String name = getString();
 
-            ScoreInfo info = new ScoreInfo(id, obj, score, name);
-            infos.add(info);
+                ScoreInfo info = new ScoreInfo(id, obj, score, name);
+                infos.add(info);
+            } catch (Exception e) {}
         }
 
         this.infos = infos;

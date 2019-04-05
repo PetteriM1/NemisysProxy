@@ -19,10 +19,7 @@ public class QueryRegenerateEvent extends ServerEvent {
     private static final HandlerList handlers = new HandlerList();
     private int timeout;
     private String serverName;
-    private boolean listPlugins;
-    private Plugin[] plugins;
     private Player[] players;
-    private String gameType;
     private String version;
     private String server_engine;
     private String map;
@@ -31,7 +28,6 @@ public class QueryRegenerateEvent extends ServerEvent {
     private String whitelist;
     private int port;
     private String ip;
-    private Map<String, String> extraData = new HashMap<>();
 
     public QueryRegenerateEvent(Server server) {
         this(server, 5);
@@ -40,15 +36,7 @@ public class QueryRegenerateEvent extends ServerEvent {
     public QueryRegenerateEvent(Server server, int timeout) {
         this.timeout = timeout;
         this.serverName = server.getMotd();
-        this.listPlugins = (boolean) server.getConfig("settings.query-plugins", true);
-        this.plugins = server.getPluginManager().getPlugins().values().toArray(new Plugin[server.getPluginManager().getPlugins().values().size()]);
-        List<Player> players = new ArrayList<>();
-        for (Player player : server.getOnlinePlayers().values()) {
-            players.add(player);
-        }
-        this.players = players.toArray(new Player[players.size()]);
-
-        this.gameType = "SMP";
+        this.players = new ArrayList<>(server.getOnlinePlayers().values()).toArray(new Player[0]);
         this.version = server.getVersion();
         this.server_engine = "Nemisys PetteriM1 Edition";
         this.map = " ";
@@ -84,20 +72,16 @@ public class QueryRegenerateEvent extends ServerEvent {
     }
 
     public boolean canListPlugins() {
-        return this.listPlugins;
+        return false;
     }
 
-    public void setListPlugins(boolean listPlugins) {
-        this.listPlugins = listPlugins;
-    }
+    public void setListPlugins(boolean listPlugins){}
 
     public Plugin[] getPlugins() {
-        return plugins;
+        return new Plugin[0];
     }
 
-    public void setPlugins(Plugin[] plugins) {
-        this.plugins = plugins;
-    }
+    public void setPlugins(Plugin[] plugins) {}
 
     public Player[] getPlayerList() {
         return players;
@@ -132,12 +116,10 @@ public class QueryRegenerateEvent extends ServerEvent {
     }
 
     public Map<String, String> getExtraData() {
-        return extraData;
+        return new HashMap<String, String>();
     }
 
-    public void setExtraData(Map<String, String> extraData) {
-        this.extraData = extraData;
-    }
+    public void setExtraData(Map<String, String> extraData) {}
 
     public byte[] getLongQuery() {
         ByteBuffer query = ByteBuffer.allocate(65536);
@@ -150,7 +132,7 @@ public class QueryRegenerateEvent extends ServerEvent {
 
         LinkedHashMap<String, String> KVdata = new LinkedHashMap<>();
         KVdata.put("hostname", this.serverName);
-        KVdata.put("gametype", this.gameType);
+        KVdata.put("gametype", "SMP");
         KVdata.put("game_id", "MINECRAFTPE");
         KVdata.put("version", this.version);
         KVdata.put("server_engine", this.server_engine);
@@ -184,7 +166,7 @@ public class QueryRegenerateEvent extends ServerEvent {
         ByteBuffer query = ByteBuffer.allocate(65536);
         query.put(this.serverName.getBytes(StandardCharsets.UTF_8));
         query.put((byte) 0x00);
-        query.put(this.gameType.getBytes(StandardCharsets.UTF_8));
+        query.put("SMP".getBytes(StandardCharsets.UTF_8));
         query.put((byte) 0x00);
         query.put(this.map.getBytes(StandardCharsets.UTF_8));
         query.put((byte) 0x00);

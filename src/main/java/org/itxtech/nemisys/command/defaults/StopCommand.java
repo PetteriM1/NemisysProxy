@@ -9,7 +9,7 @@ import org.itxtech.nemisys.command.CommandSender;
 public class StopCommand extends VanillaCommand {
 
     public StopCommand(String name) {
-        super(name, "Stop the proxy", "/stop");
+        super(name, "Stop the proxy", "/stop", new String[]{"shutdown"});
     }
 
     @Override

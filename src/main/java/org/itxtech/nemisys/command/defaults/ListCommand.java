@@ -11,7 +11,7 @@ import org.itxtech.nemisys.event.TranslationContainer;
 public class ListCommand extends VanillaCommand {
 
     public ListCommand(String name) {
-        super(name, "Get a list of all online players", "/list");
+        super(name, "Get a list of all online players", "/list", new String[]{"players"});
     }
 
     @Override

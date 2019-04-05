@@ -142,7 +142,6 @@ public abstract class Packet implements Cloneable {
                 this.putByte((byte) ((~Integer.valueOf(b)) & 0xff));
             }
             this.putShort(port);
-        } else {
         }
     }
 
