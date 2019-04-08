@@ -15,6 +15,8 @@ public class Nemisys {
 
     public static void main(String[] args) {
 
+        System.setProperty("java.net.preferIPv4Stack" , "true");
+
         MainLogger logger = new MainLogger(DATA_PATH + "server.log");
 
         try {
