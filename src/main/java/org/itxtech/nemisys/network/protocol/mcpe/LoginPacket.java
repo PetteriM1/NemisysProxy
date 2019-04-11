@@ -18,9 +18,6 @@ public class LoginPacket extends DataPacket {
     public UUID clientUUID;
     public long clientId;
     public Skin skin;
-    public String skinGeometryName;
-    public byte[] skinGeometry;
-    public byte[] capeData;
     public byte[] cacheBuffer;
 
     @Override

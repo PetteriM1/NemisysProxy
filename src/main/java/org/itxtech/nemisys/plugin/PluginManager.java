@@ -165,14 +165,14 @@ public class PluginManager {
                         if (description != null) {
                             String name = description.getName();
                             if (name.toLowerCase().contains("nukkit") || name.toLowerCase().contains("minecraft") || name.toLowerCase().contains("mojang")) {
-                                this.server.getLogger().error(this.server.getLanguage().translateString("nemisys.plugin.loadError", new String[]{name, "%nemisys.plugin.restrictedName"}));
+                                this.server.getLogger().error(this.server.getLanguage().translateString("Could not load plugin '{%0}': {%1}", new String[]{name, "Restricted name"}));
                                 continue;
                             } else if (name.contains(" ")) {
-                                this.server.getLogger().warning(this.server.getLanguage().translateString("nemisys.plugin.spacesDiscouraged", name));
+                                this.server.getLogger().warning(this.server.getLanguage().translateString("Plugin '{%0}' uses spaces in its name, this is discouraged", name));
                             }
 
                             if (plugins.containsKey(name) || this.getPlugin(name) != null) {
-                                this.server.getLogger().error(this.server.getLanguage().translateString("nemisys.plugin.duplicateError", name));
+                                this.server.getLogger().error(this.server.getLanguage().translateString("Could not load plugin '{%0}': plugin exists", name));
                                 continue;
                             }
 
@@ -214,7 +214,7 @@ public class PluginManager {
                                 dependencies.get(name).remove(dependency);
                             } else if (!plugins.containsKey(dependency)) {
                                 this.server.getLogger().critical(this.server.getLanguage().translateString("nukkit" +
-                                        ".plugin.loadError", new String[]{name, "%nemisys.plugin.unknownDependency"}));
+                                        ".plugin.loadError", new String[]{name, "Unknown dependency"}));
                                 break;
                             }
                         }
@@ -243,7 +243,7 @@ public class PluginManager {
                         if (plugin != null) {
                             loadedPlugins.put(name, plugin);
                         } else {
-                            this.server.getLogger().critical(this.server.getLanguage().translateString("nemisys.plugin.genericLoadError", name));
+                            this.server.getLogger().critical(this.server.getLanguage().translateString("Could not load plugin '{%0}'", name));
                         }
                     }
                 }
@@ -259,14 +259,14 @@ public class PluginManager {
                             if (plugin != null) {
                                 loadedPlugins.put(name, plugin);
                             } else {
-                                this.server.getLogger().critical(this.server.getLanguage().translateString("nemisys.plugin.genericLoadError", name));
+                                this.server.getLogger().critical(this.server.getLanguage().translateString("Could not load plugin '{%0}'", name));
                             }
                         }
                     }
 
                     if (missingDependency) {
                         for (String name : plugins.keySet()) {
-                            this.server.getLogger().critical(this.server.getLanguage().translateString("nemisys.plugin.loadError", new String[]{name, "%nemisys.plugin.circularDependency"}));
+                            this.server.getLogger().critical(this.server.getLanguage().translateString("Could not load plugin '{%0}': {%1}", new String[]{name, "Circular dependency detected"}));
                         }
                         plugins.clear();
                     }
@@ -431,7 +431,7 @@ public class PluginManager {
             String key = (String) entry.getKey();
             Object data = entry.getValue();
             if (key.contains(":")) {
-                this.server.getLogger().critical(this.server.getLanguage().translateString("nemisys.plugin.commandError", new String[]{key, plugin.getDescription().getFullName()}));
+                this.server.getLogger().critical(this.server.getLanguage().translateString("Could not load command {%0} for plugin {%1}", new String[]{key, plugin.getDescription().getFullName()}));
                 continue;
             }
             if (data instanceof Map) {
@@ -452,7 +452,7 @@ public class PluginManager {
                         List<String> aliasList = new ArrayList<>();
                         for (String alias : (List<String>) aliases) {
                             if (alias.contains(":")) {
-                                this.server.getLogger().critical(this.server.getLanguage().translateString("nemisys.plugin.aliasError", new String[]{alias, plugin.getDescription().getFullName()}));
+                                this.server.getLogger().critical(this.server.getLanguage().translateString("Could not load alias {%0} for plugin {%1}", new String[]{alias, plugin.getDescription().getFullName()}));
                                 continue;
                             }
                             aliasList.add(alias);
@@ -513,7 +513,7 @@ public class PluginManager {
                 try {
                     registration.callEvent(event);
                 } catch (Exception e) {
-                    this.server.getLogger().critical(this.server.getLanguage().translateString("nemisys.plugin.eventError", new String[]{event.getEventName(), registration.getPlugin().getDescription().getFullName(), e.getMessage(), registration.getListener().getClass().getName()}));
+                    this.server.getLogger().critical(this.server.getLanguage().translateString("Could not pass event '{%0}' to '{%1}': {%2} on {%3}", new String[]{event.getEventName(), registration.getPlugin().getDescription().getFullName(), e.getMessage(), registration.getListener().getClass().getName()}));
                     MainLogger logger = this.server.getLogger();
                     if (logger != null) {
                         logger.logException(e);

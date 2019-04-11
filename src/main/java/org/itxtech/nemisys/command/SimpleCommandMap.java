@@ -27,7 +27,6 @@ public class SimpleCommandMap implements CommandMap {
     }
 
     private void setDefaultCommands() {
-        this.register("nemisys", new VersionCommand("version"));
         this.register("nemisys", new PluginsCommand("plugins"));
         this.register("nemisys", new HelpCommand("help"));
         this.register("nemisys", new StopCommand("stop"));
@@ -122,8 +121,8 @@ public class SimpleCommandMap implements CommandMap {
         try {
             target.execute(sender, sentCommandLabel, args);
         } catch (Exception e) {
-            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.exception"));
-            this.server.getLogger().critical(this.server.getLanguage().translateString("nemisys.command.exception", new String[]{cmdLine, target.toString(), Utils.getExceptionMessage(e)}));
+            sender.sendMessage(new TranslationContainer(TextFormat.RED + "An unknown error occurred while attempting to perform this command"));
+            this.server.getLogger().critical(this.server.getLanguage().translateString("Unhandled exception executing command '{%0}' in {%1}: {%2}", new String[]{cmdLine, target.toString(), Utils.getExceptionMessage(e)}));
             MainLogger logger = sender.getServer().getLogger();
             if (logger != null) {
                 logger.logException(e);

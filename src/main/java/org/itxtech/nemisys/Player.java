@@ -3,7 +3,6 @@ package org.itxtech.nemisys;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Getter;
-import org.itxtech.nemisys.command.Command;
 import org.itxtech.nemisys.command.CommandSender;
 import org.itxtech.nemisys.command.data.CommandDataVersions;
 import org.itxtech.nemisys.event.TextContainer;
@@ -303,7 +302,7 @@ public class Player implements CommandSender {
         List<ScoreInfo> infos = new ArrayList<>();
         scoreboards.forEach((obj, inf) -> {
             for (Long scoreId : inf) {
-                infos.add(new ScoreInfo(scoreId, obj, 1, "a"));
+                infos.add(new ScoreInfo(scoreId, obj, 1));
             }
         });
         SetScorePacket ssp = new SetScorePacket();
@@ -391,7 +390,7 @@ public class Player implements CommandSender {
                 this.client.removePlayer(this);
             }
 
-            this.server.getLogger().info(this.getServer().getLanguage().translateString("nemisys.player.logOut", new String[]{
+            this.server.getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged out due to {%3}", new String[]{
                     TextFormat.AQUA + this.getName() + TextFormat.WHITE,
                     this.ip,
                     String.valueOf(this.port),
@@ -461,7 +460,7 @@ public class Player implements CommandSender {
     }
 
     protected void completeLogin() {
-        this.server.getLogger().info(this.getServer().getLanguage().translateString("nemisys.player.logIn", new String[]{
+        this.server.getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged in", new String[]{
                 TextFormat.AQUA + this.name + TextFormat.WHITE,
                 this.ip,
                 String.valueOf(this.port)
@@ -499,18 +498,13 @@ public class Player implements CommandSender {
 
     public void sendTranslation(String message, String[] parameters) {
         TextPacket pk = new TextPacket();
-        if (!this.server.isLanguageForced()) {
-            pk.type = TextPacket.TYPE_TRANSLATION;
-            pk.message = this.server.getLanguage().translateString(message, parameters, "nemisys.");
-            for (int i = 0; i < parameters.length; i++) {
-                parameters[i] = this.server.getLanguage().translateString(parameters[i], parameters, "nemisys.");
+        pk.type = TextPacket.TYPE_TRANSLATION;
+        pk.message = this.server.getLanguage().translateString(message, parameters, "nemisys.");
+        for (int i = 0; i < parameters.length; i++) {
+            parameters[i] = this.server.getLanguage().translateString(parameters[i], parameters, "nemisys.");
 
             }
-            pk.parameters = parameters;
-        } else {
-            pk.type = TextPacket.TYPE_RAW;
-            pk.message = this.server.getLanguage().translateString(message, parameters);
-        }
+        pk.parameters = parameters;
 
         this.sendDataPacket(pk);
     }

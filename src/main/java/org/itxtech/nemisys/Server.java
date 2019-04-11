@@ -64,7 +64,6 @@ public class Server {
     private RCON rcon;
     private Network network;
     private BaseLang baseLang;
-    private boolean forceLanguage = false;
     private UUID serverID;
     private String filePath;
     private String dataPath;
@@ -305,7 +304,7 @@ public class Server {
         }
 
         if (notify)
-            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.unknown"));
+            sender.sendMessage(new TranslationContainer(TextFormat.RED + "Unknown command. Try /help for a list of commands"));
 
         return false;
     }
@@ -689,10 +688,6 @@ public class Server {
 
     public BaseLang getLanguage() {
         return baseLang;
-    }
-
-    public boolean isLanguageForced() {
-        return forceLanguage;
     }
 
     public Network getNetwork() {

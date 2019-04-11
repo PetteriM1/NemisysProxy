@@ -18,7 +18,7 @@ public class PlayerChatEvent extends PlayerMessageEvent implements Cancellable {
     protected String format;
 
     public PlayerChatEvent(Player player, String message) {
-        this(player, message, "chat.type.text");
+        this(player, message, "<{%0}> {%1}");
     }
 
     public PlayerChatEvent(Player player, String message, String format) {

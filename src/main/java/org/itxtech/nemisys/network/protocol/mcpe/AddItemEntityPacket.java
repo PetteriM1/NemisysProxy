@@ -13,12 +13,6 @@ public class AddItemEntityPacket extends DataPacket {
 
     public long entityUniqueId;
     public long entityRuntimeId;
-    public float x;
-    public float y;
-    public float z;
-    public float speedX;
-    public float speedY;
-    public float speedZ;
 
     @Override
     public void decode() {

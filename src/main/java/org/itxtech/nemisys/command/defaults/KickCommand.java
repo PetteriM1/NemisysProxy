@@ -18,7 +18,7 @@ public class KickCommand extends VanillaCommand {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(new TranslationContainer("commands.generic.usage", this.usageMessage));
+            sender.sendMessage(new TranslationContainer("Usage: {%0}", this.usageMessage));
             return false;
         }
 
@@ -37,12 +37,12 @@ public class KickCommand extends VanillaCommand {
         if (player != null) {
             player.close(reason);
             if (reason.length() >= 1) {
-                sender.sendMessage(new TranslationContainer("commands.kick.success.reason", new String[]{player.getName(), reason}));
+                sender.sendMessage(new TranslationContainer("Kicked {%0} from the game: '{%1}'", new String[]{player.getName(), reason}));
             } else {
-                sender.sendMessage(new TranslationContainer("commands.kick.success", player.getName()));
+                sender.sendMessage(new TranslationContainer("Kicked {%0} from the game", player.getName()));
             }
         } else {
-            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.player.notFound"));
+            sender.sendMessage(new TranslationContainer(TextFormat.RED + "That player cannot be found"));
         }
 
         return true;

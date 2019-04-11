@@ -38,6 +38,6 @@ public class PluginsCommand extends VanillaCommand {
             list += plugin.getDescription().getFullName();
         }
 
-        sender.sendMessage(new TranslationContainer("nemisys.command.plugins.success", new String[]{String.valueOf(plugins.size()), list}));
+        sender.sendMessage(new TranslationContainer("Plugins ({%0}): {%1}", new String[]{String.valueOf(plugins.size()), list}));
     }
 }

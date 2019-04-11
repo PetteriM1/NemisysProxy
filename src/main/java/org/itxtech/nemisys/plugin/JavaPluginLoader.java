@@ -33,7 +33,7 @@ public class JavaPluginLoader implements PluginLoader {
     public Plugin loadPlugin(File file) throws Exception {
         PluginDescription description = this.getPluginDescription(file);
         if (description != null) {
-            this.server.getLogger().info(this.server.getLanguage().translateString("nemisys.plugin.load", description.getFullName()));
+            this.server.getLogger().info(this.server.getLanguage().translateString("Loading {%0}", description.getFullName()));
             File dataFolder = new File(file.getParentFile(), description.getName());
             if (dataFolder.exists() && !dataFolder.isDirectory()) {
                 throw new IllegalStateException("Projected dataFolder '" + dataFolder.toString() + "' for " + description.getName() + " exists and is not a directory");
@@ -108,7 +108,7 @@ public class JavaPluginLoader implements PluginLoader {
     @Override
     public void enablePlugin(Plugin plugin) {
         if (plugin instanceof PluginBase && !plugin.isEnabled()) {
-            this.server.getLogger().info(this.server.getLanguage().translateString("nemisys.plugin.enable", plugin.getDescription().getFullName()));
+            this.server.getLogger().info(this.server.getLanguage().translateString("Enabling {%0}", plugin.getDescription().getFullName()));
 
             ((PluginBase) plugin).setEnabled(true);
 
@@ -119,7 +119,7 @@ public class JavaPluginLoader implements PluginLoader {
     @Override
     public void disablePlugin(Plugin plugin) {
         if (plugin instanceof PluginBase && plugin.isEnabled()) {
-            this.server.getLogger().info(this.server.getLanguage().translateString("nemisys.plugin.disable", plugin.getDescription().getFullName()));
+            this.server.getLogger().info(this.server.getLanguage().translateString("Disabling {%0}", plugin.getDescription().getFullName()));
 
             this.server.getPluginManager().callEvent(new PluginDisableEvent(plugin));
 

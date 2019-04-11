@@ -21,15 +21,15 @@ public abstract class Command {
 
     protected CommandData commandData;
 
-    protected String description = "";
-    protected String usageMessage = "";
+    protected String description;
+    protected String usageMessage;
     private String permission = null;
     private String permissionMessage = null;
     private String name;
     private String nextLabel;
     private String label;
-    private String[] aliases = new String[0];
-    private String[] activeAliases = new String[0];
+    private String[] aliases;
+    private String[] activeAliases;
     private CommandMap commandMap = null;
 
     @Getter
@@ -109,7 +109,7 @@ public abstract class Command {
         }
 
         if (this.permissionMessage == null) {
-            target.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.unknown", this.name));
+            target.sendMessage(new TranslationContainer(TextFormat.RED + "Unknown command. Try /help for a list of commands", this.name));
         } else if (!this.permissionMessage.equals("")) {
             target.sendMessage(this.permissionMessage.replace("<permission>", this.permission));
         }
