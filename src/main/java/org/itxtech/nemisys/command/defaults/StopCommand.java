@@ -3,7 +3,7 @@ package org.itxtech.nemisys.command.defaults;
 import org.itxtech.nemisys.command.CommandSender;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class StopCommand extends VanillaCommand {

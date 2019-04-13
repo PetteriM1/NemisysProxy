@@ -1,7 +1,7 @@
 package org.itxtech.nemisys.event;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public enum EventPriority {

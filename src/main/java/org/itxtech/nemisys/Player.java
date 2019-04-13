@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
- * Author: PeratX
+ * @author PeratX
  * Nemisys Project
  */
 public class Player implements CommandSender {
@@ -415,16 +415,20 @@ public class Player implements CommandSender {
             List<DataPacket> packets = new ArrayList<>();
 
             while (!buffer.feof()) {
-                byte[] data = buffer.getByteArray();
+                try {
+                    byte[] data = buffer.getByteArray();
 
-                DataPacket pk = getServer().getNetwork().getPacket(data[0]);
+                    DataPacket pk = getServer().getNetwork().getPacket(data[0]);
 
-                if (pk != null) {
-                    pk.setBuffer(data, 1);
-                    pk.decode();
-                    pk.isEncoded = true;
+                    if (pk != null) {
+                        pk.setBuffer(data, 1);
+                        pk.decode();
+                        pk.isEncoded = true;
 
-                    packets.add(pk);
+                        packets.add(pk);
+                    }
+                } catch (Exception e) {
+                    this.getServer().getLogger().warning("Processing incoming batch packet failed!");
                 }
             }
 

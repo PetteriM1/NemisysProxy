@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit
  */
  public class MainLogger extends ThreadedLogger {

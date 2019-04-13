@@ -17,7 +17,7 @@ import java.util.*;
  * To get chain data, you can use player.getLoginChainData() or read(loginPacket)
  * <p>
  * ===============
- * author: boybook
+ * @author boybook
  * Nukkit Project
  * ===============
  */

@@ -4,7 +4,7 @@ import org.itxtech.nemisys.raknet.protocol.EncapsulatedPacket;
 import org.itxtech.nemisys.utils.BinaryStream;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public abstract class DataPacket extends BinaryStream implements Cloneable {

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Author: PeratX
+ * @author PeratX
  * Nemisys Project
  */
 public class BroadcastPacket extends SynapseDataPacket {

@@ -4,7 +4,7 @@ import org.itxtech.nemisys.raknet.RakNet;
 import org.itxtech.nemisys.raknet.protocol.Packet;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class OPEN_CONNECTION_REPLY_1 extends Packet {

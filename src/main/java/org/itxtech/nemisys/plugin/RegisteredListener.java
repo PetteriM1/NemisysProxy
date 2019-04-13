@@ -6,7 +6,7 @@ import org.itxtech.nemisys.event.EventPriority;
 import org.itxtech.nemisys.event.Listener;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class RegisteredListener {

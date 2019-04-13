@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * SynapsePacketDecoder
  * ===============
- * author: boybook
+ * @author boybook
  * Nemisys Project
  * ===============
  */

@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class Skin {

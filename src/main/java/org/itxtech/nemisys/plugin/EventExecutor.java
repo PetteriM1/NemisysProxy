@@ -4,7 +4,7 @@ import org.itxtech.nemisys.event.Event;
 import org.itxtech.nemisys.event.Listener;
 
 /**
- * author: iNevet
+ * @author iNevet
  * Nukkit Project
  */
 public interface EventExecutor {

@@ -5,7 +5,7 @@ import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
 
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public interface SourceInterface {

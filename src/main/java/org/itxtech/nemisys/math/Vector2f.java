@@ -1,7 +1,7 @@
 package org.itxtech.nemisys.math;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class Vector2f {

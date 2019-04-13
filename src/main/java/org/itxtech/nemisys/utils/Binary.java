@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class Binary {

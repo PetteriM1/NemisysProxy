@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Synapse
  * ===============
- * author: boybook
+ * @author boybook
  * EaseCation Network Project
  * nemisys
  * ===============

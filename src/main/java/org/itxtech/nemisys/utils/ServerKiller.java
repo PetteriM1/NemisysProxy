@@ -3,7 +3,7 @@ package org.itxtech.nemisys.utils;
 import java.util.concurrent.TimeUnit;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class ServerKiller extends Thread {

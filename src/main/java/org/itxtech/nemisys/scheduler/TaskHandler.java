@@ -4,7 +4,7 @@ import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.plugin.Plugin;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit
  */
 public class TaskHandler {

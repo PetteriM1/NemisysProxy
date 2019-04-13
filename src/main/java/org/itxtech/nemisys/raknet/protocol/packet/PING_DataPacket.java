@@ -3,7 +3,7 @@ package org.itxtech.nemisys.raknet.protocol.packet;
 import org.itxtech.nemisys.raknet.protocol.Packet;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class PING_DataPacket extends Packet {

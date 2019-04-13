@@ -38,7 +38,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * author: MagicDroidX & Box
+ * @author MagicDroidX & Box
  * Nukkit
  */
 public class Server {
@@ -504,11 +504,10 @@ public class Server {
         Runtime runtime = Runtime.getRuntime();
         double used = NemisysMath.round((double) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024, 2);
         double max = NemisysMath.round(((double) runtime.maxMemory()) / 1024 / 1024, 2);
-        String usage = Math.round(used / max * 100) + "%";
         String title = (char) 0x1b + "]0;Nemisys Proxy" +
                 " | Players " + this.players.size() + "/" + this.getMaxPlayers() +
                 " | Servers " + this.clients.size() +
-                " | Memory " + usage +
+                " | Memory " + Math.round(used / max * 100) + "%" +
                 " | TPS " + this.getTicksPerSecond() +
                 " | Load " + this.getTickUsage() + "%" + (char) 0x07;
 

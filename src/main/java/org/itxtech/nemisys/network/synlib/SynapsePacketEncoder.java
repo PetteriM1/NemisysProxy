@@ -8,7 +8,7 @@ import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
 /**
  * SynapsePacketEncoder
  * ===============
- * author: boybook
+ * @author boybook
  * Nemisys Project
  * ===============
  */

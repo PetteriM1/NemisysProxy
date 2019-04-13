@@ -3,7 +3,7 @@ package org.itxtech.nemisys.network.synlib;
 /**
  * SynapseContextException
  * ===============
- * author: boybook
+ * @author boybook
  * Nemisys Project
  * ===============
  */

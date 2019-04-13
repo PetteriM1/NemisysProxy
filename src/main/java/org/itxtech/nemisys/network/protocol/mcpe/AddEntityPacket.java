@@ -1,7 +1,7 @@
 package org.itxtech.nemisys.network.protocol.mcpe;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class AddEntityPacket extends DataPacket {

@@ -25,7 +25,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Author: PeratX
+ * @author PeratX
  * Nemisys Project
  */
 public class Client {

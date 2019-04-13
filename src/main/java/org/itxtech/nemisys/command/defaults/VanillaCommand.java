@@ -3,7 +3,7 @@ package org.itxtech.nemisys.command.defaults;
 import org.itxtech.nemisys.command.Command;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public abstract class VanillaCommand extends Command {
