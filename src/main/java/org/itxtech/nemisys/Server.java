@@ -19,6 +19,7 @@ import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
 import org.itxtech.nemisys.network.protocol.mcpe.ProtocolInfo;
 import org.itxtech.nemisys.network.query.QueryHandler;
 import org.itxtech.nemisys.network.rcon.RCON;
+import org.itxtech.nemisys.network.synlib.SynapseContextException;
 import org.itxtech.nemisys.permission.DefaultPermissions;
 import org.itxtech.nemisys.plugin.JavaPluginLoader;
 import org.itxtech.nemisys.plugin.Plugin;
@@ -451,9 +452,7 @@ public class Server {
         }
 
         if ((this.tickCounter & 0b1111) == 0) {
-            this.getScheduler().scheduleTask(() -> {
-                this.titleTick();
-            }, true);
+            this.titleTick();
             this.maxTick = 20;
             this.maxUse = 0;
 

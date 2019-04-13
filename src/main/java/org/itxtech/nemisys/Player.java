@@ -64,8 +64,6 @@ public class Player implements CommandSender {
     @Getter
     private ClientChainData loginChainData;
 
-    protected Map<String, CommandDataVersions> clientCommands;
-
     protected Set<Long> spawnedEntities = new HashSet<>();
     protected Set<UUID> playerList = new HashSet<>();
 
