@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SynapseServer extends Thread implements InterruptibleThread {
 
-    public static final String VERSION = "0.3.0";
     public EventLoopGroup bossGroup = new NioEventLoopGroup();
     public EventLoopGroup workerGroup = new NioEventLoopGroup();
     protected ConcurrentLinkedQueue<SynapseClientPacket> externalQueue;

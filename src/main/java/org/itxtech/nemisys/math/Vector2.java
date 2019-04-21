@@ -5,6 +5,7 @@ package org.itxtech.nemisys.math;
  * Nukkit Project
  */
 public class Vector2 {
+
     public final double x;
     public final double y;
 

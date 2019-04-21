@@ -123,7 +123,7 @@ public class Network {
             int count = 0;
             while (stream.offset < len) {
                 count++;
-                if(count >= 500){
+                if (count >= 500) {
                     player.close("Too many packets in a single batch");
                 }
                 byte[] buf = stream.getByteArray();

@@ -43,8 +43,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class Server {
 
-    public static final String BROADCAST_CHANNEL_ADMINISTRATIVE = "nukkit.broadcast.admin";
-    public static final String BROADCAST_CHANNEL_USERS = "nukkit.broadcast.user";
+    public static final String BROADCAST_CHANNEL_ADMINISTRATIVE = "nemisys.broadcast.admin";
+    public static final String BROADCAST_CHANNEL_USERS = "nemisys.broadcast.user";
 
     private static Server instance = null;
     private AtomicBoolean isRunning = new AtomicBoolean(true);
@@ -115,7 +115,7 @@ public class Server {
                 put("server-port", 19132);
                 put("synapse-ip", "0.0.0.0");
                 put("synapse-port", 10305);
-                put("password", "1234567890123456");
+                put("password", "must16keyslength");
                 put("async-workers", "auto");
                 put("max-players", 50);
                 put("plus-one-max-count", false);
@@ -269,7 +269,7 @@ public class Server {
     }
 
     public boolean comparePassword(String pass) {
-        String truePass = this.getPropertyString("password", "1234567890123456");
+        String truePass = this.getPropertyString("password", "must16keyslength");
         return (truePass.equals(pass));
     }
 
