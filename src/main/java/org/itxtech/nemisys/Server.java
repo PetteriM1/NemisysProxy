@@ -118,7 +118,7 @@ public class Server {
                 put("password", "must16keyslength");
                 put("async-workers", "auto");
                 put("max-players", 50);
-                put("plus-one-max-count", false);
+                put("plus-one-max-count", true);
                 put("players-per-thread", 50);
                 put("enable-query", true);
                 put("enable-rcon", false);
@@ -452,7 +452,10 @@ public class Server {
         }
 
         if ((this.tickCounter & 0b1111) == 0) {
-            this.titleTick();
+            if ((this.tickCounter & 0b11111) == 0) {
+                this.titleTick();
+            }
+
             this.maxTick = 20;
             this.maxUse = 0;
 
@@ -501,15 +504,12 @@ public class Server {
     public void titleTick() {
         if (!Nemisys.ANSI) return;
 
-        Runtime runtime = Runtime.getRuntime();
-        double used = NemisysMath.round((double) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024, 2);
-        double max = NemisysMath.round(((double) runtime.maxMemory()) / 1024 / 1024, 2);
         String title = (char) 0x1b + "]0;Nemisys Proxy" +
-                " | Players " + this.players.size() + "/" + this.getMaxPlayers() +
-                " | Servers " + this.clients.size() +
-                " | Memory " + Math.round(used / max * 100) + "%" +
-                " | TPS " + this.getTicksPerSecond() +
-                " | Load " + this.getTickUsage() + "%" + (char) 0x07;
+                " | Players: " + this.players.size() +
+                " | Servers: " + this.clients.size() +
+                " | Memory: " + Math.round(NemisysMath.round((double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024, 2)) + " MB" +
+                " | TPS: " + this.getTicksPerSecond() +
+                " | Load: " + this.getTickUsage() + "%" + (char) 0x07;
 
         System.out.print(title);
 

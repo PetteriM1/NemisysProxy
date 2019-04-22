@@ -41,7 +41,7 @@ public class QueryRegenerateEvent extends ServerEvent {
         this.server_engine = "Nemisys PetteriM1 Edition";
         this.map = " ";
         this.numPlayers = this.players.length;
-        if (server.getPropertyBoolean("plus-one-max-count", false)) {
+        if (server.getPropertyBoolean("plus-one-max-count", true)) {
             this.maxPlayers = this.numPlayers + 1;
         } else {
             this.maxPlayers = server.getMaxPlayers();
