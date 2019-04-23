@@ -6,9 +6,9 @@ package org.itxtech.nemisys.network.protocol.mcpe;
  */
 public interface ProtocolInfo {
 
-    int CURRENT_PROTOCOL = 340;
+    int CURRENT_PROTOCOL = 354;
 
-    String MINECRAFT_VERSION_NETWORK = "1.10.0";
+    String MINECRAFT_VERSION_NETWORK = "1.11.0";
 
     byte LOGIN_PACKET = 0x01;
     byte DISCONNECT_PACKET = 0x05;
