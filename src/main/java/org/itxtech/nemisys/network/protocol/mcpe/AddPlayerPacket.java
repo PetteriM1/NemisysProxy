@@ -3,7 +3,7 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 import java.util.UUID;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class AddPlayerPacket extends DataPacket {

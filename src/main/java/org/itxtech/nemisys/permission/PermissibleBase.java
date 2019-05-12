@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 public class PermissibleBase implements Permissible {
 
-    ServerOperator opable = null;
+    ServerOperator opable;
 
     private Permissible parent = null;
 

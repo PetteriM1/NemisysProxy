@@ -3,7 +3,7 @@ package org.itxtech.nemisys.raknet.server;
 import org.itxtech.nemisys.raknet.protocol.EncapsulatedPacket;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public interface ServerInstance {

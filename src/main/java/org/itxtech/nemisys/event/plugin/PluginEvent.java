@@ -5,7 +5,7 @@ import org.itxtech.nemisys.event.HandlerList;
 import org.itxtech.nemisys.plugin.Plugin;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class PluginEvent extends Event {

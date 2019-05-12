@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Author: PeratX
+ * @author PeratX
  * Nemisys Project
  */
 public class SessionManager {

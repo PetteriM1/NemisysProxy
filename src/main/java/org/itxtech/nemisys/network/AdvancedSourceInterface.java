@@ -1,7 +1,7 @@
 package org.itxtech.nemisys.network;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public interface AdvancedSourceInterface extends SourceInterface {

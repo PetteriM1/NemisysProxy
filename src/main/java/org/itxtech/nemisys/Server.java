@@ -19,6 +19,7 @@ import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
 import org.itxtech.nemisys.network.protocol.mcpe.ProtocolInfo;
 import org.itxtech.nemisys.network.query.QueryHandler;
 import org.itxtech.nemisys.network.rcon.RCON;
+import org.itxtech.nemisys.network.synlib.SynapseContextException;
 import org.itxtech.nemisys.permission.DefaultPermissions;
 import org.itxtech.nemisys.plugin.JavaPluginLoader;
 import org.itxtech.nemisys.plugin.Plugin;
@@ -37,13 +38,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * author: MagicDroidX & Box
+ * @author MagicDroidX & Box
  * Nukkit
  */
 public class Server {
 
-    public static final String BROADCAST_CHANNEL_ADMINISTRATIVE = "nukkit.broadcast.admin";
-    public static final String BROADCAST_CHANNEL_USERS = "nukkit.broadcast.user";
+    public static final String BROADCAST_CHANNEL_ADMINISTRATIVE = "nemisys.broadcast.admin";
+    public static final String BROADCAST_CHANNEL_USERS = "nemisys.broadcast.user";
 
     private static Server instance = null;
     private AtomicBoolean isRunning = new AtomicBoolean(true);
@@ -114,10 +115,10 @@ public class Server {
                 put("server-port", 19132);
                 put("synapse-ip", "0.0.0.0");
                 put("synapse-port", 10305);
-                put("password", "1234567890123456");
+                put("password", "must16keyslength");
                 put("async-workers", "auto");
                 put("max-players", 50);
-                put("plus-one-max-count", false);
+                put("plus-one-max-count", true);
                 put("players-per-thread", 50);
                 put("enable-query", true);
                 put("enable-rcon", false);
@@ -268,7 +269,7 @@ public class Server {
     }
 
     public boolean comparePassword(String pass) {
-        String truePass = this.getPropertyString("password", "1234567890123456");
+        String truePass = this.getPropertyString("password", "must16keyslength");
         return (truePass.equals(pass));
     }
 
@@ -451,9 +452,10 @@ public class Server {
         }
 
         if ((this.tickCounter & 0b1111) == 0) {
-            this.getScheduler().scheduleTask(() -> {
+            if ((this.tickCounter & 0b11111) == 0) {
                 this.titleTick();
-            }, true);
+            }
+
             this.maxTick = 20;
             this.maxUse = 0;
 
@@ -502,16 +504,12 @@ public class Server {
     public void titleTick() {
         if (!Nemisys.ANSI) return;
 
-        Runtime runtime = Runtime.getRuntime();
-        double used = NemisysMath.round((double) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024, 2);
-        double max = NemisysMath.round(((double) runtime.maxMemory()) / 1024 / 1024, 2);
-        String usage = Math.round(used / max * 100) + "%";
         String title = (char) 0x1b + "]0;Nemisys Proxy" +
-                " | Players " + this.players.size() + "/" + this.getMaxPlayers() +
-                " | Servers " + this.clients.size() +
-                " | Memory " + usage +
-                " | TPS " + this.getTicksPerSecond() +
-                " | Load " + this.getTickUsage() + "%" + (char) 0x07;
+                " | Players: " + this.players.size() +
+                " | Servers: " + this.clients.size() +
+                " | Memory: " + Math.round(NemisysMath.round((double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024, 2)) + " MB" +
+                " | TPS: " + this.getTicksPerSecond() +
+                " | Load: " + this.getTickUsage() + "%" + (char) 0x07;
 
         System.out.print(title);
 

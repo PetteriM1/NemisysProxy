@@ -5,7 +5,7 @@ import org.itxtech.nemisys.event.Cancellable;
 import org.itxtech.nemisys.event.HandlerList;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class ServerCommandEvent extends ServerEvent implements Cancellable {

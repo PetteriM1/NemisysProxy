@@ -3,7 +3,7 @@ package org.itxtech.nemisys.event.plugin;
 import org.itxtech.nemisys.plugin.Plugin;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class PluginDisableEvent extends PluginEvent {

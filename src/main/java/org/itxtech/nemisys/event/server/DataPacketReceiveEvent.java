@@ -6,7 +6,7 @@ import org.itxtech.nemisys.event.HandlerList;
 import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class DataPacketReceiveEvent extends ServerEvent implements Cancellable {

@@ -1,10 +1,11 @@
 package org.itxtech.nemisys.math;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class Vector3 implements Cloneable {
+
     public static final int SIDE_DOWN = 0;
     public static final int SIDE_UP = 1;
     public static final int SIDE_NORTH = 2;

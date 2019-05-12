@@ -1,10 +1,11 @@
 package org.itxtech.nemisys.math;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class Vector2f {
+
     public final float x;
     public final float y;
 

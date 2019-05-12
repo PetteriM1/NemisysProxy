@@ -47,22 +47,24 @@ public class SetScorePacket extends DataPacket {
         List<ScoreInfo> infos = new ArrayList<>(length);
 
         for (int i = 0; i < length; i++) {
-            long id = getVarLong();
-            String obj = getString();
-            int score = getLInt();
-            Type type = Type.values()[getByte()];
+            try {
+                long id = getVarLong();
+                String obj = getString();
+                int score = getLInt();
+                Type type = Type.values()[getByte()];
 
-            ScoreInfo info = new ScoreInfo(id, obj, score);
+                ScoreInfo info = new ScoreInfo(id, obj, score);
 
-            info.type(type);
+                info.type(type);
 
-            if (type == Type.ENTITY || type == Type.PLAYER) {
-                info.entityId = getVarLong();
-            } else {
-                info.name = getString();
-            }
+                if (type == Type.ENTITY || type == Type.PLAYER) {
+                    info.entityId = getVarLong();
+                } else {
+                    info.name = getString();
+                }
 
-            infos.add(info);
+                infos.add(info);
+            } catch (Exception ignore) {}
         }
 
         this.infos = infos;

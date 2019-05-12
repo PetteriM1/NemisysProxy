@@ -16,14 +16,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class SynapseClient extends Thread {
 
-    public static final String VERSION = "0.3.0";
     public boolean needReconnect = false;
     protected ConcurrentLinkedQueue<SynapseDataPacket> externalQueue;
     protected ConcurrentLinkedQueue<SynapseDataPacket> internalQueue;
     private ThreadedLogger logger;
     private String interfaz;
     private int port;
-    private boolean shutdown = false;
+    private boolean shutdown;
     private boolean needAuth = true;
     private boolean connected = false;
     private EventLoopGroup clientGroup;

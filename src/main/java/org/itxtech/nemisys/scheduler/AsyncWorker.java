@@ -5,7 +5,7 @@ import org.itxtech.nemisys.InterruptibleThread;
 import java.util.LinkedList;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class AsyncWorker extends Thread implements InterruptibleThread {

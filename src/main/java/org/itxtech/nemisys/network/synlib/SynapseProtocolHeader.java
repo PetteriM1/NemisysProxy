@@ -3,7 +3,7 @@ package org.itxtech.nemisys.network.synlib;
 /**
  * SynapseProtocolHeader
  * ===============
- * author: boybook
+ * @author boybook
  * Synapse Protocol Header
  * nemisys
  * ===============

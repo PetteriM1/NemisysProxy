@@ -5,7 +5,7 @@ import org.itxtech.nemisys.raknet.protocol.Packet;
 import java.net.InetSocketAddress;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class CLIENT_HANDSHAKE_DataPacket extends Packet {

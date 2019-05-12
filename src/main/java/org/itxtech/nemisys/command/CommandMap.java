@@ -3,7 +3,7 @@ package org.itxtech.nemisys.command;
 import java.util.List;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public interface CommandMap {

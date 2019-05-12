@@ -5,7 +5,7 @@ import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
 /**
  * SynapseClientPacket
  * ===============
- * author: boybook
+ * @author boybook
  * Nukkit Project
  * ===============
  */

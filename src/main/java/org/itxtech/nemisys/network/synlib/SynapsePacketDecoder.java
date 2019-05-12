@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * SynapsePacketDecoder
  * ===============
- * author: boybook
+ * @author boybook
  * Nemisys Project
  * ===============
  */
@@ -29,11 +29,10 @@ public class SynapsePacketDecoder extends ReplayingDecoder<SynapsePacketDecoder.
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         switch (state()) {
             case HEADER_MAGIC:
-                if (checkMagic(in.readShort())) {
-                    checkpoint(State.HEADER_ID);
-                } else {
-                    return;
+                if (SynapseProtocolHeader.MAGIC != in.readShort()) {
+                    throw new SynapseContextException("Magic value does not match");
                 }
+                checkpoint(State.HEADER_ID);
             case HEADER_ID:
                 header.pid(in.readByte());
                 checkpoint(State.HEADER_BODY_LENGTH);
@@ -57,14 +56,6 @@ public class SynapsePacketDecoder extends ReplayingDecoder<SynapsePacketDecoder.
             throw new SynapseContextException("body of request is bigger than limit value " + MAX_BODY_SIZE);
         }
         return bodyLength;
-    }
-
-    private boolean checkMagic(short magic) {
-        if (SynapseProtocolHeader.MAGIC != magic) {
-            MainLogger.getLogger().debug("Magic value does not match");
-            return false;
-        }
-        return true;
     }
 
     enum State {

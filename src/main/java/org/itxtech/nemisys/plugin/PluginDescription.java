@@ -27,7 +27,7 @@ import java.util.*;
  * <b>version:</b> "1.0.0"
  * <b>api:</b> ["1.0.0"]
  * load: POSTWORLD
- * author: 粉鞋大妈
+ * @author 粉鞋大妈
  * description: A simple Hello World plugin for Nukkit
  * website: http://www.cnblogs.com/xtypr
  * permissions:

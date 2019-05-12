@@ -4,7 +4,7 @@ import org.itxtech.nemisys.raknet.protocol.DataPacket;
 import org.itxtech.nemisys.raknet.protocol.Packet;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class DATA_PACKET_B extends DataPacket {

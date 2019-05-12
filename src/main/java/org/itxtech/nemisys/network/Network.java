@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 @SuppressWarnings("unchecked")
@@ -111,7 +111,7 @@ public class Network {
     public void processBatch(BatchPacket packet, Player player) {
         byte[] data;
         try {
-            data = Zlib.inflate(packet.payload, 64 * 1024 * 1024);
+            data = Zlib.inflate(packet.payload, 2 * 1024 * 1024);
         } catch (Exception e) {
             return;
         }
@@ -120,7 +120,13 @@ public class Network {
         BinaryStream stream = new BinaryStream(data);
         try {
             List<DataPacket> packets = new ArrayList<>();
+            int count = 0;
             while (stream.offset < len) {
+                count++;
+                if (count >= 1000) {
+                    player.close("Illegal Batch Packet");
+                    return;
+                }
                 byte[] buf = stream.getByteArray();
 
                 DataPacket pk;

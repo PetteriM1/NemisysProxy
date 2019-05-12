@@ -5,7 +5,7 @@ import org.itxtech.nemisys.utils.LogLevel;
 import org.itxtech.nemisys.utils.Logger;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class PluginLogger implements Logger {

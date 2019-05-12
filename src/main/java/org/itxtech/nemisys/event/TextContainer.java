@@ -3,7 +3,7 @@ package org.itxtech.nemisys.event;
 import org.itxtech.nemisys.Server;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class TextContainer implements Cloneable {

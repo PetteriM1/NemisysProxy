@@ -3,7 +3,7 @@ package org.itxtech.nemisys.command;
 import org.itxtech.nemisys.plugin.Plugin;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public interface PluginIdentifiableCommand {

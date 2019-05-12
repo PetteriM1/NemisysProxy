@@ -4,7 +4,7 @@ import org.itxtech.nemisys.Player;
 import org.itxtech.nemisys.event.Event;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public abstract class PlayerEvent extends Event {

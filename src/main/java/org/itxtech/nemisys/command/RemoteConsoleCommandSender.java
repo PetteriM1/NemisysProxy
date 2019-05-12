@@ -8,6 +8,7 @@ import org.itxtech.nemisys.event.TextContainer;
  * @author Tee7even
  */
 public class RemoteConsoleCommandSender extends ConsoleCommandSender {
+
     private StringBuilder messages = new StringBuilder();
 
     @Override

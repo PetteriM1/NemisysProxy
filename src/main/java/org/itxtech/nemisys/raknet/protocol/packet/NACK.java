@@ -4,7 +4,7 @@ import org.itxtech.nemisys.raknet.protocol.AcknowledgePacket;
 import org.itxtech.nemisys.raknet.protocol.Packet;
 
 /**
- * author: MagicDroidX
+ * @author MagicDroidX
  * Nukkit Project
  */
 public class NACK extends AcknowledgePacket {

@@ -1,7 +1,7 @@
 package org.itxtech.nemisys.network.protocol.mcpe;
 
 /**
- * Author: PeratX
+ * @author PeratX
  * Nemisys Project
  */
 public class GenericPacket extends DataPacket {
