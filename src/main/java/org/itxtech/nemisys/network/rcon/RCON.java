@@ -16,6 +16,7 @@ import java.io.IOException;
  * @author Tee7even
  */
 public class RCON {
+
     private Server server;
     private RCONServer serverThread;
 

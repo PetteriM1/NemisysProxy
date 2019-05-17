@@ -17,5 +17,4 @@ public class ClientConnectEvent extends ClientEvent {
     public static HandlerList getHandlers() {
         return handlers;
     }
-
 }

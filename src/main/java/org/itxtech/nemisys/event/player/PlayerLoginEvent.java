@@ -5,6 +5,7 @@ import org.itxtech.nemisys.event.Cancellable;
 import org.itxtech.nemisys.event.HandlerList;
 
 public class PlayerLoginEvent extends PlayerEvent implements Cancellable {
+
     private static final HandlerList handlers = new HandlerList();
     protected String kickMessage;
     private String clientHash;

@@ -8,6 +8,7 @@ import java.nio.channels.SocketChannel;
  * @author Tee7even
  */
 public class RCONCommand {
+
     private SocketChannel sender;
     private int id;
     private String command;

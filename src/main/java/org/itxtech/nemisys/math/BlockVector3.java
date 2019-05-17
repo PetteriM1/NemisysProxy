@@ -19,9 +19,6 @@ public class BlockVector3 implements Cloneable {
         this.z = z;
     }
 
-    public BlockVector3() {
-    }
-
     public static int getOppositeSide(int side) {
         switch (side) {
             case BlockVector3.SIDE_DOWN:

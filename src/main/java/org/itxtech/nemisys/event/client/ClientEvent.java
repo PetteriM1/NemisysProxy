@@ -8,6 +8,7 @@ import org.itxtech.nemisys.event.Event;
  * Nukkit Project
  */
 public abstract class ClientEvent extends Event {
+
     protected Client client;
 
     public ClientEvent(Client client) {

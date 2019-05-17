@@ -19,7 +19,6 @@ import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
 import org.itxtech.nemisys.network.protocol.mcpe.ProtocolInfo;
 import org.itxtech.nemisys.network.query.QueryHandler;
 import org.itxtech.nemisys.network.rcon.RCON;
-import org.itxtech.nemisys.network.synlib.SynapseContextException;
 import org.itxtech.nemisys.permission.DefaultPermissions;
 import org.itxtech.nemisys.plugin.JavaPluginLoader;
 import org.itxtech.nemisys.plugin.Plugin;
@@ -82,6 +81,7 @@ public class Server {
     private Map<String, Client> mainClients = new ConcurrentHashMap<>();
     private Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
     private Synapse synapse;
+    @SuppressWarnings("unused")
     public int uptime = 0;
 
     @Getter
@@ -422,11 +422,11 @@ public class Server {
         this.playersUUIDs.put(uuid, player);
     }
 
-    private boolean tick() {
+    private void tick() {
         long tickTime = System.currentTimeMillis();
         long tickTimeNano = System.nanoTime();
         if ((tickTime - this.nextTick) < -5) {
-            return false;
+            return;
         }
 
         ++this.tickCounter;
@@ -497,11 +497,9 @@ public class Server {
         } else {
             this.nextTick += 10;
         }
-
-        return true;
     }
 
-    public void titleTick() {
+    private void titleTick() {
         if (!Nemisys.ANSI) return;
 
         String title = (char) 0x1b + "]0;Nemisys Proxy" +

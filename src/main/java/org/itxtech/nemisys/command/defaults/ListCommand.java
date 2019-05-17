@@ -16,20 +16,20 @@ public class ListCommand extends VanillaCommand {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        String online = "";
+        StringBuilder online = new StringBuilder();
         int onlineCount = 0;
         for (Player player : sender.getServer().getOnlinePlayers().values()) {
-            online += player.getName() + ", ";
+            online.append(player.getName()).append(", ");
             ++onlineCount;
         }
 
         if (online.length() > 0) {
-            online = online.substring(0, online.length() - 2);
+            online = new StringBuilder(online.substring(0, online.length() - 2));
         }
 
         sender.sendMessage(new TranslationContainer("There are {%0}/{%1} players online:",
                 new String[]{String.valueOf(onlineCount), String.valueOf(sender.getServer().getMaxPlayers())}));
-        sender.sendMessage(online);
+        sender.sendMessage(online.toString());
         return true;
     }
 }

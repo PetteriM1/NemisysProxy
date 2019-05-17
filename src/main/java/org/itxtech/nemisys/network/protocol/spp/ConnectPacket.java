@@ -23,7 +23,7 @@ public class ConnectPacket extends SynapseDataPacket {
         this.putInt(this.protocol);
         this.putInt(this.maxPlayers);
         this.putBoolean(this.isLobbyServer);
-        this.putBoolean(transferShutdown);
+        this.putBoolean(this.transferShutdown);
         this.putString(this.description);
         this.putString(this.password);
     }

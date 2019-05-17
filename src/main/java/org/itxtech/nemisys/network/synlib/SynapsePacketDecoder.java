@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
 import org.itxtech.nemisys.network.SynapseInterface;
-import org.itxtech.nemisys.utils.MainLogger;
 
 import java.util.List;
 

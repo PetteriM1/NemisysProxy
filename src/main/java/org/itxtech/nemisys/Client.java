@@ -1,7 +1,5 @@
 package org.itxtech.nemisys;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import lombok.Getter;
 import lombok.Setter;
 import org.itxtech.nemisys.event.client.ClientAuthEvent;
@@ -18,9 +16,6 @@ import org.itxtech.nemisys.utils.BinaryStream;
 import org.itxtech.nemisys.utils.MainLogger;
 import org.itxtech.nemisys.utils.TextFormat;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -297,7 +292,7 @@ public class Client {
                         byte[] data = outputStream.getBuffer();
 
                         if (data.length > 0) {
-                            this.sendPluginMesssage(channel, data);
+                            this.sendPluginMessage(channel, data);
                         }
                     } catch (Exception e) {
                         MainLogger.getLogger().logException(e);
@@ -389,7 +384,7 @@ public class Client {
         this.closeAllPlayers(reason, transferOnShutdown ? this.server.getFallbackClient() : null);
     }
 
-    public void sendPluginMesssage(String channel, byte[] data) {
+    public void sendPluginMessage(String channel, byte[] data) {
         PluginMessagePacket pk = new PluginMessagePacket();
         pk.channel = channel;
         pk.data = data;

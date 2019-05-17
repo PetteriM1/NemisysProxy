@@ -29,5 +29,4 @@ public class ClientDisconnectEvent extends ClientEvent {
     public int getType() {
         return type;
     }
-
 }

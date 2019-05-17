@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import org.itxtech.nemisys.command.CommandSender;
-import org.itxtech.nemisys.command.data.CommandDataVersions;
 import org.itxtech.nemisys.event.TextContainer;
 import org.itxtech.nemisys.event.TranslationContainer;
 import org.itxtech.nemisys.event.player.*;
@@ -58,7 +57,6 @@ public class Player implements CommandSender {
     @Getter
     private byte[] rawUUID;
     private boolean isFirstTimeLogin = true;
-    private long lastUpdate;
     @Getter
     private Skin skin;
     @Getter
@@ -74,8 +72,6 @@ public class Player implements CommandSender {
 
     private PermissibleBase perm;
 
-    private AsyncTask loginTask;
-
     protected final Map<String, Set<Long>> scoreboards = new HashMap<>();
 
     public Player(SourceInterface interfaz, long clientId, String ip, int port) {
@@ -85,7 +81,6 @@ public class Player implements CommandSender {
         this.port = port;
         this.name = "";
         this.server = Server.getInstance();
-        this.lastUpdate = System.currentTimeMillis();
         this.perm = new PermissibleBase(this);
     }
 
@@ -94,7 +89,6 @@ public class Player implements CommandSender {
             if (this.closed) {
                 return;
             }
-            this.lastUpdate = System.currentTimeMillis();
 
             if (packet instanceof BatchPacket) {
                 this.getServer().getNetwork().processBatch((BatchPacket) packet, this);
@@ -118,7 +112,7 @@ public class Player implements CommandSender {
                     this.loginChainData = ClientChainData.read(loginPacket);
                     this.server.addOnlinePlayer(this.uuid, this);
 
-                    this.loginTask = new AsyncTask() {
+                    AsyncTask loginTask = new AsyncTask() {
                         PlayerAsyncPreLoginEvent e = new PlayerAsyncPreLoginEvent(getName(), getUuid(), getIp(), getPort());
 
                         @Override
@@ -140,7 +134,7 @@ public class Player implements CommandSender {
                         }
                     };
 
-                    this.getServer().getScheduler().scheduleAsyncTask(this.loginTask);
+                    this.getServer().getScheduler().scheduleAsyncTask(loginTask);
 
                     return;
                 case ProtocolInfo.TEXT_PACKET:

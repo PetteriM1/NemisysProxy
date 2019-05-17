@@ -137,8 +137,7 @@ public class JavaPluginLoader implements PluginLoader {
 
                 try {
                     cachedClass = loader.findClass(name, false);
-                } catch (ClassNotFoundException e) {
-                }
+                } catch (ClassNotFoundException e) {}
                 if (cachedClass != null) {
                     return cachedClass;
                 }
@@ -151,9 +150,5 @@ public class JavaPluginLoader implements PluginLoader {
         if (!classes.containsKey(name)) {
             classes.put(name, clazz);
         }
-    }
-
-    private void removeClass(String name) {
-        Class<?> clazz = classes.remove(name);
     }
 }

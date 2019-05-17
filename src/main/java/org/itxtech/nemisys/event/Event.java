@@ -47,6 +47,4 @@ public abstract class Event {
     public void setCancelled() {
         setCancelled(true);
     }
-
-
 }

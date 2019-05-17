@@ -21,6 +21,7 @@ import java.util.*;
  * @author Tee7even
  */
 public class RCONServer extends Thread {
+
     private static final int SERVERDATA_AUTH = 3;
     private static final int SERVERDATA_AUTH_RESPONSE = 2;
     private static final int SERVERDATA_EXECCOMMAND = 2;
@@ -97,7 +98,7 @@ public class RCONServer extends Thread {
                         this.write(key);
                     }
                 }
-            } catch (BufferUnderflowException exception) {
+            } catch (BufferUnderflowException ignore) {
             } catch (Exception exception) {
                 Server.getInstance().getLogger().logException(exception);
             }
@@ -156,7 +157,6 @@ public class RCONServer extends Thread {
         switch (packet.getType()) {
             case SERVERDATA_AUTH:
                 byte[] payload = new byte[1];
-                payload[0] = 0;
 
                 if (new String(packet.getPayload(), Charset.forName("UTF-8")).equals(this.password)) {
                     this.rconSessions.add(channel);

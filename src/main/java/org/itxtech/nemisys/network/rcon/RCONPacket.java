@@ -10,6 +10,7 @@ import java.nio.ByteOrder;
  * @author Tee7even
  */
 public class RCONPacket {
+
     private int id;
     private int type;
     private byte[] payload;
