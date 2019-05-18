@@ -195,9 +195,8 @@ public class RakNetInterface implements ServerInstance, AdvancedSourceInterface 
                         ProtocolInfo.MINECRAFT_VERSION_NETWORK + ";" +
                         info.getPlayerCount() + ";" +
                         info.getMaxPlayerCount() + ";" +
-                        server.getServerUniqueId().toString() +
-                        "" + ";" +
-                        "" + ";");
+                        server.getServerUniqueId().toString() + ";" +
+                        "Powered by Nemisys;" + "Survival;");
     }
 
     public void setPortCheck(boolean value) {
