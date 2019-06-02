@@ -83,7 +83,7 @@ public class SessionManager {
                     }
                     --max;
                 } catch (Exception e) {
-                    if (currentSource != "") {
+                    if (!Objects.equals(currentSource, "")) {
                         this.blockAddress(currentSource);
                     }
                 }
@@ -94,7 +94,7 @@ public class SessionManager {
             if (time < 10) {
                 try {
                     Thread.sleep(10 - time);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
             this.tick();
@@ -117,7 +117,7 @@ public class SessionManager {
 
         if ((this.ticks & 0b1111) == 0) {
             double diff = Math.max(5d, (double) time - this.lastMeasure);
-            this.streamOption("bandwidth", this.sendBytes / diff + ";" + this.receiveBytes / diff);
+            this.streamOption(this.sendBytes / diff + ";" + this.receiveBytes / diff);
             this.lastMeasure = time;
             this.sendBytes = 0;
             this.receiveBytes = 0;
@@ -276,11 +276,11 @@ public class SessionManager {
         this.server.pushThreadToMainPacket(buffer);
     }
 
-    protected void streamOption(String name, String value) {
+    protected void streamOption(String value) {
         byte[] buffer = Binary.appendBytes(
                 RakNet.PACKET_SET_OPTION,
-                new byte[]{(byte) (name.length() & 0xff)},
-                name.getBytes(StandardCharsets.UTF_8),
+                new byte[]{(byte) ("bandwidth".length() & 0xff)},
+                "bandwidth".getBytes(StandardCharsets.UTF_8),
                 value.getBytes(StandardCharsets.UTF_8)
         );
         this.server.pushThreadToMainPacket(buffer);

@@ -14,7 +14,6 @@ import java.util.UUID;
 public class SynapsePlayer extends Player {
 
     protected SynapseEntry synapseEntry;
-    private boolean isFirstTimeLogin = false;
 
     public SynapsePlayer(SourceInterface interfaz, SynapseEntry synapseEntry, long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
@@ -22,9 +21,9 @@ public class SynapsePlayer extends Player {
     }
 
     public void handleLoginPacket(PlayerLoginPacket packet) {
-        this.isFirstTimeLogin = packet.isFirstTime;
+        boolean isFirstTimeLogin = packet.isFirstTime;
         SynapsePlayerConnectEvent ev;
-        this.getServer().getPluginManager().callEvent(ev = new SynapsePlayerConnectEvent(this, this.isFirstTimeLogin));
+        this.getServer().getPluginManager().callEvent(ev = new SynapsePlayerConnectEvent(this, isFirstTimeLogin));
         if (!ev.isCancelled()) {
             DataPacket pk = this.getSynapseEntry().getSynapse().getPacket(packet.cachedLoginPacket);
             pk.setOffset(3);

@@ -49,7 +49,7 @@ public class Session {
             if (time < 10) {
                 try {
                     Thread.sleep(10 - time);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
         }

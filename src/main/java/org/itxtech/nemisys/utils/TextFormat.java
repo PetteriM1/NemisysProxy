@@ -102,7 +102,7 @@ public enum TextFormat {
      */
     public static final char ESCAPE = '\u00A7';
 
-    private static final Pattern CLEAN_PATTERN = Pattern.compile("(?i)" + String.valueOf(ESCAPE) + "[0-9A-FK-OR]");
+    private static final Pattern CLEAN_PATTERN = Pattern.compile("(?i)" + ESCAPE + "[0-9A-FK-OR]");
     private final static Map<Integer, TextFormat> BY_ID = Maps.newTreeMap();
     private final static Map<Character, TextFormat> BY_CHAR = new HashMap<>();
 
@@ -219,7 +219,7 @@ public enum TextFormat {
      * @return Any remaining chat color to pass onto the next line.
      */
     public static String getLastColors(String input) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         int length = input.length();
 
         for (int index = length - 1; index > -1; index--) {
@@ -229,7 +229,7 @@ public enum TextFormat {
                 TextFormat color = getByChar(c);
 
                 if (color != null) {
-                    result = color.toString() + result;
+                    result.insert(0, color.toString());
 
                     if (color.isColor() || color.equals(RESET)) {
                         break;
@@ -238,7 +238,7 @@ public enum TextFormat {
             }
         }
 
-        return result;
+        return result.toString();
     }
 
     /**

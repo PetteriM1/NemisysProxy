@@ -46,7 +46,7 @@ public class CommandReader extends Thread implements InterruptibleThread {
     }
 
     public void run() {
-        Long lastLine = System.currentTimeMillis();
+        long lastLine = System.currentTimeMillis();
         String line;
 
         try {
@@ -85,14 +85,14 @@ public class CommandReader extends Thread implements InterruptibleThread {
         try {
             reader.getOutput().write("\u001b[1G\u001b[K");
             reader.flush();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 
     public synchronized void unstashLine() {
         try {
             reader.resetPromptLine("> ", this.stashed.toString(), this.stashed.cursor);
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 

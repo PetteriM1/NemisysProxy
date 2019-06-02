@@ -121,7 +121,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
             while (!isShutdown.get()) {
                  try {
                      Thread.sleep(1000);
-                 } catch (InterruptedException e) {}
+                 } catch (InterruptedException ignored) {}
              }
          }
      }

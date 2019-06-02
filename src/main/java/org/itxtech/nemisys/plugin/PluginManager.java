@@ -358,10 +358,7 @@ public class PluginManager {
 
     public Set<Permissible> getPermissionSubscriptions(String permission) {
         if (this.permSubs.containsKey(permission)) {
-            Set<Permissible> subs = new HashSet<>();
-            for (Permissible p : this.permSubs.get(permission).values()) {
-                subs.add(p);
-            }
+            Set<Permissible> subs = new HashSet<>(this.permSubs.get(permission).values());
             return subs;
         }
 
@@ -387,13 +384,9 @@ public class PluginManager {
     public Set<Permissible> getDefaultPermSubscriptions(boolean op) {
         Set<Permissible> subs = new HashSet<>();
         if (op) {
-            for (Permissible p : this.defSubsOp.values()) {
-                subs.add(p);
-            }
+            subs.addAll(this.defSubsOp.values());
         } else {
-            for (Permissible p : this.defSubs.values()) {
-                subs.add(p);
-            }
+            subs.addAll(this.defSubs.values());
         }
         return subs;
     }

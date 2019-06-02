@@ -88,9 +88,6 @@ import java.util.*;
  * <li><i>prefix</i><br>
  * 字符串，表示这个插件的消息头衔。参见：{@link PluginDescription#getPrefix()}<br>
  * String, the message title of the plugin. See: {@link PluginDescription#getPrefix()}</li>
- * <li><i>load</i><br>
- * 字符串，表示这个插件的加载顺序，或者说在什么时候加载。参见：{@link PluginLoadOrder}<br>
- * String, the load order of plugin, or when the plugin loads. See: {@link PluginLoadOrder}</li>
  * <li><i>commands</i><br>
  * 序列，表示这个插件的命令列表。<br>
  * List, the command list.</li>
@@ -103,8 +100,7 @@ import java.util.*;
  * @author iNevet(code and javadoc) @ Nukkit Project
  * @author 粉鞋大妈(javadoc) @ Nukkit Project
  * @see Plugin
- * @see PluginLoadOrder
- * @since Nukkit 1.0 | Nukkit API 1.0.0
+ * @since Nemisys 1.0 | Nemisys API 1.0.0
  */
 public class PluginDescription {
 

@@ -49,9 +49,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
      * @return
      */
     public Map<String, Object> getAllMap() {
-        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.putAll(this);
-        return map;
+        return new LinkedHashMap<>(this);
     }
 
 
@@ -89,9 +87,9 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
         String[] keys = key.split("\\.", 2);
         if (!super.containsKey(keys[0])) return defaltValue;
         Object value = super.get(keys[0]);
-        if (value != null && value instanceof ConfigSection) {
+        if (value instanceof ConfigSection) {
             ConfigSection section = (ConfigSection) value;
-            return (T) section.get(keys[1], defaltValue);
+            return section.get(keys[1], defaltValue);
         }
         return defaltValue;
     }
@@ -170,7 +168,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
         if (parent == null) return sections;
         parent.entrySet().forEach(e -> {
             if (e.getValue() instanceof ConfigSection)
-                sections.put(e.getKey(), (ConfigSection) e.getValue());
+                sections.put(e.getKey(), e.getValue());
         });
         return sections;
     }
@@ -322,7 +320,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
      * @return
      */
     public boolean getBoolean(String key, boolean defaultValue) {
-        return this.get(key, (Boolean) defaultValue).booleanValue();
+        return this.get(key, defaultValue).booleanValue();
     }
 
     /**
@@ -407,7 +405,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
             } else if (object instanceof String) {
                 try {
                     result.add(Integer.valueOf((String) object));
-                } catch (Exception ex) {
+                } catch (Exception ignored) {
                 }
             } else if (object instanceof Character) {
                 result.add((int) (Character) object);
@@ -462,7 +460,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
             } else if (object instanceof String) {
                 try {
                     result.add(Double.valueOf((String) object));
-                } catch (Exception ex) {
+                } catch (Exception ignored) {
                 }
             } else if (object instanceof Character) {
                 result.add((double) (Character) object);
@@ -491,7 +489,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
             } else if (object instanceof String) {
                 try {
                     result.add(Float.valueOf((String) object));
-                } catch (Exception ex) {
+                } catch (Exception ignored) {
                 }
             } else if (object instanceof Character) {
                 result.add((float) (Character) object);
@@ -520,7 +518,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
             } else if (object instanceof String) {
                 try {
                     result.add(Long.valueOf((String) object));
-                } catch (Exception ex) {
+                } catch (Exception ignored) {
                 }
             } else if (object instanceof Character) {
                 result.add((long) (Character) object);
@@ -552,7 +550,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
             } else if (object instanceof String) {
                 try {
                     result.add(Byte.valueOf((String) object));
-                } catch (Exception ex) {
+                } catch (Exception ignored) {
                 }
             } else if (object instanceof Character) {
                 result.add((byte) ((Character) object).charValue());
@@ -617,7 +615,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
             } else if (object instanceof String) {
                 try {
                     result.add(Short.valueOf((String) object));
-                } catch (Exception ex) {
+                } catch (Exception ignored) {
                 }
             } else if (object instanceof Character) {
                 result.add((short) ((Character) object).charValue());
