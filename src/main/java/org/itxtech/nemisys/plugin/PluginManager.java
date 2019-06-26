@@ -146,17 +146,7 @@ public class PluginManager {
             }
 
             for (final PluginLoader loader : loaders.values()) {
-                for (File file : dictionary.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        for (Pattern pattern : loader.getPluginFilters()) {
-                            if (pattern.matcher(name).matches()) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-                })) {
+                for (File file : dictionary.listFiles(new MyFilenameFilter(loader))) {
                     if (file.isDirectory() && !includeDir) {
                         continue;
                     }
@@ -592,12 +582,31 @@ public class PluginManager {
             return clazz;
         } catch (NoSuchMethodException e) {
             if (clazz.getSuperclass() != null
-                    && !clazz.getSuperclass().equals(Event.class)
+                    && clazz.getSuperclass() != Event.class
                     && Event.class.isAssignableFrom(clazz.getSuperclass())) {
                 return getRegistrationClass(clazz.getSuperclass().asSubclass(Event.class));
             } else {
                 throw new IllegalAccessException("Unable to find handler list for event " + clazz.getName() + ". Static getHandlers method required!");
             }
+        }
+    }
+
+    private static class MyFilenameFilter implements FilenameFilter {
+
+        private final PluginLoader loader;
+
+        public MyFilenameFilter(PluginLoader loader) {
+            this.loader = loader;
+        }
+
+        @Override
+        public boolean accept(File dir, String name) {
+            for (Pattern pattern : loader.getPluginFilters()) {
+                if (pattern.matcher(name).matches()) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

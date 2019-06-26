@@ -24,7 +24,7 @@ public class SynapseServer extends Thread implements InterruptibleThread {
     private ThreadedLogger logger;
     private String interfaz;
     private int port;
-    private boolean shutdown = false;
+    private boolean shutdown;
     private SessionManager sessionManager;
 
     public SynapseServer(ThreadedLogger logger, SynapseInterface server, int port) {

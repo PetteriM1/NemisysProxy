@@ -42,7 +42,7 @@ public class JavaPluginLoader implements PluginLoader {
             String className = description.getMain();
             PluginClassLoader classLoader = new PluginClassLoader(this, this.getClass().getClassLoader(), file);
             this.classLoaders.put(description.getName(), classLoader);
-            PluginBase plugin = null;
+            PluginBase plugin;
             try {
                 Class javaClass = classLoader.loadClass(className);
 

@@ -2,23 +2,14 @@ package org.itxtech.nemisys.command;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.itxtech.nemisys.Player;
-import org.itxtech.nemisys.command.data.*;
 import org.itxtech.nemisys.event.TranslationContainer;
 import org.itxtech.nemisys.utils.TextFormat;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author MagicDroidX
  * Nukkit Project
  */
 public abstract class Command {
-
-    protected CommandData commandData;
 
     protected String description;
     protected String usageMessage;
@@ -109,7 +100,7 @@ public abstract class Command {
 
         if (this.permissionMessage == null) {
             target.sendMessage(new TranslationContainer(TextFormat.RED + "Unknown command. Try /help for a list of commands", this.name));
-        } else if (!this.permissionMessage.equals("")) {
+        } else if (!this.permissionMessage.isEmpty()) {
             target.sendMessage(this.permissionMessage.replace("<permission>", this.permission));
         }
 
@@ -117,7 +108,7 @@ public abstract class Command {
     }
 
     public boolean testPermissionSilent(CommandSender target) {
-        if (this.permission == null || this.permission.equals("")) {
+        if (this.permission == null || this.permission.isEmpty()) {
             return true;
         }
 
@@ -129,50 +120,6 @@ public abstract class Command {
         }
 
         return false;
-    }
-
-    /**
-     * Returns an CommandData containing command data
-     *
-     * @return CommandData
-     */
-    public CommandData getDefaultCommandData() {
-        return this.commandData;
-    }
-
-    /**
-     * Generates modified command data for the specified player
-     * for AvailableCommandsPacket.
-     *
-     * @return CommandData|null
-     */
-    public CommandDataVersions generateCustomCommandData(Player player) {
-        if (!this.testPermission(player)) {
-            return null;
-        }
-
-        CommandData customData = new CommandData();
-
-        if (getAliases().length > 0) {
-            List<String> aliases = new ArrayList(Arrays.asList(getAliases()));
-            if (!aliases.contains(this.name)) {
-                aliases.add(this.name);
-            }
-
-            customData.aliases = new CommandEnum(this.name + "Aliases", aliases);
-        }
-
-        customData.description = player.getServer().getLanguage().translateString(this.getDescription());
-        if (customData.overloads.size() == 0) customData.overloads.put("default", new CommandOverload());
-
-        CommandDataVersions versions = new CommandDataVersions();
-        versions.versions.add(customData);
-
-        return versions;
-    }
-
-    public Map<String, CommandOverload> getOverloads() {
-        return this.commandData.overloads;
     }
 
     public boolean allowChangesFrom(CommandMap commandMap) {

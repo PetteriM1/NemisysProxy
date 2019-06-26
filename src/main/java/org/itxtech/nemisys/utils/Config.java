@@ -158,7 +158,7 @@ public class Config {
     public boolean load(InputStream inputStream) {
         if (inputStream == null) return false;
         if (this.correct) {
-            String content = "";
+            String content;
             try {
                 content = Utils.readFile(inputStream);
             } catch (IOException e) {
@@ -509,8 +509,7 @@ public class Config {
             case Config.JSON:
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder.create();
-                this.config = new ConfigSection(gson.fromJson(content, new TypeToken<LinkedHashMap<String, Object>>() {
-                }.getType()));
+                this.config = new ConfigSection(gson.fromJson(content, new LinkedHashMapTypeToken().getType()));
                 break;
             case Config.YAML:
                 DumperOptions dumperOptions = new DumperOptions();
@@ -537,5 +536,8 @@ public class Config {
     public Set<String> getKeys(boolean child) {
         if (this.correct) return config.getKeys(child);
         return new HashSet<>();
+    }
+
+    private static class LinkedHashMapTypeToken extends TypeToken<LinkedHashMap<String, Object>> {
     }
 }

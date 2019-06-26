@@ -40,7 +40,6 @@ public abstract class DefaultPermissions {
         registerPermission(new Permission(ROOT + ".command.help", "Allows the user to view the help menu", Permission.DEFAULT_TRUE), commands);
         registerPermission(new Permission(ROOT + ".command.plugins", "Allows the user to view the list of plugins", Permission.DEFAULT_OP), commands);
         registerPermission(new Permission(ROOT + ".command.status", "Allows the user to view the server performance", Permission.DEFAULT_OP), commands);
-        registerPermission(new Permission(ROOT + ".command.gc", "Allows the user to fire garbage collection tasks", Permission.DEFAULT_OP), commands);
 
         commands.recalculatePermissibles();
 

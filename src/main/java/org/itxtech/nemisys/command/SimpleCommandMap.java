@@ -33,7 +33,6 @@ public class SimpleCommandMap implements CommandMap {
         this.register("nemisys", new ListCommand("list"));
         this.register("nemisys", new KickCommand("kick"));
         this.register("nemisys", new StatusCommand("status"));
-        this.register("nemisys", new GarbageCollectorCommand("gc"));
     }
 
     @Override
