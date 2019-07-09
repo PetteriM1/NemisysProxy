@@ -141,8 +141,7 @@ public final class ClientChainData {
 
     private void decodeChainData() {
         Map<String, List<String>> map = new Gson().fromJson(new String(bs.get(bs.getLInt()), StandardCharsets.UTF_8),
-                new TypeToken<Map<String, List<String>>>() {
-                }.getType());
+                new MapTypeToken().getType());
         if (map.isEmpty() || !map.containsKey("chain") || map.get("chain").isEmpty()) return;
         List<String> chains = map.get("chain");
         for (String c : chains) {
@@ -183,4 +182,6 @@ public final class ClientChainData {
         return new Gson().fromJson(json, JsonObject.class);
     }
 
+    private static class MapTypeToken extends TypeToken<Map<String, List<String>>> {
+    }
 }

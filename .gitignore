@@ -57,3 +57,5 @@ nbdist/
 .nb-gradle/
 rebel.xml
 .DS_Store
+.factorypath
+dependency-reduced-pom.xml

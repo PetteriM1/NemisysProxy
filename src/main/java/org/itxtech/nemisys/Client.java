@@ -339,7 +339,7 @@ public class Client {
     }
 
     public void closeAllPlayers(String reason, Client fallback) {
-        String msg = fallback == null ? "§cAll lobby servers are offline!" + (reason.equals("") ? "" : "\n" + TextFormat.YELLOW + reason) : TextFormat.RED + "The server you were previously on went down and you have been connected to lobby";
+        String msg = fallback == null ? "§cAll lobby servers are offline!" + (reason.isEmpty() ? "" : "\n" + TextFormat.YELLOW + reason) : TextFormat.RED + "The server you were previously on went down and you have been connected to lobby";
 
         for (Player player : new ArrayList<>(this.players.values())) {
             if (fallback == null) {

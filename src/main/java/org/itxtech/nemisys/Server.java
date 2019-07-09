@@ -91,7 +91,6 @@ public class Server {
     private final ThreadPoolExecutor playerTicker = new ThreadPoolExecutor(1, Runtime.getRuntime().availableProcessors(),
             1, TimeUnit.MINUTES, new LinkedBlockingQueue<>(), new ThreadFactoryBuilder().setNameFormat("Player Ticker - #%d").setDaemon(true).build());
 
-    @SuppressWarnings("serial")
     public Server(MainLogger logger, final String filePath, String dataPath, String pluginPath) {
         instance = this;
         this.logger = logger;
@@ -108,26 +107,7 @@ public class Server {
         this.console = new CommandReader();
         this.console.start();
 
-        this.properties = new Config(this.dataPath + "server.properties", Config.PROPERTIES, new ConfigSection() {
-            {
-                put("motd", "Nemisys Proxy");
-                put("server-ip", "0.0.0.0");
-                put("server-port", 19132);
-                put("synapse-ip", "0.0.0.0");
-                put("synapse-port", 10305);
-                put("password", "must16keyslength");
-                put("async-workers", "auto");
-                put("max-players", 50);
-                put("plus-one-max-count", true);
-                put("players-per-thread", 50);
-                put("enable-query", true);
-                put("enable-rcon", false);
-                put("rcon.password", Base64.getEncoder().encodeToString(UUID.randomUUID().toString().replace("-", "").getBytes()).substring(3, 13));
-                put("debug", 1);
-                put("enable-synapse-client", false);
-                put("ansi", true);
-            }
-        });
+        this.properties = new Config(this.dataPath + "server.properties", Config.PROPERTIES, new ServerProperties());
 
         if (!this.getPropertyBoolean("ansi", true)) Nemisys.ANSI = false;
 
@@ -147,7 +127,7 @@ public class Server {
         this.scheduler = new ServerScheduler();
 
         if (this.getPropertyBoolean("enable-rcon", false)) {
-            this.rcon = new RCON(this, this.getPropertyString("rcon.password", ""), (!this.getIp().equals("")) ? this.getIp() : "0.0.0.0", this.getPropertyInt("rcon.port", this.getPort()));
+            this.rcon = new RCON(this, this.getPropertyString("rcon.password", ""), (!this.getIp().isEmpty()) ? this.getIp() : "0.0.0.0", this.getPropertyInt("rcon.port", this.getPort()));
         }
 
         this.maxPlayers = this.getPropertyInt("max-players", 20);
@@ -155,7 +135,7 @@ public class Server {
         Nemisys.DEBUG = this.getPropertyInt("debug", 1);
         this.logger.setLogDebug(Nemisys.DEBUG > 1);
 
-        this.logger.info(this.getLanguage().translateString("\u00A7b[\u00A7cNemisys \u00A7aPetteriM1 Edition\u00A7b] Proxy started on {%0}:{%1}", new String[]{this.getIp().equals("") ? "*" : this.getIp(), String.valueOf(this.getPort())}));
+        this.logger.info(this.getLanguage().translateString("\u00A7b[\u00A7cNemisys \u00A7aPetteriM1 Edition\u00A7b] Proxy started on {%0}:{%1}", new String[]{this.getIp().isEmpty() ? "*" : this.getIp(), String.valueOf(this.getPort())}));
         this.serverID = UUID.randomUUID();
 
         this.network = new Network(this);
@@ -260,7 +240,7 @@ public class Server {
         if (this.clients.size() > 0) {
             this.clientData = new ClientData();
             for (Client client : this.clients.values()) {
-                ClientData.Entry entry = this.clientData.new Entry(client.getIp(), client.getPort(), client.getPlayers().size(),
+                ClientData.Entry entry = new ClientData.Entry(client.getIp(), client.getPort(), client.getPlayers().size(),
                         client.getMaxPlayers(), client.getDescription(), client.getTps(), client.getLoad(), client.getUpTime());
                 this.clientData.clientList.put(client.getHash(), entry);
             }
@@ -835,6 +815,27 @@ public class Server {
         int threads = Math.min(Math.max(1, players.size() / this.playersPerThread), Runtime.getRuntime().availableProcessors());
         if (playerTicker.getMaximumPoolSize() != threads) {
             playerTicker.setMaximumPoolSize(threads);
+        }
+    }
+
+    private static class ServerProperties extends ConfigSection {
+        {
+            put("motd", "Nemisys Proxy");
+            put("server-ip", "0.0.0.0");
+            put("server-port", 19132);
+            put("synapse-ip", "0.0.0.0");
+            put("synapse-port", 10305);
+            put("password", "must16keyslength");
+            put("async-workers", "auto");
+            put("max-players", 50);
+            put("plus-one-max-count", true);
+            put("players-per-thread", 50);
+            put("enable-query", true);
+            put("enable-rcon", false);
+            put("rcon.password", Base64.getEncoder().encodeToString(UUID.randomUUID().toString().replace("-", "").getBytes()).substring(3, 13));
+            put("debug", 1);
+            put("enable-synapse-client", false);
+            put("ansi", true);
         }
     }
 }

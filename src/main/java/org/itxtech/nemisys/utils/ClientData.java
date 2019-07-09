@@ -20,7 +20,7 @@ public class ClientData {
         return re[0];
     }
 
-    public class Entry {
+    public static class Entry {
         private String ip;
         private int port;
         private int playerCount;
@@ -73,5 +73,4 @@ public class ClientData {
             return this.upTime;
         }
     }
-
 }

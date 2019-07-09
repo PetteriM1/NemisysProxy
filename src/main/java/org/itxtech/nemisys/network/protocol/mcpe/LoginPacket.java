@@ -44,8 +44,7 @@ public class LoginPacket extends DataPacket {
 
     private void decodeChainData() {
         Map<String, List<String>> map = new Gson().fromJson(new String(this.get(getLInt()), StandardCharsets.UTF_8),
-                new TypeToken<Map<String, List<String>>>() {
-                }.getType());
+                new MapTypeToken().getType());
         if (map.isEmpty() || !map.containsKey("chain") || map.get("chain").isEmpty()) return;
         List<String> chains = map.get("chain");
         for (String c : chains) {
@@ -94,5 +93,8 @@ public class LoginPacket extends DataPacket {
     @Override
     public Skin getSkin() {
         return this.skin;
+    }
+
+    private static class MapTypeToken extends TypeToken<Map<String, List<String>>> {
     }
 }
