@@ -480,16 +480,16 @@ public class Server {
     }
 
     private void titleTick() {
-        if (!Nemisys.ANSI) return;
+        if (Nemisys.ANSI) {
+            String title = (char) 0x1b + "]0;Nemisys Proxy" +
+                    " | Players: " + this.players.size() +
+                    " | Servers: " + this.clients.size() +
+                    " | Memory: " + Math.round(NemisysMath.round((double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024, 2)) + " MB" +
+                    " | TPS: " + this.getTicksPerSecond() +
+                    " | Load: " + this.getTickUsage() + "%" + (char) 0x07;
 
-        String title = (char) 0x1b + "]0;Nemisys Proxy" +
-                " | Players: " + this.players.size() +
-                " | Servers: " + this.clients.size() +
-                " | Memory: " + Math.round(NemisysMath.round((double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024, 2)) + " MB" +
-                " | TPS: " + this.getTicksPerSecond() +
-                " | Load: " + this.getTickUsage() + "%" + (char) 0x07;
-
-        System.out.print(title);
+            System.out.print(title);
+        }
 
         this.network.resetStatistics();
     }
