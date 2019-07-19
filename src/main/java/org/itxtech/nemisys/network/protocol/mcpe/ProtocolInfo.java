@@ -1,7 +1,7 @@
 package org.itxtech.nemisys.network.protocol.mcpe;
 
 /**
- * @author MagicDroidX & iNevet
+ * @author MagicDroidX &amp; iNevet
  * Nukkit Project
  */
 public interface ProtocolInfo {

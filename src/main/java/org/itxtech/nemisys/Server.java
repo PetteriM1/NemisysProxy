@@ -37,7 +37,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author MagicDroidX & Box
+ * @author MagicDroidX &amp; Box
  * Nukkit
  */
 public class Server {
