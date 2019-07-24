@@ -375,11 +375,15 @@ public class Player implements CommandSender {
             this.closed = true;
 
             if (this.client != null) {
-                PlayerLogoutPacket pk = new PlayerLogoutPacket();
-                pk.uuid = this.uuid;
-                pk.reason = reason;
-                this.client.sendDataPacket(pk);
-                this.client.removePlayer(this);
+                try {
+                    PlayerLogoutPacket pk = new PlayerLogoutPacket();
+                    pk.uuid = this.uuid;
+                    pk.reason = reason;
+                    this.client.sendDataPacket(pk);
+                } catch (Exception ignore) {}
+                try {
+                    this.client.removePlayer(this);
+                } catch (Exception ignore) {}
             }
 
             this.server.getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged out due to {%3}", new String[]{

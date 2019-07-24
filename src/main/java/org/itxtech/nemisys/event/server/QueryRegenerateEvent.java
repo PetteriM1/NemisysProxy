@@ -154,8 +154,10 @@ public class QueryRegenerateEvent extends ServerEvent {
         query.put(new byte[]{0x00, 0x01}).put("player_".getBytes()).put(new byte[]{0x00, 0x00});
 
         for (Player player : this.players) {
-            query.put(player.getName().getBytes(StandardCharsets.UTF_8));
-            query.put((byte) 0x00);
+            try {
+                query.put(player.getName().getBytes(StandardCharsets.UTF_8));
+                query.put((byte) 0x00);
+            } catch (Exception ignore) {}
         }
 
         query.put((byte) 0x00);
