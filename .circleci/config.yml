@@ -1,0 +1,27 @@
+version: 2
+jobs:
+  build:
+    
+    working_directory: ~/NemisysPetteriM1Edition
+
+    docker:
+      - image: circleci/openjdk:8-jdk-browsers
+
+    steps:
+
+      - checkout
+
+      - restore_cache:
+          key: NemisysPetteriM1Edition-{{ checksum "pom.xml" }}
+      
+      - run: mvn dependency:go-offline
+      
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: NemisysPetteriM1Edition-{{ checksum "pom.xml" }}
+      
+      - run: mvn clean package
+
+      - store_artifacts:
+          path: target/Nemisys-PM1E.jar
