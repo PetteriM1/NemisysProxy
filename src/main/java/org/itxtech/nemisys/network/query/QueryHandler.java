@@ -3,6 +3,7 @@ package org.itxtech.nemisys.network.query;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.event.server.QueryRegenerateEvent;
 import org.itxtech.nemisys.utils.Binary;
+import org.itxtech.nemisys.utils.Utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -39,7 +40,7 @@ public class QueryHandler {
         try {
             return String.valueOf(Binary.readInt(Binary.subBytes(MessageDigest.getInstance("SHA-512").digest((salt + ":" + token).getBytes()), 7, 4)));
         } catch (NoSuchAlgorithmException e) {
-            return String.valueOf(new Random().nextInt());
+            return String.valueOf(Utils.random.nextInt());
         }
     }
 
@@ -54,7 +55,7 @@ public class QueryHandler {
         this.lastToken = this.token;
         byte[] token = new byte[16];
         for (int i = 0; i < 16; i++) {
-            token[i] = (byte) new Random().nextInt(255);
+            token[i] = (byte) Utils.random.nextInt(255);
         }
         this.token = token;
     }

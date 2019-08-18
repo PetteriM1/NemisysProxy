@@ -470,7 +470,7 @@ public class Player implements CommandSender {
 
         String clientHash;
         if (c.size() > 0) {
-            clientHash = new ArrayList<>(c.keySet()).get(new Random().nextInt(c.size()));
+            clientHash = new ArrayList<>(c.keySet()).get(Utils.random.nextInt(c.size()));
         } else {
             clientHash = "";
         }

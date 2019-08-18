@@ -8,6 +8,7 @@ import org.itxtech.nemisys.raknet.protocol.Packet;
 import org.itxtech.nemisys.raknet.protocol.packet.*;
 import org.itxtech.nemisys.utils.Binary;
 import org.itxtech.nemisys.utils.ThreadedLogger;
+import org.itxtech.nemisys.utils.Utils;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -54,7 +55,7 @@ public class SessionManager {
         this.socket = socket;
         this.registerPackets();
 
-        this.serverId = new Random().nextLong();
+        this.serverId = Utils.random.nextLong();
 
         this.run();
     }

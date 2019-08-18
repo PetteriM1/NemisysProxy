@@ -2,6 +2,7 @@ package org.itxtech.nemisys.utils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.SplittableRandom;
 import java.util.UUID;
 
 /**
@@ -9,6 +10,8 @@ import java.util.UUID;
  * Nukkit Project
  */
 public class Utils {
+
+    public static final SplittableRandom random = new SplittableRandom();
 
     public static byte[] writeClientHash(String hash) {
         return Binary.appendBytes(

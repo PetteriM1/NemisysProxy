@@ -11,6 +11,7 @@ import org.itxtech.nemisys.network.protocol.spp.*;
 import org.itxtech.nemisys.synapse.network.SynLibInterface;
 import org.itxtech.nemisys.synapse.network.SynapseInterface;
 import org.itxtech.nemisys.utils.ClientData;
+import org.itxtech.nemisys.utils.Utils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -220,7 +221,7 @@ public class SynapseEntry {
                 break;
             case SynapseInfo.PLAYER_LOGIN_PACKET:
                 PlayerLoginPacket playerLoginPacket = (PlayerLoginPacket) pk;
-                SynapsePlayerCreationEvent ev = new SynapsePlayerCreationEvent(this.synLibInterface, SynapsePlayer.class, SynapsePlayer.class, new Random().nextLong(), playerLoginPacket.address, playerLoginPacket.port);
+                SynapsePlayerCreationEvent ev = new SynapsePlayerCreationEvent(this.synLibInterface, SynapsePlayer.class, SynapsePlayer.class, Utils.random.nextLong(), playerLoginPacket.address, playerLoginPacket.port);
                 this.getSynapse().getServer().getPluginManager().callEvent(ev);
                 Class<? extends SynapsePlayer> clazz = ev.getPlayerClass();
                 try {
