@@ -5,6 +5,8 @@ import org.itxtech.nemisys.event.Event;
 import org.itxtech.nemisys.event.HandlerList;
 import org.itxtech.nemisys.network.SourceInterface;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author CreeperFace
  */
@@ -20,19 +22,16 @@ public class PlayerCreationEvent extends Event {
 
     private final Long clientId;
 
-    private final String address;
-
-    private final int port;
+    private final InetSocketAddress socketAddress;
 
     private Class<? extends Player> baseClass;
 
     private Class<? extends Player> playerClass;
 
-    public PlayerCreationEvent(SourceInterface interfaz, Class<? extends Player> baseClass, Class<? extends Player> playerClass, long clientId, String address, int port) {
+    public PlayerCreationEvent(SourceInterface interfaz, Class<? extends Player> baseClass, Class<? extends Player> playerClass, Long clientId, InetSocketAddress socketAddress) {
         this.interfaz = interfaz;
         this.clientId = clientId;
-        this.address = address;
-        this.port = port;
+        this.socketAddress = socketAddress;
 
         this.baseClass = baseClass;
         this.playerClass = playerClass;
@@ -43,11 +42,15 @@ public class PlayerCreationEvent extends Event {
     }
 
     public String getAddress() {
-        return address;
+        return this.socketAddress.getAddress().toString();
     }
 
     public int getPort() {
-        return port;
+        return this.socketAddress.getPort();
+    }
+
+    public InetSocketAddress getSocketAddress() {
+        return socketAddress;
     }
 
     public long getClientId() {

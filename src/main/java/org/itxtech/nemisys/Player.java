@@ -21,6 +21,7 @@ import org.itxtech.nemisys.plugin.Plugin;
 import org.itxtech.nemisys.scheduler.AsyncTask;
 import org.itxtech.nemisys.utils.*;
 
+import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,9 +40,7 @@ public class Player implements CommandSender {
     @Getter
     private String name;
     @Getter
-    private String ip;
-    @Getter
-    private int port;
+    private InetSocketAddress socketAddress;
     @Getter
     private long clientId;
     @Getter
@@ -74,11 +73,10 @@ public class Player implements CommandSender {
 
     protected final Map<String, Set<Long>> scoreboards = new HashMap<>();
 
-    public Player(SourceInterface interfaz, long clientId, String ip, int port) {
+    public Player(SourceInterface interfaz, Long clientID, InetSocketAddress socketAddress) {
         this.interfaz = interfaz;
         this.clientId = clientId;
-        this.ip = ip;
-        this.port = port;
+        this.socketAddress = socketAddress;
         this.name = "";
         this.server = Server.getInstance();
         this.perm = new PermissibleBase(this);
@@ -113,7 +111,7 @@ public class Player implements CommandSender {
                     this.server.addOnlinePlayer(this.uuid, this);
 
                     AsyncTask loginTask = new AsyncTask() {
-                        PlayerAsyncPreLoginEvent e = new PlayerAsyncPreLoginEvent(getName(), getUuid(), getIp(), getPort());
+                        PlayerAsyncPreLoginEvent e = new PlayerAsyncPreLoginEvent(getName(), getUuid(), Player.this.getAddress(), Player.this.getPort());
 
                         @Override
                         public void onRun() {
@@ -324,8 +322,8 @@ public class Player implements CommandSender {
 
             PlayerLoginPacket pk = new PlayerLoginPacket();
             pk.uuid = this.uuid;
-            pk.address = this.ip;
-            pk.port = this.port;
+            pk.address = this.getAddress();
+            pk.port = this.getPort();
             pk.isFirstTime = this.isFirstTimeLogin;
             pk.cachedLoginPacket = this.cachedLoginPacket;
 
@@ -388,8 +386,8 @@ public class Player implements CommandSender {
 
             this.server.getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged out due to {%3}", new String[]{
                     TextFormat.AQUA + this.getName() + TextFormat.WHITE,
-                    this.ip,
-                    String.valueOf(this.port),
+                    this.getAddress(),
+                    String.valueOf(this.getPort()),
                     this.getServer().getLanguage().translateString(reason)
             }));
 
@@ -462,8 +460,8 @@ public class Player implements CommandSender {
     protected void completeLogin() {
         this.server.getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged in", new String[]{
                 TextFormat.AQUA + this.name + TextFormat.WHITE,
-                this.ip,
-                String.valueOf(this.port)
+                this.getAddress(),
+                String.valueOf(this.getPort())
         }));
 
         Map<String, Client> c = this.server.getMainClients();
@@ -590,5 +588,17 @@ public class Player implements CommandSender {
 
     public int rawHashCode() {
         return super.hashCode();
+    }
+
+    public String getAddress() {
+        return this.socketAddress.getAddress().getHostAddress();
+    }
+
+    public int getPort() {
+        return this.socketAddress.getPort();
+    }
+
+    public InetSocketAddress getSocketAddress() {
+        return this.socketAddress;
     }
 }

@@ -2,6 +2,7 @@ package org.itxtech.nemisys;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
 import org.itxtech.nemisys.command.*;
@@ -29,6 +30,7 @@ import org.itxtech.nemisys.synapse.SynapseEntry;
 import org.itxtech.nemisys.utils.*;
 
 import java.io.File;
+import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,9 +73,8 @@ public class Server {
     private QueryHandler queryHandler;
     private QueryRegenerateEvent queryRegenerateEvent;
     private Config properties;
-    private Map<String, Player> players = new ConcurrentHashMap<>();
+    private Map<InetSocketAddress, Player> players = new ConcurrentHashMap<>();
     private Map<UUID, Player> playersUUIDs = new ConcurrentHashMap<>();
-    private Map<Integer, String> identifier = new ConcurrentHashMap<>();
     private SynapseInterface synapseInterface;
     private Map<String, Client> clients = new ConcurrentHashMap<>();
     private ClientData clientData = new ClientData();
@@ -184,10 +185,6 @@ public class Server {
 
         for (Player player : players) {
             player.sendDataPacket(packet);
-        }
-
-        if (packet.encapsulatedPacket != null) {
-            packet.encapsulatedPacket = null;
         }
     }
 
@@ -363,15 +360,24 @@ public class Server {
         this.forceShutdown();
     }
 
-    public void handlePacket(String address, int port, byte[] payload) {
+    public void handlePacket(InetSocketAddress address, ByteBuf payload) {
         try {
-            if (payload.length > 2 && Arrays.equals(Binary.subBytes(payload, 0, 2), new byte[]{(byte) 0xfe, (byte) 0xfd}) && this.queryHandler != null) {
-                this.queryHandler.handle(address, port, payload);
+            if (!payload.isReadable(3)) {
+                return;
+            }
+            byte[] prefix = new byte[2];
+            payload.readBytes(prefix);
+
+            if (!Arrays.equals(prefix, new byte[]{(byte) 0xfe, (byte) 0xfd})) {
+                return;
+            }
+            if (this.queryHandler != null) {
+                this.queryHandler.handle(address, payload);
             }
         } catch (Exception e) {
             this.logger.logException(e);
 
-            this.getNetwork().blockAddress(address, 600);
+            this.network.blockAddress(address.getAddress(), -1);
         }
     }
 
@@ -392,9 +398,8 @@ public class Server {
         }
     }
 
-    public void addPlayer(String identifier, Player player) {
-        this.players.put(identifier, player);
-        this.identifier.put(player.rawHashCode(), identifier);
+    public void addPlayer(InetSocketAddress socketAddress, Player player) {
+        this.players.put(socketAddress, player);
         adjustPoolSize();
     }
 
@@ -499,7 +504,7 @@ public class Server {
     }
 
     public String getName() {
-        return "Nemisys";
+        return "Nemisys PetteriM1 Edition";
     }
 
     public boolean isRunning() {
@@ -547,7 +552,7 @@ public class Server {
     }
 
     public String getMotd() {
-        return this.getPropertyString("motd", "Nemisys Server");
+        return this.getPropertyString("motd", "Nemisys Proxy");
     }
 
     public MainLogger getLogger() {
@@ -596,7 +601,7 @@ public class Server {
         return commandMap;
     }
 
-    public Map<String, Player> getOnlinePlayers() {
+    public Map<InetSocketAddress, Player> getOnlinePlayers() {
         return this.players;
     }
 
@@ -650,13 +655,16 @@ public class Server {
     }
 
     public void removePlayer(Player player) {
-        if (player.getUuid() != null)
+        if (player.getUuid() != null) {
             this.playersUUIDs.remove(player.getUuid());
+        }
 
-        String identifier;
-        if ((identifier = this.identifier.get(player.rawHashCode())) != null) {
-            this.players.remove(identifier);
-            this.identifier.remove(player.rawHashCode());
+        for (InetSocketAddress socketAddress : new ArrayList<>(this.players.keySet())) {
+            Player p = this.players.get(socketAddress);
+            if (player == p) {
+                this.players.remove(socketAddress);
+                break;
+            }
         }
 
         adjustPoolSize();
@@ -776,10 +784,10 @@ public class Server {
         byte[] data;
         data = Binary.appendBytes(payload);
 
-        List<String> targets = new ArrayList<>();
+        List<InetSocketAddress> targets = new ArrayList<>();
         for (Player p : players) {
             if (!p.closed) {
-                targets.add(this.identifier.get(p.rawHashCode()));
+                targets.add(p.getSocketAddress());
             }
         }
 
@@ -790,11 +798,11 @@ public class Server {
         }
     }
 
-    public void broadcastPacketsCallback(byte[] data, List<String> identifiers) {
+    public void broadcastPacketsCallback(byte[] data, List<InetSocketAddress> targets) {
         BatchPacket pk = new BatchPacket();
         pk.payload = data;
 
-        for (String i : identifiers) {
+        for (InetSocketAddress i : targets) {
             if (this.players.containsKey(i)) {
                 this.players.get(i).sendDataPacket(pk);
             }

@@ -229,7 +229,7 @@ public class SynapseEntry {
                     SynapsePlayer player = (SynapsePlayer) constructor.newInstance(this.synLibInterface, this, ev.getClientId(), ev.getAddress(), ev.getPort());
                     player.setUniqueId(playerLoginPacket.uuid);
                     this.players.put(playerLoginPacket.uuid, player);
-                    this.getSynapse().getServer().addPlayer(playerLoginPacket.uuid.toString(), player);
+                    this.getSynapse().getServer().addPlayer(player.getSocketAddress(), player);
                     player.handleLoginPacket(playerLoginPacket);
                 } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                     Server.getInstance().getLogger().logException(e);

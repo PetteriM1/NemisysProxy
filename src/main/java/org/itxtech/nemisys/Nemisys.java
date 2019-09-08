@@ -1,5 +1,8 @@
 package org.itxtech.nemisys;
 
+import io.netty.util.ResourceLeakDetector;
+import io.netty.util.internal.logging.InternalLoggerFactory;
+import io.netty.util.internal.logging.Log4J2LoggerFactory;
 import org.itxtech.nemisys.command.CommandReader;
 import org.itxtech.nemisys.utils.MainLogger;
 import org.itxtech.nemisys.utils.ServerKiller;
@@ -16,6 +19,12 @@ public class Nemisys {
     public static void main(String[] args) {
 
         System.setProperty("java.net.preferIPv4Stack" , "true");
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("-DEBUG")) {
+            InternalLoggerFactory.setDefaultFactory(Log4J2LoggerFactory.INSTANCE);
+            ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
+            System.out.print("Debug stuff enabled!\n");
+        }
 
         MainLogger logger = new MainLogger(DATA_PATH + "server.log");
 
