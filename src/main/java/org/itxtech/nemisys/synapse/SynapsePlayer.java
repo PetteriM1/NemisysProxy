@@ -9,14 +9,15 @@ import org.itxtech.nemisys.network.protocol.spp.PlayerLoginPacket;
 import org.itxtech.nemisys.network.protocol.spp.TransferPacket;
 import org.itxtech.nemisys.utils.ClientData;
 
+import java.net.InetSocketAddress;
 import java.util.UUID;
 
 public class SynapsePlayer extends Player {
 
     protected SynapseEntry synapseEntry;
 
-    public SynapsePlayer(SourceInterface interfaz, SynapseEntry synapseEntry, long clientID, String ip, int port) {
-        super(interfaz, clientID, ip, port);
+    public SynapsePlayer(SourceInterface interfaz, SynapseEntry synapseEntry, long clientID, InetSocketAddress socketAddress) {
+        super(interfaz, clientID, socketAddress);
         this.synapseEntry = synapseEntry;
     }
 

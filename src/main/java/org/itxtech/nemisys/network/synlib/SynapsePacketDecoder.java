@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class SynapsePacketDecoder extends ReplayingDecoder<SynapsePacketDecoder.State> {
 
-    private static final int MAX_BODY_SIZE = 1024 * 1024 * 5;
+    private static final int MAX_BODY_SIZE = 5242880; // 1024 * 1024 * 5
 
     private final SynapseProtocolHeader header = new SynapseProtocolHeader();
 

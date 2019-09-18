@@ -75,7 +75,7 @@ public class Client {
     }
 
     public void onUpdate(int currentTick) {
-        if ((System.currentTimeMillis() - this.lastUpdate) >= 30 * 1000) {
+        if ((System.currentTimeMillis() - this.lastUpdate) >= 30000) {
             this.close("timeout");
         }
     }
