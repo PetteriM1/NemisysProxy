@@ -113,7 +113,7 @@ public class Client {
             case SynapseInfo.CONNECT_PACKET:
                 ConnectPacket connectPacket = (ConnectPacket) packet;
                 if (connectPacket.protocol != SynapseInfo.CURRENT_PROTOCOL) {
-                    this.close("Incompatible SPP version! Required SPP version: " + SynapseInfo.CURRENT_PROTOCOL, true, org.itxtech.nemisys.network.protocol.spp.DisconnectPacket.TYPE_WRONG_PROTOCOL);
+                    this.close("Incompatible SPP version! Please download correct build of SynapseAPI.", true, org.itxtech.nemisys.network.protocol.spp.DisconnectPacket.TYPE_WRONG_PROTOCOL);
                     return;
                 }
                 pk = new InformationPacket();
