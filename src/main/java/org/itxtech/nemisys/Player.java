@@ -75,7 +75,7 @@ public class Player implements CommandSender {
 
     public Player(SourceInterface interfaz, Long clientID, InetSocketAddress socketAddress) {
         this.interfaz = interfaz;
-        this.clientId = clientId;
+        this.clientId = clientID;
         this.socketAddress = socketAddress;
         this.name = "";
         this.server = Server.getInstance();

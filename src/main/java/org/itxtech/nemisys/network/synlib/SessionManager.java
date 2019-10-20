@@ -158,10 +158,9 @@ public class SessionManager {
 
     public float getTickUsageAverage() {
         float sum = 0;
-        int count = this.useAverage.length;
         for (float aUseAverage : this.useAverage) {
             sum += aUseAverage;
         }
-        return ((float) Math.round(sum / count * 100)) / 100;
+        return ((float) Math.round(sum / this.useAverage.length * 100)) / 100;
     }
 }

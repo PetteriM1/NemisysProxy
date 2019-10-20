@@ -21,11 +21,9 @@ public class QueryRegenerateEvent extends ServerEvent {
     private String serverName;
     private Player[] players;
     private String version;
-    private String server_engine;
     private String map;
     private int numPlayers;
     private int maxPlayers;
-    private String whitelist;
     private int port;
     private String ip;
 
@@ -38,7 +36,6 @@ public class QueryRegenerateEvent extends ServerEvent {
         this.serverName = server.getMotd();
         this.players = new ArrayList<>(server.getOnlinePlayers().values()).toArray(new Player[0]);
         this.version = server.getVersion();
-        this.server_engine = "Nemisys PetteriM1 Edition";
         this.map = " ";
         this.numPlayers = this.players.length;
         if (server.getPropertyBoolean("plus-one-max-count", true)) {
@@ -46,7 +43,6 @@ public class QueryRegenerateEvent extends ServerEvent {
         } else {
             this.maxPlayers = server.getMaxPlayers();
         }
-        this.whitelist = "off";
         this.ip = server.getIp();
         this.port = server.getPort();
     }
@@ -69,10 +65,6 @@ public class QueryRegenerateEvent extends ServerEvent {
 
     public void setServerName(String serverName) {
         this.serverName = serverName;
-    }
-
-    public boolean canListPlugins() {
-        return false;
     }
 
     public void setListPlugins(boolean listPlugins){}
@@ -123,7 +115,6 @@ public class QueryRegenerateEvent extends ServerEvent {
 
     public byte[] getLongQuery() {
         ByteBuffer query = ByteBuffer.allocate(65536);
-        String plist = this.server_engine;
 
         query.put("splitnum".getBytes());
         query.put((byte) 0x00);
@@ -135,12 +126,12 @@ public class QueryRegenerateEvent extends ServerEvent {
         KVdata.put("gametype", "SMP");
         KVdata.put("game_id", "MINECRAFTPE");
         KVdata.put("version", this.version);
-        KVdata.put("server_engine", this.server_engine);
-        KVdata.put("plugins", plist);
+        KVdata.put("server_engine", "Nemisys PetteriM1 Edition");
+        KVdata.put("plugins", "Nemisys PetteriM1 Edition");
         KVdata.put("map", this.map);
         KVdata.put("numplayers", String.valueOf(this.numPlayers));
         KVdata.put("maxplayers", String.valueOf(this.maxPlayers));
-        KVdata.put("whitelist", this.whitelist);
+        KVdata.put("whitelist", "off");
         KVdata.put("hostip", this.ip);
         KVdata.put("hostport", String.valueOf(this.port));
 

@@ -50,9 +50,9 @@ public class SynapsePacketDecoder extends ReplayingDecoder<SynapsePacketDecoder.
         checkpoint(State.HEADER_MAGIC);
     }
 
-    private int checkBodyLength(int bodyLength) throws SynapseContextException {
+    private static int checkBodyLength(int bodyLength) throws SynapseContextException {
         if (bodyLength > MAX_BODY_SIZE) {
-            throw new SynapseContextException("body of request is bigger than limit value " + MAX_BODY_SIZE);
+            throw new SynapseContextException("Body of request is bigger than limit value " + MAX_BODY_SIZE);
         }
         return bodyLength;
     }

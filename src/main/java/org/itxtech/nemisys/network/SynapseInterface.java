@@ -21,7 +21,7 @@ public class SynapseInterface {
 
     public SynapseInterface(Server server, String ip, int port) {
         this.server = server;
-        this.registerPackets();
+        registerPackets();
         this.interfaz = new SynapseServer(server.getLogger(), this, port, ip);
     }
 
@@ -111,7 +111,7 @@ public class SynapseInterface {
         }
     }
 
-    private void registerPackets() {
+    private static void registerPackets() {
         packetPool.clear();
         registerPacket(SynapseInfo.HEARTBEAT_PACKET, new HeartbeatPacket());
         registerPacket(SynapseInfo.CONNECT_PACKET, new ConnectPacket());

@@ -19,7 +19,7 @@ public class SynapseInterface {
 
     public SynapseInterface(SynapseEntry server, String ip, int port) {
         this.synapse = server;
-        this.registerPackets();
+        registerPackets();
         this.client = new SynapseClient(server.getSynapse().getLogger(), port, ip);
     }
 
@@ -82,7 +82,7 @@ public class SynapseInterface {
         }
     }
 
-    private void registerPackets() {
+    private static void registerPackets() {
         packetPool.clear();
         registerPacket(SynapseInfo.HEARTBEAT_PACKET, new HeartbeatPacket());
         registerPacket(SynapseInfo.CONNECT_PACKET, new ConnectPacket());

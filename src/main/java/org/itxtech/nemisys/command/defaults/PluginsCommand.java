@@ -23,11 +23,11 @@ public class PluginsCommand extends VanillaCommand {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        this.sendPluginList(sender);
+        sendPluginList(sender);
         return true;
     }
 
-    private void sendPluginList(CommandSender sender) {
+    private static void sendPluginList(CommandSender sender) {
         StringBuilder list = new StringBuilder();
         Map<String, Plugin> plugins = sender.getServer().getPluginManager().getPlugins();
         for (Plugin plugin : plugins.values()) {

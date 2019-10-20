@@ -143,8 +143,7 @@ public final class ClientChainData {
         Map<String, List<String>> map = new Gson().fromJson(new String(bs.get(bs.getLInt()), StandardCharsets.UTF_8),
                 new MapTypeToken().getType());
         if (map.isEmpty() || !map.containsKey("chain") || map.get("chain").isEmpty()) return;
-        List<String> chains = map.get("chain");
-        for (String c : chains) {
+        for (String c : map.get("chain")) {
             JsonObject chainMap = decodeToken(c);
             if (chainMap == null) continue;
             if (chainMap.has("extraData")) {
@@ -175,11 +174,10 @@ public final class ClientChainData {
         if (skinToken.has("UIProfile")) this.UIProfile = skinToken.get("UIProfile").getAsInt();
     }
 
-    private JsonObject decodeToken(String token) {
+    private static JsonObject decodeToken(String token) {
         String[] base = token.split("\\.");
         if (base.length < 2) return null;
-        String json = new String(Base64.getDecoder().decode(base[1]), StandardCharsets.UTF_8);
-        return new Gson().fromJson(json, JsonObject.class);
+        return new Gson().fromJson(new String(Base64.getDecoder().decode(base[1]), StandardCharsets.UTF_8), JsonObject.class);
     }
 
     private static class MapTypeToken extends TypeToken<Map<String, List<String>>> {
