@@ -183,8 +183,7 @@ public class PluginManager {
                             }
                         }
                     } catch (Exception e) {
-                        this.server.getLogger().error(this.server.getLanguage().translateString("nemisys.plugin" +
-                                ".fileError", new String[]{file.getName(), dictionary.toString(), Utils
+                        this.server.getLogger().error(this.server.getLanguage().translateString("nemisys.plugin.fileError", new String[]{file.getName(), dictionary.toString(), Utils
                                 .getExceptionMessage(e)}));
                         MainLogger logger = this.server.getLogger();
                         if (logger != null) {
@@ -203,8 +202,7 @@ public class PluginManager {
                             if (loadedPlugins.containsKey(dependency) || this.getPlugin(dependency) != null) {
                                 dependencies.get(name).remove(dependency);
                             } else if (!plugins.containsKey(dependency)) {
-                                this.server.getLogger().critical(this.server.getLanguage().translateString("nukkit" +
-                                        ".plugin.loadError", new String[]{name, "Unknown dependency"}));
+                                this.server.getLogger().critical(this.server.getLanguage().translateString("nukkit.plugin.loadError", new String[]{name, "Unknown dependency"}));
                                 break;
                             }
                         }

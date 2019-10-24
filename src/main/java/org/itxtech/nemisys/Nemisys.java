@@ -21,7 +21,7 @@ public class Nemisys {
 
         try {
             if (ANSI) {
-                System.out.print((char) 0x1b + "]0;Nemisys Proxy" + (char) 0x07);
+                System.out.print("\u001B]0;Nemisys Proxy\u0007");
             }
             new Server(logger, PATH, DATA_PATH, PLUGIN_PATH);
         } catch (Exception e) {
@@ -29,7 +29,7 @@ public class Nemisys {
         }
 
         if (ANSI) {
-            System.out.print((char) 0x1b + "]0;Proxy shutting down..." + (char) 0x07);
+            System.out.print("\u001B]0;Proxy shutting down...\u0007");
         }
 
         logger.debug("Stopping other threads...");
@@ -54,7 +54,7 @@ public class Nemisys {
         CommandReader.getInstance().removePromptLine();
 
         if (ANSI) {
-            System.out.print((char) 0x1b + "]0;Proxy Stopped" + (char) 0x07);
+            System.out.print("\u001B]0;Proxy Stopped\u0007");
         }
 
         System.exit(0);
