@@ -456,8 +456,6 @@ public class Server {
                     this.logger.logException(e);
                 }
             }
-
-            this.getNetwork().updateName();
         }
 
         long nowNano = System.nanoTime();
