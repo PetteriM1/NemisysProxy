@@ -18,7 +18,6 @@ public interface ProtocolInfo {
     byte REMOVE_ENTITY_PACKET = 0x0e;
     byte ADD_ITEM_ENTITY_PACKET = 0x0f;
     byte ADD_PAINTING_PACKET = 0x16;
-    byte PLAYER_LIST_PACKET = 0x3f;
     byte REMOVE_OBJECTIVE_PACKET = 0x6a;
     byte SET_DISPLAY_OBJECTIVE_PACKET = 0x6b;
     byte SET_SCORE_PACKET = 0x6c;

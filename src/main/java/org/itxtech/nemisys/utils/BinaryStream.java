@@ -204,24 +204,6 @@ public class BinaryStream {
         return Binary.readUUID(this.get(16));
     }
 
-    public void putSkin(Skin skin) {
-        this.putString(skin.getSkinId());
-        this.putByteArray(skin.getSkinData());
-        this.putByteArray(skin.getCapeData());
-        this.putString(skin.getGeometryName());
-        this.putString(skin.getGeometryData());
-    }
-
-    public Skin getSkin() {
-        Skin skin = new Skin();
-        skin.setSkinId(this.getString());
-        skin.setSkinData(this.getByteArray());
-        skin.setCapeData(this.getByteArray());
-        skin.setGeometryName(this.getString());
-        skin.setGeometryData(this.getString());
-        return skin;
-    }
-
     public BlockVector3 getBlockVector3() {
         return new BlockVector3(this.getVarInt(), (int) this.getUnsignedVarInt(), this.getVarInt());
     }

@@ -17,7 +17,6 @@ public class LoginPacket extends DataPacket {
     public int protocol;
     public UUID clientUUID;
     public long clientId;
-    public Skin skin;
     public byte[] cacheBuffer;
 
     @Override
@@ -31,7 +30,6 @@ public class LoginPacket extends DataPacket {
         this.protocol = this.getInt();
         this.setBuffer(this.getByteArray(), 0);
         decodeChainData();
-        decodeSkinData();
     }
 
     @Override
@@ -58,39 +56,10 @@ public class LoginPacket extends DataPacket {
         }
     }
 
-    private void decodeSkinData() {
-        JsonObject skinToken = decodeToken(new String(this.get(this.getLInt())));
-        if (skinToken.has("ClientRandomId")) this.clientId = skinToken.get("ClientRandomId").getAsLong();
-        skin = new Skin();
-        if (skinToken.has("SkinId")) {
-            skin.setSkinId(skinToken.get("SkinId").getAsString());
-        }
-        if (skinToken.has("SkinData")) {
-            skin.setSkinData(Base64.getDecoder().decode(skinToken.get("SkinData").getAsString()));
-        }
-
-        if (skinToken.has("CapeData")) {
-            this.skin.setCapeData(Base64.getDecoder().decode(skinToken.get("CapeData").getAsString()));
-        }
-
-        if (skinToken.has("SkinGeometryName")) {
-            skin.setGeometryName(skinToken.get("SkinGeometryName").getAsString());
-        }
-
-        if (skinToken.has("SkinGeometry")) {
-            skin.setGeometryData(new String(Base64.getDecoder().decode(skinToken.get("SkinGeometry").getAsString()), StandardCharsets.UTF_8));
-        }
-    }
-
     private static JsonObject decodeToken(String token) {
         String[] base = token.split("\\.");
         if (base.length < 2) return null;
         return new Gson().fromJson(new String(Base64.getDecoder().decode(base[1].replaceAll("-", "+").replaceAll("_", "/")), StandardCharsets.UTF_8), JsonObject.class);
-    }
-
-    @Override
-    public Skin getSkin() {
-        return this.skin;
     }
 
     private static class MapTypeToken extends TypeToken<Map<String, List<String>>> {
