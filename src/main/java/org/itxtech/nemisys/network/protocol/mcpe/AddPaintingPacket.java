@@ -7,11 +7,6 @@ public class AddPaintingPacket extends DataPacket {
 
     public long entityUniqueId;
     public long entityRuntimeId;
-    public int x;
-    public int y;
-    public int z;
-    public int direction;
-    public String title;
 
     @Override
     public void decode() {
@@ -21,12 +16,6 @@ public class AddPaintingPacket extends DataPacket {
 
     @Override
     public void encode() {
-        this.reset();
-        this.putEntityUniqueId(this.entityUniqueId);
-        this.putEntityRuntimeId(this.entityRuntimeId);
-        this.putBlockVector3(this.x, this.y, this.z);
-        this.putVarInt(this.direction);
-        this.putString(this.title);
     }
 
     @Override

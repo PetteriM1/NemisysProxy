@@ -52,17 +52,12 @@ public class Player implements CommandSender {
     @Getter
     private Client client;
     @Getter
-    private Server server;
-    @Getter
     private byte[] rawUUID;
     private boolean isFirstTimeLogin = true;
-    @Getter
-    private Skin skin;
     @Getter
     private ClientChainData loginChainData;
 
     protected Set<Long> spawnedEntities = new HashSet<>();
-    protected Set<UUID> playerList = new HashSet<>();
 
     protected final Queue<DataPacket> incomingPackets = new ConcurrentLinkedQueue<>();
     protected final Queue<DataPacket> outgoingPackets = new ConcurrentLinkedQueue<>();
@@ -78,7 +73,6 @@ public class Player implements CommandSender {
         this.clientId = clientID;
         this.socketAddress = socketAddress;
         this.name = "";
-        this.server = Server.getInstance();
         this.perm = new PermissibleBase(this);
     }
 
@@ -97,18 +91,17 @@ public class Player implements CommandSender {
                 case ProtocolInfo.LOGIN_PACKET:
                     LoginPacket loginPacket = (LoginPacket) packet;
                     this.cachedLoginPacket = loginPacket.cacheBuffer;
-                    this.skin = loginPacket.skin;
                     this.name = loginPacket.username;
                     this.uuid = loginPacket.clientUUID;
                     if (this.uuid == null) {
-                        this.close(TextFormat.RED + "Please choose another name and try again!");
+                        this.close(TextFormat.RED + "Error");
                         break;
                     }
                     this.rawUUID = Binary.writeUUID(this.uuid);
                     this.randomClientId = loginPacket.clientId;
                     this.protocol = loginPacket.protocol;
                     this.loginChainData = ClientChainData.read(loginPacket);
-                    this.server.addOnlinePlayer(this.uuid, this);
+                    this.getServer().addOnlinePlayer(this.uuid, this);
 
                     AsyncTask loginTask = new AsyncTask() {
                         PlayerAsyncPreLoginEvent e = new PlayerAsyncPreLoginEvent(getName(), getUuid(), Player.this.getAddress(), Player.this.getPort());
@@ -180,15 +173,6 @@ public class Player implements CommandSender {
                 case ProtocolInfo.REMOVE_ENTITY_PACKET:
                     spawnedEntities.remove(((RemoveEntityPacket) pk).eid);
                     break;
-                case ProtocolInfo.PLAYER_LIST_PACKET:
-                    PlayerListPacket playerListPacket = (PlayerListPacket) pk;
-
-                    if (playerListPacket.type == PlayerListPacket.TYPE_ADD) {
-                        playerList.addAll(Arrays.stream(playerListPacket.entries).map((e) -> e.uuid).collect(Collectors.toList()));
-                    } else {
-                        playerList.removeAll(Arrays.stream(playerListPacket.entries).map((e) -> e.uuid).collect(Collectors.toList()));
-                    }
-                    break;
                 case ProtocolInfo.SET_DISPLAY_OBJECTIVE_PACKET:
                     SetDisplayObjectivePacket sdop = (SetDisplayObjectivePacket) pk;
                     scoreboards.putIfAbsent(sdop.objective, new HashSet<>());
@@ -256,19 +240,6 @@ public class Player implements CommandSender {
         ticking.set(false);
     }
 
-    public void removeAllPlayers() {
-        PlayerListPacket pk = new PlayerListPacket();
-        pk.type = PlayerListPacket.TYPE_REMOVE;
-        List<PlayerListPacket.Entry> entries = new ArrayList<>();
-        for (UUID uid : playerList) {
-            entries.add(new PlayerListPacket.Entry(uid));
-        }
-        playerList.clear();
-
-        pk.entries = entries.toArray(new PlayerListPacket.Entry[0]);
-        this.sendDataPacket(pk);
-    }
-
     public void despawnEntities() {
         if (this.spawnedEntities.isEmpty())
             return;
@@ -309,11 +280,10 @@ public class Player implements CommandSender {
 
     public void transfer(Client client) {
         PlayerTransferEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerTransferEvent(this, client));
+        this.getServer().getPluginManager().callEvent(ev = new PlayerTransferEvent(this, client));
         if (!ev.isCancelled()) {
             if (this.client != null) {
                 this.client.removePlayer(this, "");
-                this.removeAllPlayers();
                 this.despawnEntities();
                 this.removeScoreboards();
             }
@@ -331,8 +301,8 @@ public class Player implements CommandSender {
 
             this.isFirstTimeLogin = false;
 
-            this.server.getLogger().info(this.name + " has been transferred to " + this.client.getDescription());
-            this.server.updateClientData();
+            this.getServer().getLogger().info(this.name + " has been transferred to " + this.client.getDescription());
+            this.getServer().updateClientData();
         }
     }
 
@@ -369,7 +339,7 @@ public class Player implements CommandSender {
                 this.sendDataPacket(pk, true);
             }
 
-            this.server.getPluginManager().callEvent(new PlayerLogoutEvent(this));
+            this.getServer().getPluginManager().callEvent(new PlayerLogoutEvent(this));
             this.closed = true;
 
             if (this.client != null) {
@@ -384,7 +354,7 @@ public class Player implements CommandSender {
                 } catch (Exception ignore) {}
             }
 
-            this.server.getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged out due to {%3}", new String[]{
+            this.getServer().getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged out due to {%3}", new String[]{
                     TextFormat.AQUA + this.getName() + TextFormat.WHITE,
                     this.getAddress(),
                     String.valueOf(this.getPort()),
@@ -442,7 +412,7 @@ public class Player implements CommandSender {
     public void sendMessage(String message) {
         TextPacket pk = new TextPacket();
         pk.type = TextPacket.TYPE_RAW;
-        pk.message = this.server.getLanguage().translateString(message);
+        pk.message = this.getServer().getLanguage().translateString(message);
 
         this.sendDataPacket(pk);
     }
@@ -458,13 +428,13 @@ public class Player implements CommandSender {
     }
 
     protected void completeLogin() {
-        this.server.getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged in", new String[]{
+        this.getServer().getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged in", new String[]{
                 TextFormat.AQUA + this.name + TextFormat.WHITE,
                 this.getAddress(),
                 String.valueOf(this.getPort())
         }));
 
-        Map<String, Client> c = this.server.getMainClients();
+        Map<String, Client> c = this.getServer().getMainClients();
 
         String clientHash;
         if (c.size() > 0) {
@@ -479,12 +449,12 @@ public class Player implements CommandSender {
             this.close(ev.getKickMessage());
             return;
         }
-        if (this.server.getMaxPlayers() <= this.server.getOnlinePlayers().size()) {
+        if (this.getServer().getMaxPlayers() <= this.getServer().getOnlinePlayers().size()) {
             this.close(TextFormat.RED + "Synapse server is full!");
             return;
         }
 
-        Client client = this.server.getClient(ev.getClientHash());
+        Client client = this.getServer().getClient(ev.getClientHash());
 
         if (client == null) {
             this.close(TextFormat.RED + "All lobby servers are offline!");
@@ -497,9 +467,9 @@ public class Player implements CommandSender {
     public void sendTranslation(String message, String[] parameters) {
         TextPacket pk = new TextPacket();
         pk.type = TextPacket.TYPE_TRANSLATION;
-        pk.message = this.server.getLanguage().translateString(message, parameters, "nemisys.");
+        pk.message = this.getServer().getLanguage().translateString(message, parameters, "nemisys.");
         for (int i = 0; i < parameters.length; i++) {
-            parameters[i] = this.server.getLanguage().translateString(parameters[i], parameters, "nemisys.");
+            parameters[i] = this.getServer().getLanguage().translateString(parameters[i], parameters, "nemisys.");
 
             }
         pk.parameters = parameters;
@@ -563,8 +533,8 @@ public class Player implements CommandSender {
 
     @Override
     public void recalculatePermissions() {
-        this.server.getPluginManager().unsubscribeFromPermission(Server.BROADCAST_CHANNEL_USERS, this);
-        this.server.getPluginManager().unsubscribeFromPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this);
+        this.getServer().getPluginManager().unsubscribeFromPermission(Server.BROADCAST_CHANNEL_USERS, this);
+        this.getServer().getPluginManager().unsubscribeFromPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this);
 
         if (this.perm == null) {
             return;
@@ -573,11 +543,11 @@ public class Player implements CommandSender {
         this.perm.recalculatePermissions();
 
         if (this.hasPermission(Server.BROADCAST_CHANNEL_USERS)) {
-            this.server.getPluginManager().subscribeToPermission(Server.BROADCAST_CHANNEL_USERS, this);
+            this.getServer().getPluginManager().subscribeToPermission(Server.BROADCAST_CHANNEL_USERS, this);
         }
 
         if (this.hasPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE)) {
-            this.server.getPluginManager().subscribeToPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this);
+            this.getServer().getPluginManager().subscribeToPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this);
         }
     }
 
@@ -600,5 +570,9 @@ public class Player implements CommandSender {
 
     public InetSocketAddress getSocketAddress() {
         return this.socketAddress;
+    }
+
+    public Server getServer() {
+        return Server.getInstance();
     }
 }
