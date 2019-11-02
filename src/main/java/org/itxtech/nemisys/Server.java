@@ -352,6 +352,10 @@ public class Server {
     }
 
     public void start() {
+        if (this.getPropertyBoolean("send-start-message", false)) {
+            this.getLogger().info("Done (" + (double) (System.currentTimeMillis() - Nemisys.START_TIME) / 1000 + "s)! For help, type \"help\" or \"?\"");
+        }
+
         if (this.getPropertyBoolean("enable-query", true)) {
             this.queryHandler = new QueryHandler();
         }
@@ -456,6 +460,8 @@ public class Server {
                     this.logger.logException(e);
                 }
             }
+
+            this.getNetwork().updateName();
         }
 
         long nowNano = System.nanoTime();
@@ -841,6 +847,7 @@ public class Server {
             put("debug", 1);
             put("enable-synapse-client", false);
             put("ansi", true);
+            put("send-start-message", false);
         }
     }
 }
