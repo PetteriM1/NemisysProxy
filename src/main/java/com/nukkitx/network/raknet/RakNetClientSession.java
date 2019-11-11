@@ -7,6 +7,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.EventLoop;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.net.Inet6Address;
 import java.net.InetSocketAddress;
 
 @ParametersAreNonnullByDefault
@@ -142,7 +143,7 @@ public class RakNetClientSession extends RakNetSession {
     private void onConnectionRequestAccepted(ByteBuf buffer) {
         NetworkUtils.readAddress(buffer);
         buffer.readUnsignedShort();
-        while (buffer.readableBytes() > 16) {
+        while (buffer.isReadable(16)) {
             NetworkUtils.readAddress(buffer);
         }
 
@@ -156,7 +157,7 @@ public class RakNetClientSession extends RakNetSession {
         buffer.writeByte(RakNetConstants.ID_OPEN_CONNECTION_REQUEST_1);
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeByte(this.rakNet.protocolVersion);
-        buffer.writeZero(mtuSize - 46);
+        buffer.writeZero(mtuSize - 18 - (this.address.getAddress() instanceof Inet6Address ? 40 : 20) - 8);
 
         this.sendDirect(buffer);
     }

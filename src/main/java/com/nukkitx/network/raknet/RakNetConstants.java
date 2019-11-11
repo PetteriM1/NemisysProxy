@@ -6,8 +6,8 @@ import lombok.experimental.UtilityClass;
 public class RakNetConstants {
 
     public static final byte RAKNET_PROTOCOL_VERSION = 9;
-    public static final short MINIMUM_MTU_SIZE = 400;
-    public static final short MAXIMUM_MTU_SIZE = 6000;
+    public static final short MINIMUM_MTU_SIZE = 576;
+    public static final short MAXIMUM_MTU_SIZE = 1492;
     public static final int MAXIMUM_ORDERING_CHANNELS = 16;
     public static final int MAXIMUM_ENCAPSULATED_HEADER_SIZE = 28;
     public static final int UDP_HEADER_SIZE = 8;

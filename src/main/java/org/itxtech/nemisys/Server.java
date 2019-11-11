@@ -65,6 +65,9 @@ public class Server {
     private SimpleCommandMap commandMap;
     private ConsoleCommandSender consoleSender;
     private int maxPlayers;
+    private int port;
+    private String ip;
+    private String motd;
     private RCON rcon;
     private Network network;
     private BaseLang baseLang;
@@ -84,6 +87,7 @@ public class Server {
     private Map<String, Client> mainClients = new ConcurrentHashMap<>();
     private Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
     private Synapse synapse;
+    public boolean plusOnePlayerCount;
     @SuppressWarnings("unused")
     public int uptime = 0;
 
@@ -125,6 +129,12 @@ public class Server {
             }
         }
 
+        this.playersPerThread = this.getPropertyInt("players-per-thread");
+        this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
+        this.motd = this.getPropertyString("motd", "Nemisys Proxy");
+        this.ip = this.getPropertyString("server-ip", "0.0.0.0");
+        this.port = this.getPropertyInt("server-port", 19132);
+
         ServerScheduler.WORKERS = (int) poolSize;
 
         this.scheduler = new ServerScheduler();
@@ -165,8 +175,6 @@ public class Server {
                 this.logger.logException(e);
             }
         }
-
-        this.playersPerThread = this.getPropertyInt("players-per-thread");
 
         this.properties.save(true);
 
@@ -536,11 +544,11 @@ public class Server {
     }
 
     public int getPort() {
-        return this.getPropertyInt("server-port", 19132);
+        return port;
     }
 
     public String getIp() {
-        return this.getPropertyString("server-ip", "0.0.0.0");
+        return ip;
     }
 
     public int getSynapsePort() {
@@ -556,7 +564,7 @@ public class Server {
     }
 
     public String getMotd() {
-        return this.getPropertyString("motd", "Nemisys Proxy");
+        return motd;
     }
 
     public MainLogger getLogger() {

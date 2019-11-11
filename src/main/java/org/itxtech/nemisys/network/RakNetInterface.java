@@ -125,17 +125,15 @@ public class RakNetInterface implements RakNetServerListener, AdvancedSourceInte
     public void setName(String name) {
         QueryRegenerateEvent info = this.server.getQueryInformation();
         String[] names = name.split("!@#");
-        String motd = Utils.rtrim(names[0].replace(";", "\\;"), '\\');
-        String subMotd = names.length > 1 ? Utils.rtrim(names[1].replace(";", "\\;"), '\\') : "";
         StringJoiner joiner = new StringJoiner(";")
                 .add("MCPE")
-                .add(motd)
+                .add(Utils.rtrim(names[0].replace(";", "\\;"), '\\'))
                 .add(Integer.toString(ProtocolInfo.CURRENT_PROTOCOL))
                 .add(ProtocolInfo.MINECRAFT_VERSION_NETWORK)
                 .add(Integer.toString(info.getPlayerCount()))
                 .add(Integer.toString(info.getMaxPlayerCount()))
                 .add(Long.toString(this.raknet.getGuid()))
-                .add(subMotd)
+                .add(names.length > 1 ? Utils.rtrim(names[1].replace(";", "\\;"), '\\') : "")
                 .add("Survival")
                 .add("1");
 

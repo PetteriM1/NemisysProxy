@@ -38,7 +38,7 @@ public class QueryRegenerateEvent extends ServerEvent {
         this.version = server.getVersion();
         this.map = " ";
         this.numPlayers = this.players.length;
-        if (server.getPropertyBoolean("plus-one-max-count", true)) {
+        if (server.plusOnePlayerCount) {
             this.maxPlayers = this.numPlayers + 1;
         } else {
             this.maxPlayers = server.getMaxPlayers();
