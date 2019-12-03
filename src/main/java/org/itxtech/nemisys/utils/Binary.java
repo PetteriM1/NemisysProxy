@@ -314,11 +314,11 @@ public class Binary {
         }
         String str = "0123456789ABCDEF";
         hexString = hexString.toUpperCase().replace(" ", "");
-        int length = hexString.length() / 2;
+        int length = hexString.length() >> 1;
         char[] hexChars = hexString.toCharArray();
         byte[] d = new byte[length];
         for (int i = 0; i < length; i++) {
-            int pos = i * 2;
+            int pos = i << 1;
             d[i] = (byte) (((byte) str.indexOf(hexChars[pos]) << 4) | ((byte) str.indexOf(hexChars[pos + 1])));
         }
         return d;

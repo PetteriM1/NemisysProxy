@@ -10,7 +10,6 @@ import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.Inet6Address;
@@ -38,7 +37,6 @@ public class RakNetServer extends RakNet {
     private final Iterator<Channel> channelIterator = new RoundRobinIterator<>(channels);
     private volatile RakNetServerListener listener = null;
     private final int bindThreads;
-    private int maxConnections = 1024;
 
     public RakNetServer(InetSocketAddress bindAddress) {
         this(bindAddress, 1);
@@ -88,15 +86,6 @@ public class RakNetServer extends RakNet {
     @Nullable
     public RakNetServerSession getSession(InetSocketAddress address) {
         return this.sessionsByAddress.get(address);
-    }
-
-    @Nonnegative
-    public int getMaxConnections() {
-        return maxConnections;
-    }
-
-    public void setMaxConnections(@Nonnegative int maxConnections) {
-        this.maxConnections = maxConnections;
     }
 
     public RakNetServerListener getListener() {
@@ -157,8 +146,6 @@ public class RakNetServer extends RakNet {
             this.sendAlreadyConnected(ctx, packet.sender());
         } else if (this.protocolVersion >= 0 && this.protocolVersion != protocolVersion) {
             this.sendIncompatibleProtocolVersion(ctx, packet.sender());
-        } else if (this.maxConnections >= 0 && this.maxConnections <= getSessionCount()) {
-            this.sendNoFreeIncomingConnections(ctx, packet.sender());
         } else if (this.listener != null && !this.listener.onConnectionRequest(packet.sender())) {
             this.sendConnectionBanned(ctx, packet.sender());
         } else {
@@ -233,15 +220,6 @@ public class RakNetServer extends RakNet {
         ByteBuf buffer = ctx.alloc().ioBuffer(26, 26);
         buffer.writeByte(RakNetConstants.ID_INCOMPATIBLE_PROTOCOL_VERSION);
         buffer.writeByte(this.protocolVersion);
-        RakNetUtils.writeUnconnectedMagic(buffer);
-        buffer.writeLong(this.guid);
-
-        RakNet.send(ctx, recipient, buffer);
-    }
-
-    private void sendNoFreeIncomingConnections(ChannelHandlerContext ctx, InetSocketAddress recipient) {
-        ByteBuf buffer = ctx.alloc().ioBuffer(25, 25);
-        buffer.writeByte(RakNetConstants.ID_NO_FREE_INCOMING_CONNECTIONS);
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
 

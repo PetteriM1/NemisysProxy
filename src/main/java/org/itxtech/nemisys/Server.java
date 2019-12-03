@@ -451,7 +451,7 @@ public class Server {
         }
 
         if ((this.tickCounter & 0b1111) == 0) {
-            if ((this.tickCounter & 0b11111) == 0) {
+            if ((this.tickCounter & 0b111111) == 0) {
                 this.titleTick();
             }
 
@@ -782,15 +782,15 @@ public class Server {
             return;
         }
 
-        byte[][] payload = new byte[packets.length * 2][];
+        byte[][] payload = new byte[(packets.length << 1)][];
         for (int i = 0; i < packets.length; i++) {
             DataPacket p = packets[i];
             if (!p.isEncoded) {
                 p.encode();
             }
             byte[] buf = p.getBuffer();
-            payload[i * 2] = Binary.writeUnsignedVarInt(buf.length);
-            payload[i * 2 + 1] = buf;
+            payload[(i << 1)] = Binary.writeUnsignedVarInt(buf.length);
+            payload[(i << 1) + 1] = buf;
         }
         byte[] data;
         data = Binary.appendBytes(payload);
@@ -821,13 +821,18 @@ public class Server {
     }
 
     public Client getFallbackClient() {
+        List<Client> list = new ArrayList<>();
         for (Client c : clients.values()) {
             if (c.isLobbyServer()) {
-                return c;
+                list.add(c);
             }
         }
 
-        return null;
+        if (list.isEmpty()) {
+            return null;
+        }
+
+        return list.get(Utils.random.nextInt(list.size() - 1));
     }
 
     private void adjustPoolSize() {

@@ -22,7 +22,7 @@ public class SetScorePacket extends DataPacket {
             putVarLong(it.scoreId);
             putString(it.objective);
             putLInt(it.score);
-            if(action == Action.SET) {
+            if (action == Action.SET) {
                 putByte((byte) it.type.ordinal());
                 switch(it.type) {
                     case PLAYER:
