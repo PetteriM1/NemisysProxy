@@ -88,6 +88,7 @@ public class Server {
     private Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
     private Synapse synapse;
     public boolean plusOnePlayerCount;
+    public boolean forceMtu;
     @SuppressWarnings("unused")
     public int uptime = 0;
 
@@ -131,6 +132,7 @@ public class Server {
 
         this.playersPerThread = this.getPropertyInt("players-per-thread");
         this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
+        this.forceMtu = this.getPropertyBoolean("force-mtu", false);
         this.motd = this.getPropertyString("motd", "Nemisys Proxy");
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
@@ -861,6 +863,7 @@ public class Server {
             put("enable-synapse-client", false);
             put("ansi", true);
             put("send-start-message", false);
+            put("force-mtu", false);
         }
     }
 }

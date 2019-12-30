@@ -12,7 +12,6 @@ public class RakNetConstants {
     public static final int MAXIMUM_ENCAPSULATED_HEADER_SIZE = 28;
     public static final int UDP_HEADER_SIZE = 8;
     public static final int RAKNET_DATAGRAM_HEADER_SIZE = 4;
-    public static final int MAXIMUM_CONNECTION_ATTEMPTS = 10;
     public static final int SESSION_TIMEOUT_MS = 30000;
     public static final byte FLAG_VALID = (byte) 0b10000000;
     public static final byte FLAG_ACK = (byte) 0b01000000;
@@ -51,6 +50,4 @@ public class RakNetConstants {
     public static final long CC_MAXIMUM_THRESHOLD = 2000;
     public static final long CC_ADDITIONAL_VARIANCE = 30;
     public static final long CC_SYN = 10;
-    public static final int IPV4_MESSAGE_SIZE = 7;
-    public static final int IPV6_MESSAGE_SIZE = 29;
 }

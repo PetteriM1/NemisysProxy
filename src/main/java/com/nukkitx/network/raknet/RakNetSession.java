@@ -15,6 +15,7 @@ import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
+import org.itxtech.nemisys.Server;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
@@ -197,8 +198,13 @@ public abstract class RakNetSession implements SessionConnection<ByteBuf> {
     }
 
     void setMtu(int mtu) {
-        this.mtu = RakNetUtils.clamp(mtu, MINIMUM_MTU_SIZE, MAXIMUM_MTU_SIZE);
-        this.adjustedMtu = (this.mtu - UDP_HEADER_SIZE) - (this.address.getAddress() instanceof Inet6Address ? 40 : 20);
+        if (Server.getInstance().forceMtu) {
+            this.mtu = 1492;
+            this.adjustedMtu = 1464;
+        } else {
+            this.mtu = RakNetUtils.clamp(mtu, MINIMUM_MTU_SIZE, MAXIMUM_MTU_SIZE);
+            this.adjustedMtu = (this.mtu - UDP_HEADER_SIZE) - (this.address.getAddress() instanceof Inet6Address ? 40 : 20);
+        }
     }
 
     public long getPing() {
