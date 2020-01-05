@@ -834,6 +834,10 @@ public class Server {
             return null;
         }
 
+        if (list.size() == 1) {
+            return list.get(0);
+        }
+
         return list.get(Utils.random.nextInt(list.size() - 1));
     }
 
