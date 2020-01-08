@@ -14,7 +14,6 @@ pipeline {
             }
             post {
                 success {
-                    junit 'target/surefire-reports/**/*.xml'
                     archiveArtifacts artifacts: 'target/Nemisys-PM1E.jar', fingerprint: true
                 }
             }
