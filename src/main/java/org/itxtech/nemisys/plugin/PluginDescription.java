@@ -150,7 +150,7 @@ public class PluginDescription {
         }
 
         if (plugin.containsKey("code_signing")) {
-            this.signed = Boolean.valueOf((String) plugin.get("code_signing"));
+            this.signed = Boolean.parseBoolean((String) plugin.get("code_signing"));
         }
 
         if (plugin.containsKey("commands") && plugin.get("commands") instanceof Map) {
