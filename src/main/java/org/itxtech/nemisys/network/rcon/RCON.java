@@ -36,7 +36,7 @@ public class RCON {
             return;
         }
 
-        this.server.getLogger().info("RCON is running on " + address + ":" + port);
+        this.server.getLogger().info("RCON is running on " + address + ':' + port);
     }
 
     public void check() {

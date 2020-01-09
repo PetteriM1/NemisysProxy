@@ -48,7 +48,7 @@ public class SynapseInterface {
     }
 
     public void addClient(String ip, int port) {
-        this.clients.put(ip + ":" + port, new Client(this, ip, port));
+        this.clients.put(ip + ':' + port, new Client(this, ip, port));
     }
 
     public void removeClient(Client client) {

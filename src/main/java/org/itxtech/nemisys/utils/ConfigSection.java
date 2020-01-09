@@ -706,7 +706,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> {
             keys.add(entry.getKey());
             if (entry.getValue() instanceof ConfigSection) {
                 if (child)
-                    ((ConfigSection) entry.getValue()).getKeys(true).forEach(childKey -> keys.add(entry.getKey() + "." + childKey));
+                    ((ConfigSection) entry.getValue()).getKeys(true).forEach(childKey -> keys.add(entry.getKey() + '.' + childKey));
             }
         });
         return keys;

@@ -30,7 +30,7 @@ public class SessionManager {
 
     public static String getChannelHash(Channel channel) {
         InetSocketAddress address = (InetSocketAddress) channel.remoteAddress();
-        return address.getAddress().getHostAddress() + ":" + address.getPort();
+        return address.getAddress().getHostAddress() + ':' + address.getPort();
     }
 
     public void run() {

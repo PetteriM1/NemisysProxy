@@ -68,7 +68,7 @@ public class SimpleCommandMap implements CommandMap {
         command.setAliases(aliases.toArray(new String[0]));
 
         if (!registered) {
-            command.setLabel(fallbackPrefix + ":" + label);
+            command.setLabel(fallbackPrefix + ':' + label);
         }
 
         command.register(this);
@@ -77,7 +77,7 @@ public class SimpleCommandMap implements CommandMap {
     }
 
     private boolean registerAlias(Command command, boolean isAlias, String fallbackPrefix, String label) {
-        this.knownCommands.put(fallbackPrefix + ":" + label, command);
+        this.knownCommands.put(fallbackPrefix + ':' + label, command);
 
         boolean alreadyRegistered = this.knownCommands.containsKey(label);
         Command existingCommand = this.knownCommands.get(label);

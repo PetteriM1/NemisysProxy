@@ -18,7 +18,7 @@ public class KickCommand extends VanillaCommand {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(new TranslationContainer("Usage: {%0}", this.usageMessage));
+            sender.sendMessage("Usage: " +  this.usageMessage);
             return false;
         }
 
@@ -26,7 +26,7 @@ public class KickCommand extends VanillaCommand {
 
         StringBuilder reason = new StringBuilder("Kicked!");
         for (int i = 1; i < args.length; i++) {
-            reason.append(args[i]).append(" ");
+            reason.append(args[i]).append(' ');
         }
 
         if (reason.toString().endsWith(" ")) {
@@ -39,10 +39,10 @@ public class KickCommand extends VanillaCommand {
             if (reason.length() >= 1) {
                 sender.sendMessage(new TranslationContainer("Kicked {%0} from the game: '{%1}'", new String[]{player.getName(), reason.toString()}));
             } else {
-                sender.sendMessage(new TranslationContainer("Kicked {%0} from the game", player.getName()));
+                sender.sendMessage("Kicked " + player.getName() + " from the game");
             }
         } else {
-            sender.sendMessage(new TranslationContainer(TextFormat.RED + "That player cannot be found"));
+            sender.sendMessage(TextFormat.RED + "That player cannot be found");
         }
 
         return true;

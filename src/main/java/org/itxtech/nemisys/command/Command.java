@@ -43,7 +43,7 @@ public abstract class Command {
         this.nextLabel = name;
         this.label = name;
         this.description = description;
-        this.usageMessage = usageMessage == null ? "/" + name : usageMessage;
+        this.usageMessage = usageMessage == null ? '/' + name : usageMessage;
         this.aliases = aliases;
         this.activeAliases = aliases;
     }

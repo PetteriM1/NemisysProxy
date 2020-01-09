@@ -80,7 +80,7 @@ public class Utils {
         temp = br.readLine();
         while (temp != null) {
             if (stringBuilder.length() != 0) {
-                stringBuilder.append("\n");
+                stringBuilder.append('\n');
             }
             stringBuilder.append(temp);
             temp = br.readLine();

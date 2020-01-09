@@ -146,7 +146,7 @@ public class SynapseEntry {
     }
 
     public String getHash() {
-        return this.serverIp + ":" + this.port;
+        return this.serverIp + ':' + this.port;
     }
 
     public void connect() {
@@ -210,10 +210,10 @@ public class SynapseEntry {
                 switch (informationPacket.type) {
                     case InformationPacket.TYPE_LOGIN:
                         if (informationPacket.message.equals(InformationPacket.INFO_LOGIN_SUCCESS)) {
-                            this.getSynapse().getLogger().notice("Login success to " + this.serverIp + ":" + this.port);
+                            this.getSynapse().getLogger().notice("Login success to " + this.serverIp + ':' + this.port);
                             this.verified = true;
                         } else if (informationPacket.message.equals(InformationPacket.INFO_LOGIN_FAILED)) {
-                            this.getSynapse().getLogger().notice("Login failed to " + this.serverIp + ":" + this.port);
+                            this.getSynapse().getLogger().notice("Login failed to " + this.serverIp + ':' + this.port);
                         }
                         break;
                     case InformationPacket.TYPE_CLIENT_DATA:

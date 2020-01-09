@@ -82,7 +82,7 @@ public class Session {
     }
 
     public String getHash() {
-        return this.getIp() + ":" + this.getPort();
+        return this.getIp() + ':' + this.getPort();
     }
 
     public String getIp() {

@@ -296,7 +296,7 @@ public class Binary {
 
         for (byte b : src) {
             if (!(stringBuilder.length() == 0) && blank) {
-                stringBuilder.append(" ");
+                stringBuilder.append(' ');
             }
             int v = b & 0xFF;
             String hv = Integer.toHexString(v);

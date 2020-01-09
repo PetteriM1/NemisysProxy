@@ -14,11 +14,8 @@ public class StopCommand extends VanillaCommand {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-
         sender.sendMessage("\u00A7cStopping the proxy...");
-
         sender.getServer().shutdown();
-
         return true;
     }
 }

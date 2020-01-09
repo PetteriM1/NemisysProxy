@@ -36,7 +36,7 @@ public class HelpCommand extends VanillaCommand {
                 args = newargs;
                 for (String arg : args) {
                     if (!command.toString().isEmpty()) {
-                        command.append(" ");
+                        command.append(' ');
                     }
                     command.append(arg);
                 }
@@ -44,7 +44,7 @@ public class HelpCommand extends VanillaCommand {
                 pageNumber = 1;
                 for (String arg : args) {
                     if (!command.toString().isEmpty()) {
-                        command.append(" ");
+                        command.append(' ');
                     }
                     command.append(arg);
                 }
@@ -80,7 +80,7 @@ public class HelpCommand extends VanillaCommand {
             Command cmd = sender.getServer().getCommandMap().getCommand(command.toString().toLowerCase());
             if (cmd != null) {
                 String message = TextFormat.YELLOW + "--------- " + TextFormat.WHITE + " Help: /" + cmd.getName() + TextFormat.YELLOW + " ---------\n";
-                message += TextFormat.GOLD + "Description: " + TextFormat.WHITE + cmd.getDescription() + "\n";
+                message += TextFormat.GOLD + "Description: " + TextFormat.WHITE + cmd.getDescription() + '\n';
                 StringBuilder usage = new StringBuilder();
                 String[] usages = cmd.getUsage().split("\n");
                 for (String u : usages) {
@@ -89,7 +89,7 @@ public class HelpCommand extends VanillaCommand {
                     }
                     usage.append(u);
                 }
-                message += TextFormat.GOLD + "Usage: " + TextFormat.WHITE + usage + "\n";
+                message += TextFormat.GOLD + "Usage: " + TextFormat.WHITE + usage + '\n';
                 sender.sendMessage(message);
                 return true;
             }

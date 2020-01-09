@@ -94,12 +94,12 @@ public class Client {
                 break;
             case SynapseInfo.HEARTBEAT_PACKET:
                 if (!this.isVerified()) {
-                    this.server.getLogger().error("Client " + this.getIp() + ":" + this.getPort() + " is not verified");
+                    this.server.getLogger().error("Client " + this.getIp() + ':' + this.getPort() + " is not verified");
                     return;
                 }
                 HeartbeatPacket heartbeatPacket = (HeartbeatPacket) packet;
                 this.lastUpdate = System.currentTimeMillis();
-                this.server.getLogger().debug("Received Heartbeat Packet from " + this.getIp() + ":" + this.getPort());
+                this.server.getLogger().debug("Received Heartbeat Packet from " + this.getIp() + ':' + this.getPort());
                 this.tps = heartbeatPacket.tps;
                 this.load = heartbeatPacket.load;
                 this.upTime = heartbeatPacket.upTime;
@@ -125,7 +125,7 @@ public class Client {
                     this.description = connectPacket.description;
                     this.maxPlayers = connectPacket.maxPlayers;
                     this.server.addClient(this);
-                    this.server.getLogger().notice("Client " + this.getIp() + ":" + this.getPort() + " has connected successfully");
+                    this.server.getLogger().notice("Client " + this.getIp() + ':' + this.getPort() + " has connected successfully");
                     this.server.getLogger().notice("lobbyServer: " + (this.lobbyServer ? "true" : "false"));
                     this.server.getLogger().notice("description: " + this.description);
                     this.server.getLogger().notice("maxPlayers: " + this.maxPlayers);
@@ -133,7 +133,7 @@ public class Client {
                     this.sendDataPacket(pk);
                 } else {
                     pk.message = InformationPacket.INFO_LOGIN_FAILED;
-                    this.server.getLogger().emergency("Client " + this.getIp() + ":" + this.getPort() + " tried to connect with wrong password!");
+                    this.server.getLogger().emergency("Client " + this.getIp() + ':' + this.getPort() + " tried to connect with wrong password!");
                     this.sendDataPacket(pk);
                     this.close("Authentication failed!");
                 }
@@ -300,7 +300,7 @@ public class Client {
                 }
                 break;
             default:
-                this.server.getLogger().error("Client " + this.getIp() + ":" + this.getPort() + " has sent an unknown packet " + packet.pid());
+                this.server.getLogger().error("Client " + this.getIp() + ':' + this.getPort() + " has sent an unknown packet " + packet.pid());
         }
     }
 
@@ -367,7 +367,7 @@ public class Client {
         ClientDisconnectEvent ev;
         this.server.getPluginManager().callEvent(ev = new ClientDisconnectEvent(this, reason, type));
         reason = ev.getReason();
-        this.server.getLogger().info("Client " + this.ip + ":" + this.port + " has disconnected due to " + reason);
+        this.server.getLogger().info("Client " + this.ip + ':' + this.port + " has disconnected due to " + reason);
         if (needPk) {
             DisconnectPacket pk = new DisconnectPacket();
             pk.type = type;

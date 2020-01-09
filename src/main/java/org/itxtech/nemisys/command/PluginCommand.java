@@ -29,7 +29,7 @@ public class PluginCommand<T extends Plugin> extends Command implements PluginId
         boolean success = this.executor.onCommand(sender, this, commandLabel, args);
 
         if (!success && !this.usageMessage.isEmpty()) {
-            sender.sendMessage(new TranslationContainer("Usage: {%0}", this.usageMessage));
+            sender.sendMessage("Usage: " + this.usageMessage);
         }
 
         return success;

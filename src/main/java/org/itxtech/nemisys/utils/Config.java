@@ -450,7 +450,7 @@ public class Config {
             if (v instanceof Boolean) {
                 v = (Boolean) v ? "on" : "off";
             }
-            content.append(k).append("=").append(v).append("\r\n");
+            content.append(k).append('=').append(v).append("\r\n");
         }
         return content.toString();
     }

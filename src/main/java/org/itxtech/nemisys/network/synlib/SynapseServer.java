@@ -144,7 +144,7 @@ public class SynapseServer extends Thread implements InterruptibleThread {
             b.bind(this.interfaz, this.port).get();
             return true;
         } catch (Exception e) {
-            Server.getInstance().getLogger().alert("Synapse server can't bind to: " + this.interfaz + ":" + this.port);
+            Server.getInstance().getLogger().alert("Synapse server can't bind to: " + this.interfaz + ':' + this.port);
             Server.getInstance().getLogger().alert("Reason: " + e.getLocalizedMessage());
             Server.getInstance().getLogger().warning("Server will shutdown.");
             return false;

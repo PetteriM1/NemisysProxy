@@ -6,8 +6,8 @@ import org.itxtech.nemisys.utils.ServerKiller;
 
 public class Nemisys {
 
-    public final static String PATH = System.getProperty("user.dir") + "/";
-    public final static String DATA_PATH = System.getProperty("user.dir") + "/";
+    public final static String PATH = System.getProperty("user.dir") + '/';
+    public final static String DATA_PATH = System.getProperty("user.dir") + '/';
     public final static String PLUGIN_PATH = DATA_PATH + "plugins";
     public static final long START_TIME = System.currentTimeMillis();
     public static boolean ANSI = true;

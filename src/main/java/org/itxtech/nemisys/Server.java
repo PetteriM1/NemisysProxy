@@ -109,8 +109,8 @@ public class Server {
             new File(pluginPath).mkdirs();
         }
 
-        this.dataPath = new File(dataPath).getAbsolutePath() + "/";
-        this.pluginPath = new File(pluginPath).getAbsolutePath() + "/";
+        this.dataPath = new File(dataPath).getAbsolutePath() + '/';
+        this.pluginPath = new File(pluginPath).getAbsolutePath() + '/';
 
         this.console = new CommandReader();
         this.console.start();
@@ -507,7 +507,7 @@ public class Server {
                     " | Servers: " + this.clients.size() +
                     " | Memory: " + Math.round(NemisysMath.round((double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024, 2)) + " MB" +
                     " | TPS: " + this.getTicksPerSecond() +
-                    " | Load: " + this.getTickUsage() + "%" + (char) 0x07);
+                    " | Load: " + this.getTickUsage() + '%' + (char) 0x07);
         }
 
         this.network.resetStatistics();
