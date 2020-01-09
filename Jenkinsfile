@@ -14,21 +14,19 @@ pipeline {
             }
             post {
                 success {
-                    junit 'target/surefire-reports/**/*.xml'
                     archiveArtifacts artifacts: 'target/Nemisys-PM1E.jar', fingerprint: true
                 }
             }
         }
 
         stage ('Deploy') {
-            when {
-                branch "master"
-            }
             steps {
-                sh 'mvn javadoc:javadoc javadoc:jar source:jar deploy -DskipTests'
-                step([$class: 'JavadocArchiver',
-                        javadocDir: 'target/site/apidocs',
-                        keepAll: false])
+                sh 'mvn clean package'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'target/Nemisys-PM1E.jar', fingerprint: true
+                }
             }
         }
     }
