@@ -1,6 +1,5 @@
 package org.itxtech.nemisys.command;
 
-import org.itxtech.nemisys.event.TranslationContainer;
 import org.itxtech.nemisys.plugin.Plugin;
 
 /**
