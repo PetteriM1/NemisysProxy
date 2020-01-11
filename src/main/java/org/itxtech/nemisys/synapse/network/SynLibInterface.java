@@ -47,6 +47,7 @@ public class SynLibInterface implements SourceInterface {
             RedirectPacket pk = new RedirectPacket();
             pk.uuid = player.getUuid();
             pk.direct = immediate;
+            pk.mcpeBuffer = packet.getBuffer();
             if (pk.mcpeBuffer.length >= 5242880) {
                 player.close("Illegal Data Packet");
             } else {
