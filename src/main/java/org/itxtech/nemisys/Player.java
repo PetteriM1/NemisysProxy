@@ -210,7 +210,11 @@ public class Player implements CommandSender {
         pk.uuid = this.uuid;
         pk.direct = false;
         pk.mcpeBuffer = buffer;
-        this.client.sendDataPacket(pk);
+        if (pk.mcpeBuffer.length >= 5240000) {
+            this.close("Too big data packet");
+        } else {
+            this.client.sendDataPacket(pk);
+        }
     }
 
     public void addIncomingPacket(DataPacket pk, boolean direct) {
