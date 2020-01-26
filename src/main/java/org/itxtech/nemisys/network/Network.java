@@ -176,7 +176,9 @@ public class Network {
                 Server.getInstance().getLogger().logException(e);
             }
         }
-        return new GenericPacket();
+        GenericPacket pk = new GenericPacket();
+        pk.pid = id;
+        return pk;
     }
 
     public void sendPacket(InetSocketAddress socketAddress, ByteBuf payload) {

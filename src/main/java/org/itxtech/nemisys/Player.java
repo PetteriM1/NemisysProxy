@@ -7,6 +7,8 @@ import org.itxtech.nemisys.command.CommandSender;
 import org.itxtech.nemisys.event.TextContainer;
 import org.itxtech.nemisys.event.TranslationContainer;
 import org.itxtech.nemisys.event.player.*;
+import org.itxtech.nemisys.event.server.DataPacketReceiveEvent;
+import org.itxtech.nemisys.event.server.DataPacketSendEvent;
 import org.itxtech.nemisys.network.SourceInterface;
 import org.itxtech.nemisys.network.protocol.mcpe.*;
 import org.itxtech.nemisys.network.protocol.mcpe.types.ScoreInfo;
@@ -79,6 +81,14 @@ public class Player implements CommandSender {
         try {
             if (this.closed) {
                 return;
+            }
+
+            if (this.getServer().callDataPkEv) {
+                DataPacketReceiveEvent ev = new DataPacketReceiveEvent(this, packet);
+                this.getServer().getPluginManager().callEvent(ev);
+                if (ev.isCancelled()) {
+                    return;
+                }
             }
 
             if (packet instanceof BatchPacket) {
@@ -318,6 +328,14 @@ public class Player implements CommandSender {
     }
 
     public void sendDataPacket(DataPacket pk, boolean direct, boolean needACK) {
+        if (this.getServer().callDataPkEv) {
+            DataPacketSendEvent ev = new DataPacketSendEvent(this, pk);
+            this.getServer().getPluginManager().callEvent(ev);
+            if (ev.isCancelled()) {
+                return;
+            }
+        }
+
         this.interfaz.putPacket(this, pk, needACK, direct);
     }
 

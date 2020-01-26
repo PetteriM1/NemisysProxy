@@ -269,6 +269,4 @@ public class SynapseEntry {
             tick();
         }
     }
-
-
 }

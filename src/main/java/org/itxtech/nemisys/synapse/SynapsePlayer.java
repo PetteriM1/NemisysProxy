@@ -50,13 +50,4 @@ public class SynapsePlayer extends Player {
     public void setUniqueId(UUID uuid) {
         this.uuid = uuid;
     }
-
-    @Override
-    public void sendDataPacket(DataPacket pk, boolean direct, boolean needACK) {
-        DataPacketSendEvent ev = new DataPacketSendEvent(this, pk);
-        this.getServer().getPluginManager().callEvent(ev);
-        if (!ev.isCancelled()) {
-            super.sendDataPacket(pk, direct, needACK);
-        }
-    }
 }

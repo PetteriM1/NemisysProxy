@@ -88,6 +88,7 @@ public class Server {
     private Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
     private Synapse synapse;
     private int compressionLevel;
+    boolean callDataPkEv;
     public boolean plusOnePlayerCount;
     @SuppressWarnings("unused")
     public int uptime = 0;
@@ -130,12 +131,14 @@ public class Server {
             }
         }
 
+        this.callDataPkEv = this.getPropertyBoolean("call-data-pk-ev", false);
         this.compressionLevel = this.getPropertyInt("compression-level", 8);
-        this.playersPerThread = this.getPropertyInt("players-per-thread");
+        this.playersPerThread = this.getPropertyInt("players-per-thread", 30);
         this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
         this.motd = this.getPropertyString("motd", "Nemisys Proxy");
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
+        this.maxPlayers = this.getPropertyInt("max-players", 20);
 
         ServerScheduler.WORKERS = (int) poolSize;
 
@@ -144,8 +147,6 @@ public class Server {
         if (this.getPropertyBoolean("enable-rcon", false)) {
             this.rcon = new RCON(this, this.getPropertyString("rcon.password", ""), (!this.getIp().isEmpty()) ? this.getIp() : "0.0.0.0", this.getPropertyInt("rcon.port", this.getPort()));
         }
-
-        this.maxPlayers = this.getPropertyInt("max-players", 20);
 
         Nemisys.DEBUG = this.getPropertyInt("debug", 1);
         this.logger.setLogDebug(Nemisys.DEBUG > 1);
@@ -859,7 +860,7 @@ public class Server {
             put("async-workers", "auto");
             put("max-players", 50);
             put("plus-one-max-count", true);
-            put("players-per-thread", 50);
+            put("players-per-thread", 30);
             put("enable-query", true);
             put("enable-rcon", false);
             put("rcon.password", Base64.getEncoder().encodeToString(UUID.randomUUID().toString().replace("-", "").getBytes()).substring(3, 13));
@@ -868,6 +869,7 @@ public class Server {
             put("ansi", true);
             put("send-start-message", false);
             put("compression-level", 8);
+            put("call-data-pk-ev", false);
         }
     }
 }
