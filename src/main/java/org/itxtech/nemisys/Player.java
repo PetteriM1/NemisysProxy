@@ -189,19 +189,17 @@ public class Player implements CommandSender {
                 case ProtocolInfo.SET_SCORE_PACKET:
                     SetScorePacket ssp = (SetScorePacket) pk;
                     SetScorePacket.Action act = ssp.action;
-                    ssp.infos.forEach(info -> {
-                        scoreboards.compute(info.objective, (k, v) -> {
-                            if (v == null) {
-                                v = new HashSet<>();
-                            }
-                            if (act == SetScorePacket.Action.SET) {
-                                v.add(info.scoreId);
-                            } else {
-                                v.remove(info.scoreId);
-                            }
-                            return v;
-                        });
-                    });
+                    ssp.infos.forEach(info -> scoreboards.compute(info.objective, (k, v) -> {
+                        if (v == null) {
+                            v = new HashSet<>();
+                        }
+                        if (act == SetScorePacket.Action.SET) {
+                            v.add(info.scoreId);
+                        } else {
+                            v.remove(info.scoreId);
+                        }
+                        return v;
+                    }));
                     break;
             }
 

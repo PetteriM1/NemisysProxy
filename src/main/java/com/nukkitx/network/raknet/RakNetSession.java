@@ -15,7 +15,6 @@ import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
-import org.itxtech.nemisys.Server;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;

@@ -1,7 +1,6 @@
 package org.itxtech.nemisys.synapse;
 
 import org.itxtech.nemisys.Player;
-import org.itxtech.nemisys.event.server.DataPacketSendEvent;
 import org.itxtech.nemisys.event.synapse.player.SynapsePlayerConnectEvent;
 import org.itxtech.nemisys.network.SourceInterface;
 import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
