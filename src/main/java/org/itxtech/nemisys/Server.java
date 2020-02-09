@@ -364,7 +364,7 @@ public class Server {
 
     public void start() {
         if (this.getPropertyBoolean("send-start-message", false)) {
-            this.getLogger().info("Done (" + (double) (System.currentTimeMillis() - Nemisys.START_TIME) / 1000 + "s)! For help, type \"help\" or \"?\"");
+            this.getLogger().info("Done (" + (double) (System.currentTimeMillis() - Nemisys.START_TIME) / 1000 + "s)! For help, type \"help\"");
         }
 
         if (this.getPropertyBoolean("enable-query", true)) {
