@@ -40,8 +40,8 @@ public class TextPacket extends DataPacket {
             case TYPE_TRANSLATION:
                 this.message = this.getString();
                 int count = (int) this.getUnsignedVarInt();
-                this.parameters = new String[count];
-                for (int i = 0; i < count; i++) {
+                this.parameters = new String[Math.min(count, 128)];
+                for (int i = 0; i < this.parameters.length; i++) {
                     this.parameters[i] = this.getString();
                 }
         }
