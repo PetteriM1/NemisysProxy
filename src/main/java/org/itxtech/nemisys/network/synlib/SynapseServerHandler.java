@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
+import org.itxtech.nemisys.utils.BugReportGenerator;
 
 /**
  * Handles a server-side channel.
@@ -49,6 +50,9 @@ public class SynapseServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
+        try {
+            new BugReportGenerator(cause).start();
+        } catch (Exception ignored) {}
         ctx.close();
     }
 }

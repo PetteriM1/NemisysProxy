@@ -8,6 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.itxtech.nemisys.InterruptibleThread;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.network.SynapseInterface;
+import org.itxtech.nemisys.utils.BugReportGenerator;
 import org.itxtech.nemisys.utils.ThreadedLogger;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -127,6 +128,9 @@ public class SynapseServer extends Thread implements InterruptibleThread {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                new BugReportGenerator(e).start();
+            } catch (Exception ignored) {}
         }
     }
 

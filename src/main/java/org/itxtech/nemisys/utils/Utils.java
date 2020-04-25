@@ -94,6 +94,9 @@ public class Utils {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         e.printStackTrace(printWriter);
+        try {
+            new BugReportGenerator(e).start();
+        } catch (Exception ignored) {}
         return stringWriter.toString();
     }
 

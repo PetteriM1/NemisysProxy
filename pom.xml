@@ -79,6 +79,11 @@
             <scope>compile</scope>
             <classifier>osx-x86_64</classifier>
         </dependency>
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry</artifactId>
+            <version>1.7.30</version>
+        </dependency>
     </dependencies>
 
     <build>
