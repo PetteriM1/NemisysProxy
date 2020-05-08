@@ -143,13 +143,13 @@ public class Server {
         }
 
         this.callDataPkEv = this.getPropertyBoolean("call-data-pk-ev", false);
-        this.compressionLevel = this.getPropertyInt("compression-level", 8);
+        this.compressionLevel = this.getPropertyInt("compression-level", 7);
         this.playersPerThread = this.getPropertyInt("players-per-thread", 30);
         this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
         this.motd = this.getPropertyString("motd", "Nemisys Proxy");
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
-        this.maxPlayers = this.getPropertyInt("max-players", 20);
+        this.maxPlayers = this.getPropertyInt("max-players", 50);
 
         ServerScheduler.WORKERS = (int) poolSize;
 
@@ -478,7 +478,7 @@ public class Server {
                 this.titleTick();
             }
 
-            this.maxTick = 20;
+            this.maxTick = 100;
             this.maxUse = 0;
 
             if ((this.tickCounter & 0b111111111) == 0) {
@@ -888,7 +888,7 @@ public class Server {
             put("enable-synapse-client", false);
             put("ansi", true);
             put("send-start-message", false);
-            put("compression-level", 8);
+            put("compression-level", 7);
             put("call-data-pk-ev", false);
             put("automatic-bug-report", true);
             put("thread-watchdog-tick", 50000);

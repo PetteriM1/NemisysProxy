@@ -105,7 +105,7 @@ public class SessionManager {
         }
 
         if ((this.tickCounter & 0b1111) == 0) {
-            this.maxTick = 20;
+            this.maxTick = 100;
             this.maxUse = 0;
         }
 
