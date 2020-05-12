@@ -57,7 +57,7 @@ public class Server {
     private PluginManager pluginManager;
     private ServerScheduler scheduler;
     private int tickCounter;
-    public long nextTick;
+    private long nextTick;
     private float[] tickAverage = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
     private float[] useAverage = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private float maxTick = 100;
@@ -93,8 +93,6 @@ public class Server {
     boolean callDataPkEv;
     public boolean plusOnePlayerCount;
     public SentryClient sentry;
-    public final Thread currentThread;
-    private Watchdog watchdog;
     @SuppressWarnings("unused")
     public int uptime = 0;
 
@@ -106,10 +104,9 @@ public class Server {
             1, TimeUnit.MINUTES, new LinkedBlockingQueue<>(), new ThreadFactoryBuilder().setNameFormat("Player Ticker - #%d").setDaemon(true).build());
 
     public Server(MainLogger logger, final String filePath, String dataPath, String pluginPath) {
-        currentThread = Thread.currentThread();
         instance = this;
-
         this.logger = logger;
+
         this.filePath = filePath;
 
         if (!new File(pluginPath).exists()) {
@@ -191,11 +188,6 @@ public class Server {
         }
 
         this.properties.save(true);
-
-        if (this.getPropertyInt("thread-watchdog-tick", 50000) > 0) {
-            this.watchdog = new Watchdog(this, this.getPropertyInt("thread-watchdog-tick", 50000));
-            this.watchdog.start();
-        }
 
         this.start();
     }
@@ -371,10 +363,6 @@ public class Server {
                 }
             }
             this.synapseInterface.getInterface().shutdown();
-
-            if (this.watchdog != null) {
-                this.watchdog.kill();
-            }
         } catch (Exception e) {
             this.logger.logException(e);
             this.logger.emergency("Exception happened while shutting down, exit the process");
@@ -891,7 +879,6 @@ public class Server {
             put("compression-level", 7);
             put("call-data-pk-ev", false);
             put("automatic-bug-report", true);
-            put("thread-watchdog-tick", 50000);
         }
     }
 }
