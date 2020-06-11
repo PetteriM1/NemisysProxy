@@ -140,7 +140,12 @@ public final class ClientChainData {
     }
 
     private void decodeChainData() {
-        Map<String, List<String>> map = new Gson().fromJson(new String(bs.get(bs.getLInt()), StandardCharsets.UTF_8),
+        int size = bs.getLInt();
+        if (size > 3000000) {
+            throw new RuntimeException("The chain data is too big: " + size);
+        }
+
+        Map<String, List<String>> map = new Gson().fromJson(new String(bs.get(size), StandardCharsets.UTF_8),
                 new MapTypeToken().getType());
         if (map.isEmpty() || !map.containsKey("chain") || map.get("chain").isEmpty()) return;
         for (String c : map.get("chain")) {
@@ -158,7 +163,12 @@ public final class ClientChainData {
     }
 
     private void decodeSkinData() {
-        JsonObject skinToken = decodeToken(new String(bs.get(bs.getLInt())));
+        int size = bs.getLInt();
+        if (size > 3000000) {
+            throw new RuntimeException("The skin data is too big: " + size);
+        }
+
+        JsonObject skinToken = decodeToken(new String(bs.get(size)));
         if (skinToken == null) return;
         if (skinToken.has("ClientRandomId")) this.clientId = skinToken.get("ClientRandomId").getAsLong();
         if (skinToken.has("ServerAddress")) this.serverAddress = skinToken.get("ServerAddress").getAsString();

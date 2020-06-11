@@ -109,7 +109,13 @@ public class Player implements CommandSender {
                     this.rawUUID = Binary.writeUUID(this.uuid);
                     this.randomClientId = loginPacket.clientId;
                     this.protocol = loginPacket.protocol;
-                    this.loginChainData = ClientChainData.read(loginPacket);
+                    try {
+                        this.loginChainData = ClientChainData.read(loginPacket);
+                        this.close("Invalid Client Chain Data");
+                        return;
+                    } catch (Exception ex) {
+                        getServer().getLogger().logException(ex);
+                    }
                     this.getServer().addOnlinePlayer(this.uuid, this);
 
                     AsyncTask loginTask = new AsyncTask() {
