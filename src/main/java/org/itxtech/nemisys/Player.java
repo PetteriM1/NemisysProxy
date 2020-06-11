@@ -111,10 +111,10 @@ public class Player implements CommandSender {
                     this.protocol = loginPacket.protocol;
                     try {
                         this.loginChainData = ClientChainData.read(loginPacket);
-                        this.close("Invalid Client Chain Data");
-                        return;
                     } catch (Exception ex) {
                         getServer().getLogger().logException(ex);
+                        this.close("Invalid Client Chain Data");
+                        return;
                     }
                     this.getServer().addOnlinePlayer(this.uuid, this);
 
