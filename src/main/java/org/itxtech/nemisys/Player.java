@@ -306,6 +306,7 @@ public class Player implements CommandSender {
             this.client.addPlayer(this);
 
             PlayerLoginPacket pk = new PlayerLoginPacket();
+            pk.raknetProtocol = this.raknetProtocol;
             pk.uuid = this.uuid;
             pk.address = this.getAddress();
             pk.port = this.getPort();

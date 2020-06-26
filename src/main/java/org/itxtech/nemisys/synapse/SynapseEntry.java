@@ -229,6 +229,7 @@ public class SynapseEntry {
                 try {
                     Constructor constructor = clazz.getConstructor(SourceInterface.class, SynapseEntry.class, long.class, String.class, int.class);
                     SynapsePlayer player = (SynapsePlayer) constructor.newInstance(this.synLibInterface, this, ev.getClientId(), ev.getAddress(), ev.getPort());
+                    player.raknetProtocol = playerLoginPacket.raknetProtocol;
                     player.setUniqueId(playerLoginPacket.uuid);
                     this.players.put(playerLoginPacket.uuid, player);
                     this.getSynapse().getServer().addPlayer(player.getSocketAddress(), player);
