@@ -807,14 +807,24 @@ public class Server {
         data = Binary.appendBytes(payload);
 
         List<InetSocketAddress> targets = new ArrayList<>();
+        List<InetSocketAddress> targetsOld = new ArrayList<>();
         for (Player p : players) {
             if (!p.closed) {
-                targets.add(p.getSocketAddress());
+                if (p.raknetProtocol >= 10) {
+                    targets.add(p.getSocketAddress());
+                } else {
+                    targetsOld.add(p.getSocketAddress());
+                }
             }
         }
 
         try {
-            this.broadcastPacketsCallback(Zlib.deflate(data, compressionLevel), targets);
+            if (!targets.isEmpty()) {
+                this.broadcastPacketsCallback(Zlib.deflateRaw(data, compressionLevel), targets);
+            }
+            if (!targetsOld.isEmpty()) {
+                this.broadcastPacketsCallback(Zlib.deflate(data, compressionLevel), targets);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

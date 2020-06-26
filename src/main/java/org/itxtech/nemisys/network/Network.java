@@ -116,7 +116,11 @@ public class Network {
     public void processBatch(BatchPacket packet, Player player) {
         byte[] data;
         try {
-            data = Zlib.inflate(packet.payload, 2097152); // 2 * 1024 * 1024
+            if (player.raknetProtocol >= 10) {
+                data = Zlib.inflateRaw(packet.payload, 2097152); // 2 * 1024 * 1024
+            } else {
+                data = Zlib.inflate(packet.payload, 2097152);
+            }
         } catch (Exception e) {
             return;
         }

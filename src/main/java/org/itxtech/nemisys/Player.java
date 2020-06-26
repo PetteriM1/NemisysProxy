@@ -48,12 +48,11 @@ public class Player implements CommandSender {
     private long randomClientId;
     @Getter
     private int protocol = -1;
+    public int raknetProtocol;
     @Getter
     private SourceInterface interfaz;
     @Getter
     private Client client;
-    @Getter
-    private byte[] rawUUID;
     private boolean isFirstTimeLogin = true;
     @Getter
     private ClientChainData loginChainData;
@@ -106,7 +105,6 @@ public class Player implements CommandSender {
                         this.close(TextFormat.RED + "Error");
                         break;
                     }
-                    this.rawUUID = Binary.writeUUID(this.uuid);
                     this.randomClientId = loginPacket.clientId;
                     this.protocol = loginPacket.protocol;
                     try {
@@ -393,14 +391,19 @@ public class Player implements CommandSender {
 
     protected void processIncomingBatch(BatchPacket packet) {
         ByteBuf buf0 = null;
+        ByteBuf buf;
+        byte[] payload;
 
         try {
-            buf0 = Unpooled.wrappedBuffer(packet.payload);
-            ByteBuf buf = CompressionUtil.zlibInflate(buf0);
-
-            byte[] payload = new byte[buf.readableBytes()];
-            buf.readBytes(payload);
-            buf.release();
+            if (this.raknetProtocol >= 10) {
+                payload = Zlib.inflateRaw(packet.payload);
+            } else {
+                buf0 = Unpooled.wrappedBuffer(packet.payload);
+                buf = CompressionUtil.zlibInflate(buf0);
+                payload = new byte[buf.readableBytes()];
+                buf.readBytes(payload);
+                buf.release();
+            }
 
             BinaryStream buffer = new BinaryStream(payload);
             List<DataPacket> packets = new ArrayList<>();
@@ -429,8 +432,9 @@ public class Player implements CommandSender {
         } catch (Exception e) {
             MainLogger.getLogger().logException(e);
         } finally {
-            if (buf0 != null)
+            if (buf0 != null) {
                 buf0.release();
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 
@@ -16,6 +17,24 @@ public abstract class Zlib {
 
     public static byte[] deflate(byte[] data, int level) throws Exception {
         Deflater deflater = new Deflater(level);
+        deflater.reset();
+        deflater.setInput(data);
+        deflater.finish();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length);
+        byte[] buf = new byte[1024];
+        try {
+            while (!deflater.finished()) {
+                int i = deflater.deflate(buf);
+                bos.write(buf, 0, i);
+            }
+        } finally {
+            deflater.end();
+        }
+        return bos.toByteArray();
+    }
+
+    public static byte[] deflateRaw(byte[] data, int level) throws Exception {
+        Deflater deflater = new Deflater(level, true);
         deflater.reset();
         deflater.setInput(data);
         deflater.finish();
@@ -50,11 +69,37 @@ public abstract class Zlib {
         return buffer;
     }
 
+    public static byte[] inflateRaw(InputStream stream) throws IOException {
+        InflaterInputStream inputStream = new InflaterInputStream(stream, new Inflater(true));
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+
+        while ((length = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, length);
+        }
+
+        buffer = outputStream.toByteArray();
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
+
+        return buffer;
+    }
+
     public static byte[] inflate(byte[] data) throws IOException {
         return inflate(new ByteArrayInputStream(data));
     }
 
+    public static byte[] inflateRaw(byte[] data) throws IOException {
+        return inflateRaw(new ByteArrayInputStream(data));
+    }
+
     public static byte[] inflate(byte[] data, int maxSize) throws IOException {
         return inflate(new ByteArrayInputStream(data, 0, maxSize));
+    }
+
+    public static byte[] inflateRaw(byte[] data, int maxSize) throws IOException {
+        return inflateRaw(new ByteArrayInputStream(data, 0, maxSize));
     }
 }
