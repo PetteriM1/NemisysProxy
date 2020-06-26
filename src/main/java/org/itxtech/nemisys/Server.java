@@ -823,7 +823,7 @@ public class Server {
                 this.broadcastPacketsCallback(Zlib.deflateRaw(data, compressionLevel), targets);
             }
             if (!targetsOld.isEmpty()) {
-                this.broadcastPacketsCallback(Zlib.deflate(data, compressionLevel), targets);
+                this.broadcastPacketsCallback(Zlib.deflate(data, compressionLevel), targetsOld);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
