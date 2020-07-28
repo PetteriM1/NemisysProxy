@@ -148,8 +148,12 @@ public class Client {
                 Player pl = players.get(uuid);
                 if (pl != null) {
                     byte[] buffer = ((RedirectPacket) packet).mcpeBuffer;
+                    if (buffer.length == 0) {
+                        server.getLogger().warning("Redirect packet with buffer length 0");
+                        return;
+                    }
                     DataPacket send;
-                    if (buffer.length > 0 && buffer[0] == (byte) 0xfe) {
+                    if (buffer[0] == (byte) 0xfe) {
                         send = new BatchPacket();
                         send.setBuffer(buffer, 1);
                     } else {
