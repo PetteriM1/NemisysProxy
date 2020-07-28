@@ -76,6 +76,10 @@ public abstract class Zlib {
         int length;
 
         while ((length = inputStream.read(buffer)) != -1) {
+            if (length == 0) {
+                inputStream.close();
+                throw new IOException("Could not decompress data");
+            }
             outputStream.write(buffer, 0, length);
         }
 
