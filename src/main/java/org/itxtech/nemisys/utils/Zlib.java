@@ -11,23 +11,17 @@ import java.util.zip.InflaterInputStream;
 
 public abstract class Zlib {
 
-    private static final ThreadLocal<Deflater> DEFLATER = ThreadLocal.withInitial(Deflater::new);
-    private static final ThreadLocal<Inflater> INFLATER_RAW = ThreadLocal.withInitial(() -> new Inflater(true));
-    private static final ThreadLocal<Deflater> DEFLATER_RAW = ThreadLocal.withInitial(() -> new Deflater(7, true));
-    private static final ThreadLocal<byte[]> BUFFER = ThreadLocal.withInitial(() -> new byte[8192]);
-
     public static byte[] deflate(byte[] data) throws Exception {
         return deflate(data, Deflater.DEFAULT_COMPRESSION);
     }
 
     public static byte[] deflate(byte[] data, int level) throws Exception {
-        Deflater deflater = DEFLATER.get();
+        Deflater deflater = new Deflater(level);
         deflater.reset();
-        deflater.setLevel(level);
         deflater.setInput(data);
         deflater.finish();
         ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length);
-        byte[] buf = BUFFER.get();
+        byte[] buf = new byte[1024];
         try {
             while (!deflater.finished()) {
                 int i = deflater.deflate(buf);
@@ -40,13 +34,12 @@ public abstract class Zlib {
     }
 
     public static byte[] deflateRaw(byte[] data, int level) throws Exception {
-        Deflater deflater = DEFLATER_RAW.get();
+        Deflater deflater = new Deflater(level, true);
         deflater.reset();
-        deflater.setLevel(level);
         deflater.setInput(data);
         deflater.finish();
         ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length);
-        byte[] buf = BUFFER.get();
+        byte[] buf = new byte[1024];
         try {
             while (!deflater.finished()) {
                 int i = deflater.deflate(buf);
@@ -61,7 +54,7 @@ public abstract class Zlib {
     public static byte[] inflate(InputStream stream) throws IOException {
         InflaterInputStream inputStream = new InflaterInputStream(stream);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        byte[] buffer = BUFFER.get();
+        byte[] buffer = new byte[1024];
         int length;
 
         while ((length = inputStream.read(buffer)) != -1) {
@@ -77,11 +70,9 @@ public abstract class Zlib {
     }
 
     public static byte[] inflateRaw(InputStream stream) throws IOException {
-        Inflater inflater = INFLATER_RAW.get();
-        inflater.reset();
-        InflaterInputStream inputStream = new InflaterInputStream(stream, inflater);
+        InflaterInputStream inputStream = new InflaterInputStream(stream, new Inflater(true));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        byte[] buffer = BUFFER.get();
+        byte[] buffer = new byte[1024];
         int length;
 
         while ((length = inputStream.read(buffer)) != -1) {
