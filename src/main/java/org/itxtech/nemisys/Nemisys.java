@@ -16,6 +16,7 @@ public class Nemisys {
     public static void main(String[] args) {
 
         System.setProperty("java.net.preferIPv4Stack" , "true");
+        System.getProperties().putIfAbsent("io.netty.allocator.type", "unpooled");
 
         MainLogger logger = new MainLogger(DATA_PATH + "server.log");
 
