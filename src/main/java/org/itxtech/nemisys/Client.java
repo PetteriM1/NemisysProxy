@@ -81,7 +81,6 @@ public class Client {
     }
 
     public void handleDataPacket(SynapseDataPacket packet) {
-
         switch (packet.pid()) {
             case SynapseInfo.BROADCAST_PACKET:
                 GenericPacket gPacket = new GenericPacket();

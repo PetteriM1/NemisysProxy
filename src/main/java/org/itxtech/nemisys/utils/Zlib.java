@@ -33,7 +33,9 @@ public abstract class Zlib {
         } finally {
             deflater.end();
         }
-        return bos.toByteArray();
+        byte[] out = bos.toByteArray();
+        bos.close();
+        return out;
     }
 
     public static byte[] deflateRaw(byte[] data, int level) throws Exception {
@@ -52,7 +54,9 @@ public abstract class Zlib {
         } finally {
             deflater.end();
         }
-        return bos.toByteArray();
+        byte[] out = bos.toByteArray();
+        bos.close();
+        return out;
     }
 
     public static byte[] inflate(InputStream stream) throws IOException {
