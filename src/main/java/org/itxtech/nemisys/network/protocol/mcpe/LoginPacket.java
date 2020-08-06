@@ -40,8 +40,14 @@ public class LoginPacket extends DataPacket {
     }
 
     private void decodeChainData() {
-        Map<String, List<String>> map = new Gson().fromJson(new String(this.get(getLInt()), StandardCharsets.UTF_8),
-                new MapTypeToken().getType());
+        int size = this.getLInt();
+        if (size > 3000000) {
+            throw new IllegalArgumentException("The chain data is too big: " + size);
+        }
+
+        String data = new String(this.get(size), StandardCharsets.UTF_8);
+        Map<String, List<String>> map = new Gson().fromJson(data, new MapTypeToken().getType());
+
         if (map.isEmpty() || !map.containsKey("chain") || map.get("chain").isEmpty()) return;
         List<String> chains = map.get("chain");
         for (String c : chains) {
