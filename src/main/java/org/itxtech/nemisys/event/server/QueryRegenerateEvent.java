@@ -152,7 +152,9 @@ public class QueryRegenerateEvent extends ServerEvent {
         }
 
         query.put((byte) 0x00);
-        return Arrays.copyOf(query.array(), query.position());
+        byte[] copy = Arrays.copyOf(query.array(), query.position());
+        query = null;
+        return copy;
     }
 
     public byte[] getShortQuery() {
@@ -170,6 +172,8 @@ public class QueryRegenerateEvent extends ServerEvent {
         query.put(Binary.writeLShort(this.port));
         query.put(this.ip.getBytes(StandardCharsets.UTF_8));
         query.put((byte) 0x00);
-        return Arrays.copyOf(query.array(), query.position());
+        byte[] copy = Arrays.copyOf(query.array(), query.position());
+        query = null;
+        return copy;
     }
 }

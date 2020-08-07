@@ -794,17 +794,20 @@ public class Server {
         }
 
         byte[][] payload = new byte[(packets.length << 1)][];
+        int size = 0;
         for (int i = 0; i < packets.length; i++) {
             DataPacket p = packets[i];
             if (!p.isEncoded) {
                 p.encode();
             }
             byte[] buf = p.getBuffer();
-            payload[(i << 1)] = Binary.writeUnsignedVarInt(buf.length);
-            payload[(i << 1) + 1] = buf;
+            int i2 = i << 1;
+            payload[i2] = Binary.writeUnsignedVarInt(buf.length);
+            payload[i2 + 1] = buf;
+            packets[i] = null;
+            size += payload[i2].length;
+            size += payload[i2 + 1].length;
         }
-        byte[] data;
-        data = Binary.appendBytes(payload);
 
         List<InetSocketAddress> targets = new ArrayList<>();
         List<InetSocketAddress> targetsOld = new ArrayList<>();
@@ -819,11 +822,12 @@ public class Server {
         }
 
         try {
+            byte[] bytes = Binary.appendBytes(payload);
             if (!targets.isEmpty()) {
-                this.broadcastPacketsCallback(Zlib.deflateRaw(data, compressionLevel), targets);
+                this.broadcastPacketsCallback(Zlib.deflateRaw(bytes, compressionLevel), targets);
             }
             if (!targetsOld.isEmpty()) {
-                this.broadcastPacketsCallback(Zlib.deflate(data, compressionLevel), targetsOld);
+                this.broadcastPacketsCallback(Zlib.deflate(bytes, compressionLevel), targetsOld);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

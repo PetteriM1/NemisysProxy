@@ -13,7 +13,7 @@ public class VarInt {
      * @return Unsigned encoded int
      */
     public static long encodeZigZag32(int v) {
-        return (long) ((v << 1) ^ (v >> 31));
+        return ((v << 1) ^ (v >> 31)) & 0xFFFFFFFFL;
     }
 
     /**

@@ -58,49 +58,49 @@ import java.util.concurrent.ConcurrentLinkedQueue;
      @Override
      public void emergency(String message) {
          if (LogLevel.EMERGENCY.getLevel() <= logLevel.getLevel())
-             this.send(TextFormat.RED + "[EMERGENCY] " + message);
+             this.send(/*TextFormat.RED +*/ "[EMERGENCY] " + message);
      }
  
      @Override
      public void alert(String message) {
          if (LogLevel.ALERT.getLevel() <= logLevel.getLevel())
-             this.send(TextFormat.RED + "[ALERT] " + message);
+             this.send(/*TextFormat.RED +*/ "[ALERT] " + message);
      }
  
      @Override
      public void critical(String message) {
          if (LogLevel.CRITICAL.getLevel() <= logLevel.getLevel())
-             this.send(TextFormat.RED + "[CRITICAL] " + message);
+             this.send(/*TextFormat.RED +*/ "[CRITICAL] " + message);
      }
  
      @Override
      public void error(String message) {
          if (LogLevel.ERROR.getLevel() <= logLevel.getLevel())
-             this.send(TextFormat.DARK_RED + "[ERROR] " + message);
+             this.send(/*TextFormat.DARK_RED +*/ "[ERROR] " + message);
      }
  
      @Override
      public void warning(String message) {
          if (LogLevel.WARNING.getLevel() <= logLevel.getLevel())
-             this.send(TextFormat.YELLOW + "[WARNING] " + message);
+             this.send(/*TextFormat.YELLOW +*/ "[WARNING] " + message);
      }
  
      @Override
      public void notice(String message) {
          if (LogLevel.NOTICE.getLevel() <= logLevel.getLevel())
-             this.send(TextFormat.AQUA + "[NOTICE] " + message);
+             this.send(/*TextFormat.AQUA +*/ "[NOTICE] " + message);
      }
  
      @Override
      public void info(String message) {
          if (LogLevel.INFO.getLevel() <= logLevel.getLevel())
-             this.send(TextFormat.WHITE + "[INFO] " + message);
+             this.send(/*TextFormat.WHITE +*/ "[INFO] " + message);
      }
  
      @Override
      public void debug(String message) {
          if (LogLevel.DEBUG.getLevel() <= logLevel.getLevel())
-             this.send(TextFormat.GRAY + "[DEBUG] " + message);
+             this.send(/*TextFormat.GRAY +*/ "[DEBUG] " + message);
      }
  
      public void setLogDebug(Boolean logDebug) {
@@ -215,7 +215,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
          try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile, true), StandardCharsets.UTF_8), 1024)) {
              Date now = new Date();
              String consoleDateFormat = new SimpleDateFormat("HH:mm:ss ").format(now);
-             String fileDateFormat = new SimpleDateFormat("Y-M-d HH:mm:ss ").format(now);
+             String fileDateFormat = new SimpleDateFormat("y-M-d HH:mm:ss ").format(now);
              while (!logBuffer.isEmpty()) {
                  String message = logBuffer.poll();
                  if (message != null) {
@@ -223,7 +223,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
                      writer.write(TextFormat.clean(message));
                      writer.write("\r\n");
                      CommandReader.getInstance().stashLine();
-                     System.out.println(colorize(TextFormat.AQUA + consoleDateFormat + TextFormat.RESET + message + TextFormat.RESET));
+                     System.out.println(TextFormat.clean(consoleDateFormat + message)/*colorize(TextFormat.AQUA + consoleDateFormat + TextFormat.RESET + message + TextFormat.RESET)*/);
                      CommandReader.getInstance().unstashLine();
                  }
              }

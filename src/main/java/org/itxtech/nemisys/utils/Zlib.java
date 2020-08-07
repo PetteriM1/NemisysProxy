@@ -19,7 +19,6 @@ public abstract class Zlib {
 
     public static byte[] deflate(byte[] data, int level) throws Exception {
         Deflater deflater = new Deflater(level);
-        deflater.reset();
         deflater.setLevel(level);
         deflater.setInput(data);
         deflater.finish();
@@ -35,12 +34,12 @@ public abstract class Zlib {
         }
         byte[] out = bos.toByteArray();
         bos.close();
+        bos = null;
         return out;
     }
 
     public static byte[] deflateRaw(byte[] data, int level) throws Exception {
         Deflater deflater = new Deflater(level, true);
-        deflater.reset();
         deflater.setLevel(level);
         deflater.setInput(data);
         deflater.finish();
@@ -56,6 +55,7 @@ public abstract class Zlib {
         }
         byte[] out = bos.toByteArray();
         bos.close();
+        bos = null;
         return out;
     }
 
@@ -72,8 +72,9 @@ public abstract class Zlib {
         buffer = outputStream.toByteArray();
         outputStream.flush();
         outputStream.close();
+        outputStream = null;
         inputStream.close();
-
+        inputStream = null;
         return buffer;
     }
 
@@ -94,8 +95,9 @@ public abstract class Zlib {
         buffer = outputStream.toByteArray();
         outputStream.flush();
         outputStream.close();
+        outputStream = null;
         inputStream.close();
-
+        inputStream = null;
         return buffer;
     }
 
