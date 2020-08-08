@@ -223,6 +223,7 @@ public class Player implements CommandSender {
         pk.direct = false;
         pk.mcpeBuffer = buffer;
         if (pk.mcpeBuffer.length >= 5240000) {
+            pk = null;
             this.close("Too big data packet");
         } else {
             this.client.sendDataPacket(pk);
@@ -391,22 +392,22 @@ public class Player implements CommandSender {
     }
 
     protected void processIncomingBatch(BatchPacket packet) {
-        ByteBuf buf0 = null;
-        ByteBuf buf;
         byte[] payload;
 
         try {
             if (this.raknetProtocol >= 10) {
                 payload = Zlib.inflateRaw(packet.payload);
             } else {
-                buf0 = Unpooled.wrappedBuffer(packet.payload);
-                buf = CompressionUtil.zlibInflate(buf0);
+                ByteBuf buf0 = Unpooled.wrappedBuffer(packet.payload);
+                ByteBuf buf = CompressionUtil.zlibInflate(buf0);
+                buf0.release();
                 payload = new byte[buf.readableBytes()];
                 buf.readBytes(payload);
                 buf.release();
             }
 
             BinaryStream buffer = new BinaryStream(payload);
+            payload = null;
             List<DataPacket> packets = new ArrayList<>();
 
             while (!buffer.feof()) {
@@ -432,10 +433,6 @@ public class Player implements CommandSender {
             }
         } catch (Exception e) {
             MainLogger.getLogger().logException(e);
-        } finally {
-            if (buf0 != null) {
-                buf0.release();
-            }
         }
     }
 

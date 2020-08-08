@@ -18,6 +18,8 @@ public class LoginPacket extends DataPacket {
     public long clientId;
     public byte[] cacheBuffer;
 
+    private static final Gson GSON = new Gson();
+
     @Override
     public byte pid() {
         return ProtocolInfo.LOGIN_PACKET;
@@ -46,10 +48,15 @@ public class LoginPacket extends DataPacket {
         }
 
         String data = new String(this.get(size), StandardCharsets.UTF_8);
-        Map<String, List<String>> map = new Gson().fromJson(data, new MapTypeToken().getType());
+        Map<String, List<String>> map = GSON.fromJson(data, new MapTypeToken().getType());
+        data = null;
 
-        if (map.isEmpty() || !map.containsKey("chain") || map.get("chain").isEmpty()) return;
+        if (map.isEmpty() || !map.containsKey("chain") || map.get("chain").isEmpty()) {
+            map = null;
+            return;
+        }
         List<String> chains = map.get("chain");
+        map = null;
         for (String c : chains) {
             JsonObject chainMap = decodeToken(c);
             if (chainMap == null) continue;
@@ -61,10 +68,10 @@ public class LoginPacket extends DataPacket {
         }
     }
 
-    private static JsonObject decodeToken(String token) {
+    private JsonObject decodeToken(String token) {
         String[] base = token.split("\\.");
         if (base.length < 2) return null;
-        return new Gson().fromJson(new String(Base64.getDecoder().decode(base[1].replaceAll("-", "+").replaceAll("_", "/")), StandardCharsets.UTF_8), JsonObject.class);
+        return GSON.fromJson(new String(Base64.getDecoder().decode(base[1].replaceAll("-", "+").replaceAll("_", "/")), StandardCharsets.UTF_8), JsonObject.class);
     }
 
     private static class MapTypeToken extends TypeToken<Map<String, List<String>>> {

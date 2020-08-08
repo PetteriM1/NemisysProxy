@@ -49,6 +49,7 @@ public class SynLibInterface implements SourceInterface {
             pk.direct = immediate;
             pk.mcpeBuffer = packet.getBuffer();
             if (pk.mcpeBuffer.length >= 5240000) {
+                pk = null;
                 player.close("Too big data packet");
             } else {
                 this.synapseInterface.putPacket(pk);

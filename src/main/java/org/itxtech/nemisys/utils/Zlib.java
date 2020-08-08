@@ -11,7 +11,7 @@ import java.util.zip.InflaterInputStream;
 
 public abstract class Zlib {
 
-    private static final ThreadLocal<byte[]> BUFFER = ThreadLocal.withInitial(() -> new byte[8192]);
+    private static final ThreadLocal<byte[]> BUFFER = ThreadLocal.withInitial(() -> new byte[6144]);
 
     public static byte[] deflate(byte[] data) throws Exception {
         return deflate(data, Deflater.DEFAULT_COMPRESSION);
