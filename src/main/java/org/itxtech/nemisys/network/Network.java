@@ -147,6 +147,7 @@ public class Network {
 
                     packets.add(pk);
                 }
+                buf = null;
             }
 
             processPackets(player, packets);
@@ -157,6 +158,7 @@ public class Network {
                 this.server.getLogger().logException(e);
             }
         }
+        data = null;
     }
 
     /**

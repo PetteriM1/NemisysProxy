@@ -480,6 +480,10 @@ public class Server {
                 }
             }
 
+            if ((this.tickCounter & 0b1111111111) == 0) {
+                Runtime.getRuntime().gc();
+            }
+
             this.getNetwork().updateName();
         }
 
@@ -805,6 +809,7 @@ public class Server {
             payload[i2] = Binary.writeUnsignedVarInt(buf.length);
             payload[i2 + 1] = buf;
             packets[i] = null;
+            buf = null;
             size += payload[i2].length;
             size += payload[i2 + 1].length;
         }
@@ -829,9 +834,11 @@ public class Server {
             if (!targetsOld.isEmpty()) {
                 this.broadcastPacketsCallback(Zlib.deflate(bytes, compressionLevel), targetsOld);
             }
+            bytes = null;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        payload = null;
     }
 
     public void broadcastPacketsCallback(byte[] data, List<InetSocketAddress> targets) {

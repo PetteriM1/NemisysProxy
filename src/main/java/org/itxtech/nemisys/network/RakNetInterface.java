@@ -172,6 +172,7 @@ public class RakNetInterface implements RakNetServerListener, AdvancedSourceInte
         byteBuf.writeByte(0xfe);
         byteBuf.writeBytes(buffer);
         byteBuf.readerIndex(0);
+        buffer = null;
 
         session.send(byteBuf, immediate ? RakNetPriority.IMMEDIATE : RakNetPriority.MEDIUM, packet.reliability,
                 packet.getChannel());

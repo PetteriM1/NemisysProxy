@@ -388,6 +388,12 @@ public class Player implements CommandSender {
 
             this.interfaz.close(this, notify ? reason : "");
             this.getServer().removePlayer(this);
+
+            try {
+                this.cachedLoginPacket = null;
+                this.scoreboards.clear();
+                this.spawnedEntities = null;
+            } catch (Exception ignore) {}
         }
     }
 
@@ -405,6 +411,7 @@ public class Player implements CommandSender {
                 buf.readBytes(payload);
                 buf.release();
             }
+            packet.payload = null;
 
             BinaryStream buffer = new BinaryStream(payload);
             payload = null;
@@ -423,6 +430,7 @@ public class Player implements CommandSender {
 
                         packets.add(pk);
                     }
+                    data = null;
                 } catch (Exception e) {
                     this.getServer().getLogger().warning("Processing incoming batch packet failed!");
                 }
