@@ -392,7 +392,6 @@ public class Player implements CommandSender {
             try {
                 this.cachedLoginPacket = null;
                 this.scoreboards.clear();
-                this.spawnedEntities = null;
             } catch (Exception ignore) {}
         }
     }
