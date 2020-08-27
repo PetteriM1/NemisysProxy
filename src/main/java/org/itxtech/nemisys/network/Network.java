@@ -118,6 +118,10 @@ public class Network {
         try {
             if (player.raknetProtocol >= 10) {
                 data = Zlib.inflateRaw(packet.payload, 2097152); // 2 * 1024 * 1024
+                if (data == null) {
+                    this.getServer().getLogger().error("Failed to process batch packet: inflateRaw failed");
+                    return;
+                }
             } else {
                 data = Zlib.inflate(packet.payload, 2097152);
             }

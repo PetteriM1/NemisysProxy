@@ -402,6 +402,10 @@ public class Player implements CommandSender {
         try {
             if (this.raknetProtocol >= 10) {
                 payload = Zlib.inflateRaw(packet.payload);
+                if (payload == null) {
+                    this.getServer().getLogger().error("Failed to process incoming batch packet: inflateRaw failed");
+                    return;
+                }
             } else {
                 ByteBuf buf0 = Unpooled.wrappedBuffer(packet.payload);
                 ByteBuf buf = CompressionUtil.zlibInflate(buf0);
