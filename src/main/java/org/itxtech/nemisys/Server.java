@@ -20,7 +20,6 @@ import org.itxtech.nemisys.network.SourceInterface;
 import org.itxtech.nemisys.network.SynapseInterface;
 import org.itxtech.nemisys.network.protocol.mcpe.BatchPacket;
 import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
-import org.itxtech.nemisys.network.protocol.mcpe.ProtocolInfo;
 import org.itxtech.nemisys.network.query.QueryHandler;
 import org.itxtech.nemisys.network.rcon.RCON;
 import org.itxtech.nemisys.permission.DefaultPermissions;
@@ -93,6 +92,7 @@ public class Server {
     boolean callDataPkEv;
     public boolean plusOnePlayerCount;
     public SentryClient sentry;
+    private String version;
     @SuppressWarnings("unused")
     public int uptime = 0;
 
@@ -147,6 +147,7 @@ public class Server {
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
         this.maxPlayers = this.getPropertyInt("max-players", 50);
+        this.version = this.getPropertyString("query-version");
 
         ServerScheduler.WORKERS = (int) poolSize;
 
@@ -539,7 +540,7 @@ public class Server {
     }
 
     public String getVersion() {
-        return ProtocolInfo.MINECRAFT_VERSION_NETWORK;
+        return version;
     }
 
     public String getFilePath() {
@@ -900,6 +901,7 @@ public class Server {
             put("compression-level", 7);
             put("call-data-pk-ev", false);
             put("automatic-bug-report", true);
+            put("query-version", "1.16.20");
         }
     }
 }
