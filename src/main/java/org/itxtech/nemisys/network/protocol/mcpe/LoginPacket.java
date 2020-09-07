@@ -3,6 +3,7 @@ package org.itxtech.nemisys.network.protocol.mcpe;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import org.itxtech.nemisys.Server;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -43,7 +44,7 @@ public class LoginPacket extends DataPacket {
 
     private void decodeChainData() {
         int size = this.getLInt();
-        if (size > 3000000) {
+        if (size > Server.getInstance().dataLimit) {
             throw new IllegalArgumentException("The chain data is too big: " + size);
         }
 

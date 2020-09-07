@@ -92,7 +92,8 @@ public class Server {
     boolean callDataPkEv;
     public boolean plusOnePlayerCount;
     public SentryClient sentry;
-    private String version;
+    private final String version;
+    public int dataLimit;
     @SuppressWarnings("unused")
     public int uptime = 0;
 
@@ -147,7 +148,8 @@ public class Server {
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
         this.maxPlayers = this.getPropertyInt("max-players", 50);
-        this.version = this.getPropertyString("query-version");
+        this.version = this.getPropertyString("query-version", "1.16.40");
+        this.dataLimit = this.getPropertyInt("data-limit", 2097152);
 
         ServerScheduler.WORKERS = (int) poolSize;
 
@@ -901,7 +903,8 @@ public class Server {
             put("compression-level", 7);
             put("call-data-pk-ev", false);
             put("automatic-bug-report", true);
-            put("query-version", "1.16.20");
+            put("query-version", "1.16.40");
+            put("data-limit", 2097152);
         }
     }
 }

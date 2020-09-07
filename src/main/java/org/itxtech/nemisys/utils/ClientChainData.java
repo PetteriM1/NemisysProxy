@@ -3,6 +3,7 @@ package org.itxtech.nemisys.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.network.protocol.mcpe.LoginPacket;
 
 import java.nio.charset.StandardCharsets;
@@ -141,7 +142,7 @@ public final class ClientChainData {
 
     private void decodeChainData() {
         int size = bs.getLInt();
-        if (size > 3000000) {
+        if (size > Server.getInstance().dataLimit) {
             throw new RuntimeException("The chain data is too big: " + size);
         }
 
@@ -164,7 +165,7 @@ public final class ClientChainData {
 
     private void decodeSkinData() {
         int size = bs.getLInt();
-        if (size > 3000000) {
+        if (size > Server.getInstance().dataLimit) {
             throw new RuntimeException("The skin data is too big: " + size);
         }
 
