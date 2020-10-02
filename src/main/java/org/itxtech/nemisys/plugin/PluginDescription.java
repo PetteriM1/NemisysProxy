@@ -6,15 +6,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.util.*;
 
-/* TODO Add these to Javadoc：
- *     <li><i>softdepend</i><br>
- *     <br>
- *     </li>
- *     <li><i>loadbefore</i><br>
- *     <br>
- *     </li>
- */
-
 /**
  * 描述一个Nukkit插件的类。<br>
  * Describes a Nukkit plugin.

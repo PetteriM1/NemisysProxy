@@ -50,10 +50,6 @@ public final class ClientChainData {
         decodeSkinData();
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Override
-    ///////////////////////////////////////////////////////////////////////////
-
     public static ClientChainData of(byte[] buffer) {
         return new ClientChainData(buffer);
     }
@@ -61,10 +57,6 @@ public final class ClientChainData {
     public static ClientChainData read(LoginPacket pk) {
         return of(pk.getBuffer());
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Internal
-    ///////////////////////////////////////////////////////////////////////////
 
     public String getUsername() {
         return username;

@@ -2,7 +2,6 @@ package org.itxtech.nemisys.synapse;
 
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
-import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.Player;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.event.synapse.player.SynapsePlayerCreationEvent;
@@ -165,18 +164,16 @@ public class SynapseEntry {
         this.synapseInterface.process();
         if (!this.getSynapseInterface().isConnected()) return;
         long time = System.currentTimeMillis();
-        if ((time - this.lastUpdate) >= 5000) {
+        if ((time - this.lastUpdate) >= 2000) {
             this.lastUpdate = time;
             HeartbeatPacket pk = new HeartbeatPacket();
-            pk.tps = this.getSynapse().getServer().getTicksPerSecondAverage();
+            /*pk.tps = this.getSynapse().getServer().getTicksPerSecondAverage();
             pk.load = this.getSynapse().getServer().getTickUsageAverage();
-            pk.upTime = (System.currentTimeMillis() - Nemisys.START_TIME) / 1000;
+            pk.upTime = (System.currentTimeMillis() - Nemisys.START_TIME) / 1000;*/
             this.sendDataPacket(pk);
-            this.getSynapse().getServer().getLogger().debug(time + " -> Sending Heartbeat Packet to " + this.getHash());
         }
 
-        long finalTime = System.currentTimeMillis();
-        if (((finalTime - this.lastUpdate) >= 30000) && this.synapseInterface.isConnected()) {
+        if (((time - this.lastUpdate) >= 30000) && this.synapseInterface.isConnected()) {
             this.synapseInterface.reconnect();
         }
     }

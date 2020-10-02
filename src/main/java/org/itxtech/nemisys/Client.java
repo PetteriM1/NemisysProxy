@@ -98,7 +98,6 @@ public class Client {
                 }
                 HeartbeatPacket heartbeatPacket = (HeartbeatPacket) packet;
                 this.lastUpdate = System.currentTimeMillis();
-                this.server.getLogger().debug("Received Heartbeat Packet from " + this.getIp() + ':' + this.getPort());
                 this.tps = heartbeatPacket.tps;
                 this.load = heartbeatPacket.load;
                 this.upTime = heartbeatPacket.upTime;
