@@ -13,7 +13,6 @@ import org.itxtech.nemisys.network.SourceInterface;
 import org.itxtech.nemisys.network.protocol.mcpe.*;
 import org.itxtech.nemisys.network.protocol.mcpe.types.ScoreInfo;
 import org.itxtech.nemisys.network.protocol.spp.PlayerLoginPacket;
-import org.itxtech.nemisys.network.protocol.spp.PlayerLogoutPacket;
 import org.itxtech.nemisys.network.protocol.spp.RedirectPacket;
 import org.itxtech.nemisys.permission.PermissibleBase;
 import org.itxtech.nemisys.permission.Permission;
@@ -304,7 +303,7 @@ public class Player implements CommandSender {
                 this.removeScoreboards();
             }
             this.client = ev.getTargetClient();
-            this.client.addPlayer(this);
+            ev.getTargetClient().addPlayer(this);
 
             PlayerLoginPacket pk = new PlayerLoginPacket();
             pk.raknetProtocol = this.raknetProtocol;
@@ -369,13 +368,7 @@ public class Player implements CommandSender {
 
             if (this.client != null) {
                 try {
-                    PlayerLogoutPacket pk = new PlayerLogoutPacket();
-                    pk.uuid = this.uuid;
-                    pk.reason = reason;
-                    this.client.sendDataPacket(pk);
-                } catch (Exception ignore) {}
-                try {
-                    this.client.removePlayer(this);
+                    this.client.removePlayer(this, reason);
                 } catch (Exception ignore) {}
             }
 

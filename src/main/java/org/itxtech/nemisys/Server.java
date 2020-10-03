@@ -101,6 +101,8 @@ public class Server {
     @Setter
     private int playersPerThread;
 
+    private static final Gson GSON = new Gson();
+
     private final ThreadPoolExecutor playerTicker = new ThreadPoolExecutor(1, Runtime.getRuntime().availableProcessors(),
             1, TimeUnit.MINUTES, new LinkedBlockingQueue<>(), new ThreadFactoryBuilder().setNameFormat("Player Ticker - #%d").setDaemon(true).build());
 
@@ -265,7 +267,7 @@ public class Server {
                         client.getMaxPlayers(), client.getDescription(), client.getTps(), client.getLoad(), client.getUpTime());
                 this.clientData.clientList.put(client.getHash(), entry);
             }
-            this.clientDataJson = new Gson().toJson(this.clientData);
+            this.clientDataJson = GSON.toJson(this.clientData);
         }
     }
 
