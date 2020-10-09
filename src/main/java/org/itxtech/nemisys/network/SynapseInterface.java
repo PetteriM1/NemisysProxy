@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class SynapseInterface {
 
-    private static Map<Byte, SynapseDataPacket> packetPool = new HashMap<>();
+    private static final Map<Byte, SynapseDataPacket> packetPool = new HashMap<>();
     private Server server;
     private Map<String, Client> clients = new HashMap<>();
     private SynapseServer interfaz;
@@ -123,5 +123,6 @@ public class SynapseInterface {
         registerPacket(SynapseInfo.TRANSFER_PACKET, new TransferPacket());
         registerPacket(SynapseInfo.BROADCAST_PACKET, new BroadcastPacket());
         registerPacket(SynapseInfo.PLUGIN_MESSAGE_PACKET, new PluginMessagePacket());
+        registerPacket(SynapseInfo.PLAYER_COUNT_PACKET, new PlayerCountPacket());
     }
 }

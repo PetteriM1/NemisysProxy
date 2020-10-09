@@ -14,4 +14,5 @@ public interface SynapseInfo {
     byte TRANSFER_PACKET = 0x08;
     byte BROADCAST_PACKET = 0x09;
     byte PLUGIN_MESSAGE_PACKET = 0x0a;
+    byte PLAYER_COUNT_PACKET = 0x0b;
 }

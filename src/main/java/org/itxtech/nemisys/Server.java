@@ -96,6 +96,7 @@ public class Server {
     public int dataLimit;
     @SuppressWarnings("unused")
     public int uptime = 0;
+    public final static Map<String, Integer> playerCountData = new ConcurrentHashMap<>();
 
     @Getter
     @Setter

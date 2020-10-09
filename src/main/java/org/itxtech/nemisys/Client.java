@@ -192,6 +192,14 @@ public class Client {
                     }
                 }
                 break;
+            case SynapseInfo.PLAYER_COUNT_PACKET:
+                Map<String, Integer> map = ((PlayerCountPacket) packet).data;
+                Server.playerCountData.put(this.getDescription(), map.get(this.getDescription()));
+
+                PlayerCountPacket playerCountPacket = new PlayerCountPacket();
+                playerCountPacket.data = Server.playerCountData;
+                this.sendDataPacket(playerCountPacket);
+                break;
             case SynapseInfo.PLUGIN_MESSAGE_PACKET:
                 PluginMessagePacket messagePacket = (PluginMessagePacket) packet;
                 BinaryStream inputStream = new BinaryStream(messagePacket.data);

@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class SynapseInterface {
 
-    private static Map<Byte, SynapseDataPacket> packetPool = new HashMap<>();
+    private static final Map<Byte, SynapseDataPacket> packetPool = new HashMap<>();
     private SynapseEntry synapse;
     private SynapseClient client;
     private boolean connected = false;
@@ -93,5 +93,6 @@ public class SynapseInterface {
         registerPacket(SynapseInfo.INFORMATION_PACKET, new InformationPacket());
         registerPacket(SynapseInfo.TRANSFER_PACKET, new TransferPacket());
         registerPacket(SynapseInfo.BROADCAST_PACKET, new BroadcastPacket());
+        registerPacket(SynapseInfo.PLAYER_COUNT_PACKET, new PlayerCountPacket());
     }
 }
