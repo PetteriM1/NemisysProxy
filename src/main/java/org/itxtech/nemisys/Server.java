@@ -804,7 +804,6 @@ public class Server {
         }
 
         byte[][] payload = new byte[(packets.length << 1)][];
-        int size = 0;
         for (int i = 0; i < packets.length; i++) {
             DataPacket p = packets[i];
             if (!p.isEncoded) {
@@ -816,8 +815,6 @@ public class Server {
             payload[i2 + 1] = buf;
             packets[i] = null;
             buf = null;
-            size += payload[i2].length;
-            size += payload[i2 + 1].length;
         }
 
         List<InetSocketAddress> targets = new ArrayList<>();
