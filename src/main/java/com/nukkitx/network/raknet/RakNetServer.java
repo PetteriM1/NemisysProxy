@@ -142,13 +142,13 @@ public class RakNetServer extends RakNet {
 
         RakNetServerSession session = this.sessionsByAddress.get(packet.sender());
 
-        if (session != null) {
+        if (session != null && session.getState() == RakNetState.CONNECTED) {
             this.sendAlreadyConnected(ctx, packet.sender());
         } else if (protocolVersion < 9) {
             this.sendIncompatibleProtocolVersion(ctx, packet.sender());
         } else if (this.listener != null && !this.listener.onConnectionRequest(packet.sender())) {
             this.sendConnectionBanned(ctx, packet.sender());
-        } else {
+        } else if (session == null) {
             // Passed all checks. Now create the session and send the first reply.
             session = new RakNetServerSession(this, packet.sender(), ctx.channel(), mtu,
                     this.eventLoopGroup.next(), protocolVersion);
@@ -159,6 +159,8 @@ public class RakNetServer extends RakNet {
                     listener.onSessionCreation(session);
                 }
             }
+        } else {
+            session.sendOpenConnectionReply1();
         }
     }
 
