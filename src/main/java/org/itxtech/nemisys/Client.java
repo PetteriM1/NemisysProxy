@@ -388,7 +388,6 @@ public class Client {
             this.sendDataPacket(pk);
         }
 
-
         this.interfaz.removeClient(this);
         this.server.removeClient(this);
 

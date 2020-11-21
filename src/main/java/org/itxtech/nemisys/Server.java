@@ -72,7 +72,6 @@ public class Server {
     private RCON rcon;
     private Network network;
     private BaseLang baseLang;
-    private UUID serverID;
     private String filePath;
     private String dataPath;
     private String pluginPath;
@@ -166,7 +165,6 @@ public class Server {
         this.logger.setLogDebug(Nemisys.DEBUG > 1);
 
         this.logger.info(this.getLanguage().translateString("\u00A7b[\u00A7cNemisys \u00A7aPetteriM1 Edition\u00A7b] Proxy started on {%0}:{%1}", new String[]{this.getIp().isEmpty() ? "*" : this.getIp(), String.valueOf(this.getPort())}));
-        this.serverID = UUID.randomUUID();
 
         this.network = new Network(this);
         this.network.setName(this.getMotd());
@@ -578,10 +576,6 @@ public class Server {
 
     public String getSynapseIp() {
         return this.getPropertyString("synapse-ip", "0.0.0.0");
-    }
-
-    public UUID getServerUniqueId() {
-        return this.serverID;
     }
 
     public String getMotd() {

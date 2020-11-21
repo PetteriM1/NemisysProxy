@@ -11,10 +11,6 @@ import java.util.zip.InflaterInputStream;
 
 public abstract class Zlib {
 
-    public static byte[] deflate(byte[] data) throws Exception {
-        return deflate(data, Deflater.DEFAULT_COMPRESSION);
-    }
-
     public static byte[] deflate(byte[] data, int level) throws Exception {
         Deflater deflater = new Deflater(level);
         deflater.setLevel(level);
@@ -104,10 +100,6 @@ public abstract class Zlib {
             ex.printStackTrace();
             return null;
         }
-    }
-
-    public static byte[] inflate(byte[] data) throws IOException {
-        return inflate(new ByteArrayInputStream(data));
     }
 
     public static byte[] inflateRaw(byte[] data) throws IOException {

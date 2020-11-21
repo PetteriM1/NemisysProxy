@@ -327,10 +327,6 @@ public class Vector3 implements Cloneable {
         return hash;
     }
 
-    public int rawHashCode() {
-        return super.hashCode();
-    }
-
     @Override
     public Vector3 clone() {
         try {

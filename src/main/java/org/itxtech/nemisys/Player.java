@@ -587,10 +587,6 @@ public class Player implements CommandSender {
         return this.perm.getEffectivePermissions();
     }
 
-    public int rawHashCode() {
-        return super.hashCode();
-    }
-
     public String getAddress() {
         return this.socketAddress.getAddress().getHostAddress();
     }
