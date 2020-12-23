@@ -3,7 +3,6 @@ package org.itxtech.nemisys.synapse.network.synlib;
 import io.netty.channel.Channel;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
-import org.itxtech.nemisys.utils.BugReportGenerator;
 
 import java.net.InetSocketAddress;
 
@@ -43,9 +42,6 @@ public class Session {
                 this.tick();
             } catch (Exception e) {
                 e.printStackTrace();
-                try {
-                    new BugReportGenerator(e).start();
-                } catch (Exception ignored) {}
             }
             long time = System.currentTimeMillis() - start;
             this.tickUseTime = time;

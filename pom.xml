@@ -16,8 +16,8 @@
 
     <repositories>
         <repository>
-            <id>nukkitx</id>
-            <url>https://repo.nukkitx.com/main/</url>
+            <id>opencollab</id>
+            <url>https://repo.opencollab.dev/main/</url>
         </repository>
     </repositories>
 
@@ -78,11 +78,6 @@
             <version>${netty.version}</version>
             <scope>compile</scope>
             <classifier>osx-x86_64</classifier>
-        </dependency>
-        <dependency>
-            <groupId>io.sentry</groupId>
-            <artifactId>sentry</artifactId>
-            <version>1.7.30</version>
         </dependency>
     </dependencies>
 

@@ -4,8 +4,6 @@ import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
 import io.netty.buffer.ByteBuf;
-import io.sentry.SentryClient;
-import io.sentry.SentryClientFactory;
 import lombok.Getter;
 import lombok.Setter;
 import org.itxtech.nemisys.command.*;
@@ -90,7 +88,6 @@ public class Server {
     private int compressionLevel;
     boolean callDataPkEv;
     public boolean plusOnePlayerCount;
-    public SentryClient sentry;
     private final String version;
     public int dataLimit;
     @SuppressWarnings("unused")
@@ -125,11 +122,6 @@ public class Server {
         this.properties = new Config(this.dataPath + "server.properties", Config.PROPERTIES, new ServerProperties());
 
         if (!this.getPropertyBoolean("ansi", true)) Nemisys.ANSI = false;
-
-        if (this.getPropertyBoolean("automatic-bug-report", true)) {
-            ExceptionHandler.registerExceptionHandler();
-            this.sentry = SentryClientFactory.sentryClient("https://6f3b617dc07543d5889baf814274f06c@o381665.ingest.sentry.io/5213578");
-        }
 
         this.baseLang = new BaseLang("eng");
 
@@ -896,7 +888,6 @@ public class Server {
             put("send-start-message", false);
             put("compression-level", 7);
             put("call-data-pk-ev", false);
-            put("automatic-bug-report", true);
             put("query-version", "1.16.40");
             put("data-limit", 2097152);
         }
