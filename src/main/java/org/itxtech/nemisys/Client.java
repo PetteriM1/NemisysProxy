@@ -26,16 +26,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Client {
 
     @Getter
-    private Server server;
+    private final Server server;
 
-    private SynapseInterface interfaz;
+    private final SynapseInterface interfaz;
 
     @Getter
-    private String ip;
+    private final String ip;
     @Getter
-    private int port;
+    private final int port;
 
-    private Map<UUID, Player> players = new ConcurrentHashMap<>();
+    private final Map<UUID, Player> players = new ConcurrentHashMap<>();
 
     @Getter
     private boolean verified = false;

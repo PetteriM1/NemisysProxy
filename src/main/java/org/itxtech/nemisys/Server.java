@@ -49,43 +49,43 @@ public class Server {
     public static final String BROADCAST_CHANNEL_USERS = "nemisys.broadcast.user";
 
     private static Server instance = null;
-    private AtomicBoolean isRunning = new AtomicBoolean(true);
+    private final AtomicBoolean isRunning = new AtomicBoolean(true);
     private boolean hasStopped = false;
-    private PluginManager pluginManager;
-    private ServerScheduler scheduler;
+    private final PluginManager pluginManager;
+    private final ServerScheduler scheduler;
     private int tickCounter;
     private long nextTick;
-    private float[] tickAverage = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
-    private float[] useAverage = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private final float[] tickAverage = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
+    private final float[] useAverage = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private float maxTick = 100;
     private float maxUse = 0;
-    private MainLogger logger;
-    private CommandReader console;
-    private SimpleCommandMap commandMap;
-    private ConsoleCommandSender consoleSender;
-    private int maxPlayers;
-    private int port;
-    private String ip;
-    private String motd;
+    private final MainLogger logger;
+    private final CommandReader console;
+    private final SimpleCommandMap commandMap;
+    private final ConsoleCommandSender consoleSender;
+    private final int maxPlayers;
+    private final int port;
+    private final String ip;
+    private final String motd;
     private RCON rcon;
-    private Network network;
-    private BaseLang baseLang;
-    private String filePath;
-    private String dataPath;
-    private String pluginPath;
+    private final Network network;
+    private final BaseLang baseLang;
+    private final String filePath;
+    private final String dataPath;
+    private final String pluginPath;
     private QueryHandler queryHandler;
     private QueryRegenerateEvent queryRegenerateEvent;
-    private Config properties;
-    private Map<InetSocketAddress, Player> players = new ConcurrentHashMap<>();
-    private Map<UUID, Player> playersUUIDs = new ConcurrentHashMap<>();
-    private SynapseInterface synapseInterface;
-    private Map<String, Client> clients = new ConcurrentHashMap<>();
+    private final Config properties;
+    private final Map<InetSocketAddress, Player> players = new ConcurrentHashMap<>();
+    private final Map<UUID, Player> playersUUIDs = new ConcurrentHashMap<>();
+    private final SynapseInterface synapseInterface;
+    private final Map<String, Client> clients = new ConcurrentHashMap<>();
     private ClientData clientData = new ClientData();
     private String clientDataJson = "";
-    private Map<String, Client> mainClients = new ConcurrentHashMap<>();
-    private Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
+    private final Map<String, Client> mainClients = new ConcurrentHashMap<>();
+    private final Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
     private Synapse synapse;
-    private int compressionLevel;
+    private final int compressionLevel;
     boolean callDataPkEv;
     public boolean plusOnePlayerCount;
     private final String version;
@@ -781,10 +781,6 @@ public class Server {
     }
 
     public void batchPackets(Player[] players, DataPacket[] packets) {
-        this.batchPackets(players, packets, false);
-    }
-
-    public void batchPackets(Player[] players, DataPacket[] packets, boolean forceSync) {
         if (players == null || packets == null || players.length == 0 || packets.length == 0) {
             return;
         }
@@ -836,7 +832,7 @@ public class Server {
 
         for (InetSocketAddress i : targets) {
             if (this.players.containsKey(i)) {
-                this.players.get(i).sendDataPacket(pk);
+                this.players.get(i).sendDataPacket(pk, false, false);
             }
         }
     }

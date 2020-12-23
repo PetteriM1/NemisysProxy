@@ -164,7 +164,7 @@ public class RakNetInterface implements RakNetServerListener, AdvancedSourceInte
                 return null;
             }
         } else {
-            this.server.batchPackets(new Player[]{player}, new DataPacket[]{packet}, true);
+            this.server.batchPackets(new Player[]{player}, new DataPacket[]{packet});
             return null;
         }
 

@@ -24,6 +24,7 @@ import org.itxtech.nemisys.utils.*;
 
 import java.net.InetSocketAddress;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,7 +41,7 @@ public class Player implements CommandSender {
     @Getter
     private String name;
     @Getter
-    private InetSocketAddress socketAddress;
+    private final InetSocketAddress socketAddress;
     @Getter
     private long clientId;
     @Getter
@@ -49,7 +50,7 @@ public class Player implements CommandSender {
     private int protocol = -1;
     public int raknetProtocol;
     @Getter
-    private SourceInterface interfaz;
+    private final SourceInterface interfaz;
     @Getter
     private Client client;
     private boolean isFirstTimeLogin = true;
@@ -63,9 +64,11 @@ public class Player implements CommandSender {
 
     private final AtomicBoolean ticking = new AtomicBoolean();
 
-    private PermissibleBase perm;
+    private final PermissibleBase perm;
 
     protected final Map<String, Set<Long>> scoreboards = new HashMap<>();
+
+    private final Queue<DataPacket> packetQueue = new ConcurrentLinkedDeque<>();
 
     public Player(SourceInterface interfaz, Long clientID, InetSocketAddress socketAddress) {
         this.interfaz = interfaz;
@@ -252,6 +255,17 @@ public class Player implements CommandSender {
             handleIncomingPacket(incomingPackets.poll());
         }
 
+        if (!this.packetQueue.isEmpty()) {
+            Player[] pArr = new Player[]{this};
+            List<DataPacket> toBatch = new ArrayList<>();
+            DataPacket packet;
+            while ((packet = this.packetQueue.poll()) != null) {
+                toBatch.add(packet);
+            }
+            DataPacket[] arr = toBatch.toArray(new DataPacket[0]);
+            this.getServer().batchPackets(pArr, arr);
+        }
+
         ticking.set(false);
     }
 
@@ -327,7 +341,11 @@ public class Player implements CommandSender {
     }
 
     public void sendDataPacket(DataPacket pk, boolean direct) {
-        this.sendDataPacket(pk, direct, false);
+        if (protocol < 419 || direct) {
+            this.sendDataPacket(pk, true, false);
+        } else {
+            this.packetQueue.offer(pk);
+        }
     }
 
     public void sendDataPacket(DataPacket pk, boolean direct, boolean needACK) {
