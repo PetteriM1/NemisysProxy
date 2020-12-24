@@ -785,18 +785,15 @@ public class Server {
             return;
         }
 
-        byte[][] payload = new byte[(packets.length << 1)][];
-        for (int i = 0; i < packets.length; i++) {
-            DataPacket p = packets[i];
-            if (!p.isEncoded) {
-                p.encode();
+        BinaryStream batched = new BinaryStream();
+        for (DataPacket packet : packets) {
+            if (packet instanceof BatchPacket) {
+                throw new RuntimeException("Cannot batch BatchPacket");
             }
-            byte[] buf = p.getBuffer();
-            int i2 = i << 1;
-            payload[i2] = Binary.writeUnsignedVarInt(buf.length);
-            payload[i2 + 1] = buf;
-            packets[i] = null;
-            buf = null;
+            if (!packet.isEncoded) packet.encode();
+            byte[] buf = packet.getBuffer();
+            batched.putUnsignedVarInt(buf.length);
+            batched.put(buf);
         }
 
         List<InetSocketAddress> targets = new ArrayList<>();
@@ -812,7 +809,7 @@ public class Server {
         }
 
         try {
-            byte[] bytes = Binary.appendBytes(payload);
+            byte[] bytes = Binary.appendBytes(batched.getBuffer());
             if (!targets.isEmpty()) {
                 this.broadcastPacketsCallback(Zlib.deflateRaw(bytes, compressionLevel), targets);
             }
@@ -823,7 +820,6 @@ public class Server {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        payload = null;
     }
 
     public void broadcastPacketsCallback(byte[] data, List<InetSocketAddress> targets) {

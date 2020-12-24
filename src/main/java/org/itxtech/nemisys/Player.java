@@ -256,14 +256,13 @@ public class Player implements CommandSender {
         }
 
         if (!this.packetQueue.isEmpty()) {
-            Player[] pArr = new Player[]{this};
             List<DataPacket> toBatch = new ArrayList<>();
             DataPacket packet;
             while ((packet = this.packetQueue.poll()) != null) {
                 toBatch.add(packet);
             }
             DataPacket[] arr = toBatch.toArray(new DataPacket[0]);
-            this.getServer().batchPackets(pArr, arr);
+            getServer().batchPackets(new Player[]{this}, arr);
         }
 
         ticking.set(false);
@@ -341,7 +340,7 @@ public class Player implements CommandSender {
     }
 
     public void sendDataPacket(DataPacket pk, boolean direct) {
-        if (protocol < 419 || direct) {
+        if (protocol < 419 || direct || pk.pid() == ProtocolInfo.BATCH_PACKET) {
             this.sendDataPacket(pk, true, false);
         } else {
             this.packetQueue.offer(pk);
