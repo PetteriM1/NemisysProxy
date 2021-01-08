@@ -44,7 +44,6 @@ public class Config {
     }
 
     private ConfigSection config = new ConfigSection();
-    private Map<String, Object> nestedCache = new HashMap<>();
     private File file;
     private boolean correct = false;
     private int type = Config.DETECT;
@@ -97,11 +96,9 @@ public class Config {
 
     public void reload() {
         this.config.clear();
-        this.nestedCache.clear();
         this.correct = false;
         if (this.file == null) throw new IllegalStateException("Failed to reload Config. File object is undefined.");
         this.load(this.file.toString(), this.type);
-
     }
 
     public boolean load(String file) {

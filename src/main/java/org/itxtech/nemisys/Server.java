@@ -135,7 +135,7 @@ public class Server {
         }
 
         this.callDataPkEv = this.getPropertyBoolean("call-data-pk-ev", false);
-        this.compressionLevel = this.getPropertyInt("compression-level", 7);
+        this.compressionLevel = Math.max(Math.min(this.getPropertyInt("compression-level", 7), 9), 0);
         this.playersPerThread = this.getPropertyInt("players-per-thread", 30);
         this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
         this.motd = this.getPropertyString("motd", "Nemisys Proxy");
