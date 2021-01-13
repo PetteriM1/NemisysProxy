@@ -93,6 +93,7 @@ public class Server {
     @SuppressWarnings("unused")
     public int uptime = 0;
     public final static Map<String, Integer> playerCountData = new ConcurrentHashMap<>();
+    private final Thread currentThread;
 
     @Getter
     @Setter
@@ -105,8 +106,9 @@ public class Server {
 
     public Server(MainLogger logger, final String filePath, String dataPath, String pluginPath) {
         instance = this;
-        this.logger = logger;
+        currentThread = Thread.currentThread();
 
+        this.logger = logger;
         this.filePath = filePath;
 
         if (!new File(pluginPath).exists()) {
@@ -178,12 +180,16 @@ public class Server {
             try {
                 this.synapse = new Synapse(this);
             } catch (Exception e) {
-                this.logger.warning("Failed!");
+                this.logger.error("Failed to enable Synapse client");
                 this.logger.logException(e);
             }
         }
 
         this.properties.save(true);
+
+        if (this.getPropertyBoolean("thread-watchdog", true)) {
+            new Watchdog(this, 60000).start();
+        }
 
         this.start();
     }
@@ -326,9 +332,9 @@ public class Server {
 
             for (Client client : new ArrayList<>(this.clients.values())) {
                 for (Player player : new ArrayList<>(client.getPlayers().values())) {
-                    player.close("§cMaster server closed!");
+                    player.close("§cProxy server closed");
                 }
-                client.close("§cMaster server closed!");
+                client.close("§cProxy server closed");
             }
 
             if (this.rcon != null) {
@@ -353,6 +359,8 @@ public class Server {
                 interfaz.shutdown();
                 this.network.unregisterInterface(interfaz);
             }
+
+            this.getLogger().debug("Stopping Synapse...");
             if (this.synapse != null) {
                 for (SynapseEntry entry : this.synapse.getSynapseEntries().values()) {
                     entry.getSynapseInterface().shutdown();
@@ -790,20 +798,23 @@ public class Server {
             if (packet instanceof BatchPacket) {
                 throw new RuntimeException("Cannot batch BatchPacket");
             }
-            if (!packet.isEncoded) packet.encode();
+            if (!packet.isEncoded) {
+                packet.encode();
+                packet.isEncoded = true;
+            }
             byte[] buf = packet.getBuffer();
             batched.putUnsignedVarInt(buf.length);
             batched.put(buf);
         }
 
-        List<InetSocketAddress> targets = new ArrayList<>();
-        List<InetSocketAddress> targetsOld = new ArrayList<>();
+        List<Player> targets = new ArrayList<>();
+        List<Player> targetsOld = new ArrayList<>();
         for (Player p : players) {
             if (!p.closed) {
                 if (p.raknetProtocol >= 10) {
-                    targets.add(p.getSocketAddress());
+                    targets.add(p);
                 } else {
-                    targetsOld.add(p.getSocketAddress());
+                    targetsOld.add(p);
                 }
             }
         }
@@ -822,14 +833,12 @@ public class Server {
         }
     }
 
-    public void broadcastPacketsCallback(byte[] data, List<InetSocketAddress> targets) {
+    public void broadcastPacketsCallback(byte[] data, List<Player> targets) {
         BatchPacket pk = new BatchPacket();
         pk.payload = data;
 
-        for (InetSocketAddress i : targets) {
-            if (this.players.containsKey(i)) {
-                this.players.get(i).sendDataPacket(pk, false, false);
-            }
+        for (Player p : targets) {
+            p.sendDataPacket(pk, true, false);
         }
     }
 
@@ -859,6 +868,14 @@ public class Server {
         }
     }
 
+    public Thread getPrimaryThread() {
+        return currentThread;
+    }
+
+    public long getNextTick() {
+        return nextTick;
+    }
+
     private static class ServerProperties extends ConfigSection {
         {
             put("motd", "Nemisys Proxy");
@@ -880,8 +897,9 @@ public class Server {
             put("send-start-message", false);
             put("compression-level", 7);
             put("call-data-pk-ev", false);
-            put("query-version", "1.16.40");
+            put("query-version", "1.16.200");
             put("data-limit", 2097152);
+            put("thread-watchdog", true);
         }
     }
 }

@@ -111,15 +111,19 @@ public class Player implements CommandSender {
                     this.protocol = loginPacket.protocol;
                     try {
                         this.loginChainData = ClientChainData.read(loginPacket);
+                    } catch (SkinException ex) {
+                        this.close("Invalid Skin Data");
+                        return;
                     } catch (Exception ex) {
                         getServer().getLogger().logException(ex);
                         this.close("Invalid Client Chain Data");
                         return;
                     }
+
                     this.getServer().addOnlinePlayer(this.uuid, this);
 
                     AsyncTask loginTask = new AsyncTask() {
-                        PlayerAsyncPreLoginEvent e = new PlayerAsyncPreLoginEvent(getName(), getUuid(), Player.this.getAddress(), Player.this.getPort());
+                        final PlayerAsyncPreLoginEvent e = new PlayerAsyncPreLoginEvent(getName(), getUuid(), Player.this.getAddress(), Player.this.getPort());
 
                         @Override
                         public void onRun() {
@@ -377,7 +381,7 @@ public class Player implements CommandSender {
                 DisconnectPacket pk = new DisconnectPacket();
                 pk.hideDisconnectionScreen = false;
                 pk.message = reason;
-                this.sendDataPacket(pk, true);
+                this.sendDataPacket(pk, true, false);
             }
 
             this.getServer().getPluginManager().callEvent(new PlayerLogoutEvent(this));
@@ -498,14 +502,14 @@ public class Player implements CommandSender {
             return;
         }
         if (this.getServer().getMaxPlayers() <= this.getServer().getOnlinePlayers().size()) {
-            this.close(TextFormat.RED + "Synapse server is full!");
+            this.close(TextFormat.RED + "Synapse server is full");
             return;
         }
 
         Client client = this.getServer().getClient(ev.getClientHash());
 
         if (client == null) {
-            this.close(TextFormat.RED + "All lobby servers are offline!");
+            this.close(TextFormat.RED + "All lobby servers are offline");
             return;
         }
 
@@ -518,10 +522,8 @@ public class Player implements CommandSender {
         pk.message = this.getServer().getLanguage().translateString(message, parameters, "nemisys.");
         for (int i = 0; i < parameters.length; i++) {
             parameters[i] = this.getServer().getLanguage().translateString(parameters[i], parameters, "nemisys.");
-
-            }
+        }
         pk.parameters = parameters;
-
         this.sendDataPacket(pk);
     }
 

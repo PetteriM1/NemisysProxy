@@ -46,7 +46,7 @@ public class SynapseEntry {
         this.isLobbyServer = isLobbyServer;
         this.password = password;
         if (this.password.length() != 16) {
-            synapse.getLogger().warning("You must use a 16 bit length key!");
+            synapse.getLogger().warning("You must use a 16 bit length password!");
             synapse.getLogger().warning("This SynapseAPI Entry will not be enabled!");
             enable = false;
             return;
@@ -79,7 +79,7 @@ public class SynapseEntry {
         if (this.verified) {
             DisconnectPacket pk = new DisconnectPacket();
             pk.type = DisconnectPacket.TYPE_GENERIC;
-            pk.message = "§cMaster server closed!";
+            pk.message = "§cProxy server closed";
             this.sendDataPacket(pk);
             try {
                 Thread.sleep(100);
@@ -127,6 +127,7 @@ public class SynapseEntry {
 
     public void broadcastPacket(SynapsePlayer[] players, DataPacket packet, boolean direct) {
         packet.encode();
+        packet.isEncoded = true;
         BroadcastPacket broadcastPacket = new BroadcastPacket();
         broadcastPacket.direct = direct;
         broadcastPacket.payload = packet.getBuffer();

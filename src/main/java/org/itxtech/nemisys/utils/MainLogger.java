@@ -2,7 +2,6 @@ package org.itxtech.nemisys.utils;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
-import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.command.CommandReader;
 
 import java.io.*;
@@ -137,7 +136,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
          logBuffer.add(message);
      }
  
-     private String colorize(String string) {
+    /*private String colorize(String string) {
          if (string.indexOf(TextFormat.ESCAPE) < 0) {
              return string;
          } else if (Nemisys.ANSI) {
@@ -152,8 +151,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
              return TextFormat.clean(string);
          }
          return string + Ansi.ansi().reset();
-     }
- 
+     }*/
  
      @Override
      public void run() {

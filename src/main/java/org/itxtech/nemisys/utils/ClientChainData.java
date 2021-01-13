@@ -42,7 +42,7 @@ public final class ClientChainData {
     private String ADRole;
     private String tenantId;
     private int UIProfile;
-    private BinaryStream bs = new BinaryStream();
+    private final BinaryStream bs = new BinaryStream();
 
     private ClientChainData(byte[] buffer) {
         bs.setBuffer(buffer, 0);
@@ -158,7 +158,7 @@ public final class ClientChainData {
     private void decodeSkinData() {
         int size = bs.getLInt();
         if (size > Server.getInstance().dataLimit) {
-            throw new RuntimeException("The skin data is too big: " + size);
+            throw new SkinException("The skin data is too big: " + size);
         }
 
         JsonObject skinToken = decodeToken(new String(bs.get(size)));

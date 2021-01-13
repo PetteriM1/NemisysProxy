@@ -52,6 +52,7 @@ public class SynapseInterface {
     public void putPacket(SynapseDataPacket pk) {
         if (!pk.isEncoded) {
             pk.encode();
+            pk.isEncoded = true;
         }
         this.client.pushMainToThreadPacket(pk);
     }

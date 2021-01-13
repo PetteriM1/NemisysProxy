@@ -74,20 +74,20 @@ public class BaseLang {
     }
 
     public String internalGet(String id) {
-        if (this.lang.containsKey(id)) {
+        /*if (this.lang.containsKey(id)) {
             return this.lang.get(id);
         } else if (this.fallbackLang.containsKey(id)) {
             return this.fallbackLang.get(id);
-        }
+        }*/
         return null;
     }
 
     public String get(String id) {
-        if (this.lang.containsKey(id)) {
+        /*if (this.lang.containsKey(id)) {
             return this.lang.get(id);
         } else if (this.fallbackLang.containsKey(id)) {
             return this.fallbackLang.get(id);
-        }
+        }*/
         return id;
     }
 

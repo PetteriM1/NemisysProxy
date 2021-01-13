@@ -15,9 +15,9 @@ import java.util.Map;
 public class SynapseInterface {
 
     private static final Map<Byte, SynapseDataPacket> packetPool = new HashMap<>();
-    private Server server;
-    private Map<String, Client> clients = new HashMap<>();
-    private SynapseServer interfaz;
+    private final Server server;
+    private final Map<String, Client> clients = new HashMap<>();
+    private final SynapseServer interfaz;
 
     public SynapseInterface(Server server, String ip, int port) {
         this.server = server;
@@ -59,6 +59,7 @@ public class SynapseInterface {
     public void putPacket(Client client, SynapseDataPacket pk) {
         if (!pk.isEncoded) {
             pk.encode();
+            pk.isEncoded = true;
         }
         this.interfaz.pushMainToThreadPacket(new SynapseClientPacket(client.getHash(), pk));
     }

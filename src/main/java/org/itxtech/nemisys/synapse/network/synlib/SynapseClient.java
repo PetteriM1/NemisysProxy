@@ -165,5 +165,4 @@ public class SynapseClient extends Thread {
             }
         }
     }
-
 }

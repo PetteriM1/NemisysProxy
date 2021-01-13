@@ -16,7 +16,10 @@ public class SynapsePacketEncoder extends MessageToByteEncoder<SynapseDataPacket
 
     @Override
     protected void encode(ChannelHandlerContext ctx, SynapseDataPacket packet, ByteBuf out) throws Exception {
-        if (!packet.isEncoded) packet.encode();
+        if (!packet.isEncoded) {
+            packet.encode();
+            packet.isEncoded = true;
+        }
         byte[] body = packet.getBuffer();
         out.writeShort(SynapseProtocolHeader.MAGIC)
                 .writeByte(packet.pid())

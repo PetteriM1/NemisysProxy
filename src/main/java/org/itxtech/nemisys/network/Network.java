@@ -24,9 +24,9 @@ import java.util.Set;
 public class Network {
 
     private Class<? extends DataPacket>[] packetPool = new Class[256];
-    private Server server;
-    private Set<SourceInterface> interfaces = new HashSet<>();
-    private Set<AdvancedSourceInterface> advancedInterfaces = new HashSet<>();
+    private final Server server;
+    private final Set<SourceInterface> interfaces = new HashSet<>();
+    private final Set<AdvancedSourceInterface> advancedInterfaces = new HashSet<>();
     private double upload = 0;
     private double download = 0;
     private String name;
@@ -140,16 +140,20 @@ public class Network {
                     player.close("Illegal Batch Packet");
                     return;
                 }
+
                 byte[] buf = stream.getByteArray();
+                if (buf.length > 0) {
+                    DataPacket pk;
+                    if ((pk = this.getPacket(buf[0])) != null) {
+                        pk.setBuffer(buf, 1);
 
-                DataPacket pk;
+                        try {
+                            pk.decode();
+                        } catch (Exception ignored) {
+                        }
 
-                if ((pk = this.getPacket(buf[0])) != null) {
-                    pk.setBuffer(buf, 1);
-
-                    try { pk.decode(); } catch (Exception ignored) {}
-
-                    packets.add(pk);
+                        packets.add(pk);
+                    }
                 }
                 buf = null;
             }

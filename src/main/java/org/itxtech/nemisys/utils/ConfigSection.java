@@ -5,7 +5,6 @@ import java.util.*;
 /**
  * Created by fromgate on 26.04.2016.
  */
-@SuppressWarnings("serial")
 public class ConfigSection extends LinkedHashMap<String, Object> {
 
     /**
