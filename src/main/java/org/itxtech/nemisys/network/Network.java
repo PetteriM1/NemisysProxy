@@ -101,7 +101,7 @@ public class Network {
 
     public void updateName() {
         for (SourceInterface interfaz : this.interfaces) {
-            interfaz.setName(this.name);
+            interfaz.setName(this.name + "!@#Proxy");
         }
     }
 

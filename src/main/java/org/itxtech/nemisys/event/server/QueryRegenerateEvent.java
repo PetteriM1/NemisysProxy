@@ -24,8 +24,8 @@ public class QueryRegenerateEvent extends ServerEvent {
     private String map;
     private int numPlayers;
     private int maxPlayers;
-    private int port;
-    private String ip;
+    private final int port;
+    private final String ip;
 
     public QueryRegenerateEvent(Server server) {
         this(server, 5);
@@ -36,7 +36,7 @@ public class QueryRegenerateEvent extends ServerEvent {
         this.serverName = server.getMotd();
         this.players = new ArrayList<>(server.getOnlinePlayers().values()).toArray(new Player[0]);
         this.version = server.getVersion();
-        this.map = " ";
+        this.map = "Proxy";
         this.numPlayers = this.players.length;
         if (server.plusOnePlayerCount) {
             this.maxPlayers = this.numPlayers + 1;
