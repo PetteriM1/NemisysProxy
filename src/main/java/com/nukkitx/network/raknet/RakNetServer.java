@@ -9,6 +9,7 @@ import io.netty.channel.*;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
+import org.itxtech.nemisys.Server;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
-import static com.nukkitx.network.raknet.RakNetConstants.UDP_HEADER_SIZE;
+import static com.nukkitx.network.raknet.RakNetConstants.*;
 
 @ParametersAreNonnullByDefault
 public class RakNetServer extends RakNet {
@@ -36,6 +37,7 @@ public class RakNetServer extends RakNet {
     private final Set<Channel> channels = new HashSet<>();
     private final Iterator<Channel> channelIterator = new RoundRobinIterator<>(channels);
     private volatile RakNetServerListener listener = null;
+    private final InetSocketAddress bindAddress;
     private final int bindThreads;
 
     public RakNetServer(InetSocketAddress bindAddress) {
@@ -47,8 +49,9 @@ public class RakNetServer extends RakNet {
     }
 
     public RakNetServer(InetSocketAddress bindAddress, int bindThreads, EventLoopGroup eventLoopGroup) {
-        super(bindAddress, eventLoopGroup);
+        super(eventLoopGroup);
         this.bindThreads = bindThreads;
+        this.bindAddress = bindAddress;
     }
 
     @Override
@@ -88,6 +91,11 @@ public class RakNetServer extends RakNet {
         return this.sessionsByAddress.get(address);
     }
 
+    @Override
+    public InetSocketAddress getBindAddress() {
+        return this.bindAddress;
+    }
+
     public RakNetServerListener getListener() {
         return listener;
     }
@@ -101,8 +109,8 @@ public class RakNetServer extends RakNet {
     }
 
     @Override
-    public void close() {
-        super.close();
+    public void close(boolean force) {
+        super.close(force);
         for (RakNetServerSession session : this.sessionsByAddress.values()) {
             session.disconnect(DisconnectReason.SHUTTING_DOWN);
         }
@@ -136,31 +144,32 @@ public class RakNetServer extends RakNet {
         if (!RakNetUtils.verifyUnconnectedMagic(buffer)) {
             return;
         }
-        int protocolVersion = buffer.readUnsignedByte();
-        int mtu = buffer.readableBytes() + 18 + (packet.sender().getAddress() instanceof Inet6Address ? 40 : 20)
-                + UDP_HEADER_SIZE; // 1 (Packet ID), 16 (Magic), 1 (Protocol Version), 20/40 (IP Header)
+        int protocol = buffer.readUnsignedByte(); // Protocol version
+        int mtu = buffer.readableBytes() + 18 + (packet.sender().getAddress() instanceof Inet6Address ? 40 : 20) + UDP_HEADER_SIZE; // 1 (Packet ID), 16 (Magic), 1 (Protocol Version), 20/40 (IP Header)
 
         RakNetServerSession session = this.sessionsByAddress.get(packet.sender());
 
         if (session != null && session.getState() == RakNetState.CONNECTED) {
             this.sendAlreadyConnected(ctx, packet.sender());
-        } else if (protocolVersion < 9) {
+        } else if (protocol < 9) {
             this.sendIncompatibleProtocolVersion(ctx, packet.sender());
-        } else if (this.listener != null && !this.listener.onConnectionRequest(packet.sender())) {
+        } else if (this.listener != null && !this.listener.onConnectionRequest(packet.sender(), packet.sender())) {
             this.sendConnectionBanned(ctx, packet.sender());
         } else if (session == null) {
             // Passed all checks. Now create the session and send the first reply.
             session = new RakNetServerSession(this, packet.sender(), ctx.channel(), mtu,
-                    this.eventLoopGroup.next(), protocolVersion);
-            session.setState(RakNetState.INITIALIZING);
+                    ctx.channel().eventLoop().next(), protocol);
             if (this.sessionsByAddress.putIfAbsent(packet.sender(), session) == null) {
+                session.setState(RakNetState.INITIALIZING);
                 session.sendOpenConnectionReply1();
                 if (listener != null) {
                     listener.onSessionCreation(session);
+                } else {
+                    Server.getInstance().getLogger().warning("Unable to create session for " + packet.sender().getHostName() + ": listener is null");
                 }
             }
         } else {
-            session.sendOpenConnectionReply1();
+            session.sendOpenConnectionReply1(); // Probably a packet loss occurred, send the reply again
         }
     }
 
@@ -186,7 +195,7 @@ public class RakNetServer extends RakNet {
 
         ByteBuf buffer = ctx.alloc().ioBuffer(packetLength, packetLength);
 
-        buffer.writeByte(RakNetConstants.ID_UNCONNECTED_PONG);
+        buffer.writeByte(ID_UNCONNECTED_PONG);
         buffer.writeLong(pingTime);
         buffer.writeLong(this.guid);
         RakNetUtils.writeUnconnectedMagic(buffer);
@@ -202,30 +211,33 @@ public class RakNetServer extends RakNet {
 
     private void sendAlreadyConnected(ChannelHandlerContext ctx, InetSocketAddress recipient) {
         ByteBuf buffer = ctx.alloc().ioBuffer(25, 25);
-        buffer.writeByte(RakNetConstants.ID_ALREADY_CONNECTED);
+        buffer.writeByte(ID_ALREADY_CONNECTED);
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
 
         RakNet.send(ctx, recipient, buffer);
+        Server.getInstance().getLogger().debug("Already connected");
     }
 
     private void sendConnectionBanned(ChannelHandlerContext ctx, InetSocketAddress recipient) {
         ByteBuf buffer = ctx.alloc().ioBuffer(25, 25);
-        buffer.writeByte(RakNetConstants.ID_CONNECTION_BANNED);
+        buffer.writeByte(ID_CONNECTION_BANNED);
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
 
         RakNet.send(ctx, recipient, buffer);
+        Server.getInstance().getLogger().debug("Connection banned");
     }
 
     private void sendIncompatibleProtocolVersion(ChannelHandlerContext ctx, InetSocketAddress recipient) {
         ByteBuf buffer = ctx.alloc().ioBuffer(26, 26);
         buffer.writeByte(RakNetConstants.ID_INCOMPATIBLE_PROTOCOL_VERSION);
-        buffer.writeByte(this.protocolVersion);
+        buffer.writeByte(RAKNET_PROTOCOL_VERSION);
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
 
         RakNet.send(ctx, recipient, buffer);
+        Server.getInstance().getLogger().debug("Incompatible protocol");
     }
 
     @ChannelHandler.Sharable
@@ -245,7 +257,7 @@ public class RakNetServer extends RakNet {
                     return;
                 }
 
-                ByteBuf content = packet.content();
+                final ByteBuf content = packet.content();
                 if (!content.isReadable()) {
                     // We have no use for empty packets.
                     return;
@@ -254,10 +266,10 @@ public class RakNetServer extends RakNet {
 
                 // These packets don't require a session
                 switch (packetId) {
-                    case RakNetConstants.ID_UNCONNECTED_PING:
+                    case ID_UNCONNECTED_PING:
                         RakNetServer.this.onUnconnectedPing(ctx, packet);
                         return;
-                    case RakNetConstants.ID_OPEN_CONNECTION_REQUEST_1:
+                    case ID_OPEN_CONNECTION_REQUEST_1:
                         RakNetServer.this.onOpenConnectionRequest1(ctx, packet);
                         return;
                 }
@@ -266,7 +278,11 @@ public class RakNetServer extends RakNet {
                 RakNetServerSession session = RakNetServer.this.sessionsByAddress.get(packet.sender());
 
                 if (session != null) {
-                    session.onDatagram(packet);
+                    if (session.eventLoop.inEventLoop()) {
+                        session.onDatagram(content);
+                    } else {
+                        session.eventLoop.execute(() -> session.onDatagram(content));
+                    }
                 }
                 if (RakNetServer.this.listener != null) {
                     RakNetServer.this.listener.onUnhandledDatagram(ctx, packet);

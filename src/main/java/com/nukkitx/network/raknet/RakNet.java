@@ -10,7 +10,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
@@ -22,23 +21,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @ParametersAreNonnullByDefault
 public abstract class RakNet implements AutoCloseable {
 
-    final long guid = ThreadLocalRandom.current().nextLong();
-    final Bootstrap bootstrap;
-    final EventLoopGroup eventLoopGroup;
-    final InetSocketAddress bindAddress;
+    protected final long guid = ThreadLocalRandom.current().nextLong();
+    protected final Bootstrap bootstrap;
     private final AtomicBoolean running = new AtomicBoolean(false);
     private ScheduledFuture<?> tickFuture;
-    int protocolVersion = RakNetConstants.RAKNET_PROTOCOL_VERSION;
-    private volatile boolean closed;
+    protected final AtomicBoolean closed = new AtomicBoolean(false);
 
-    RakNet(InetSocketAddress bindAddress, EventLoopGroup eventLoopGroup) {
-        this.bindAddress = bindAddress;
-        this.eventLoopGroup = eventLoopGroup;
-
+    RakNet(EventLoopGroup eventLoopGroup) {
         this.bootstrap = new Bootstrap().option(ChannelOption.ALLOCATOR, ByteBufAllocator.DEFAULT);
-
-        Bootstraps.setupBootstrap(this.bootstrap, true);
         this.bootstrap.group(eventLoopGroup);
+        Bootstraps.setupBootstrap(this.bootstrap, true);
     }
 
     static void send(ChannelHandlerContext ctx, InetSocketAddress recipient, ByteBuf buffer) {
@@ -47,24 +39,27 @@ public abstract class RakNet implements AutoCloseable {
 
     public CompletableFuture<Void> bind() {
         Preconditions.checkState(this.running.compareAndSet(false, true), "RakNet has already been started");
-
-        CompletableFuture<Void> future = bindInternal();
+        CompletableFuture<Void> future = this.bindInternal();
 
         future.whenComplete((aVoid, throwable) -> {
             if (throwable != null) {
                 // Failed to start. Set running to false
                 this.running.compareAndSet(true, false);
-            } else {
-                this.closed = false;
-                this.tickFuture = this.eventLoopGroup.scheduleAtFixedRate(this::onTick, 0, 10,
-                        TimeUnit.MILLISECONDS);
+                return;
             }
+
+            this.closed.set(false);
+            this.tickFuture = this.getEventLoopGroup().next().scheduleAtFixedRate(this::onTick, 0, 10, TimeUnit.MILLISECONDS);
         });
         return future;
     }
 
     public void close() {
-        this.closed = true;
+        this.close(false);
+    }
+
+    public void close(boolean force) {
+        this.closed.set(true);
         if (this.tickFuture != null) {
             this.tickFuture.cancel(false);
         }
@@ -79,27 +74,20 @@ public abstract class RakNet implements AutoCloseable {
     }
 
     public boolean isClosed() {
-        return closed;
+        return this.closed.get();
     }
 
     public Bootstrap getBootstrap() {
-        return bootstrap;
+        return this.bootstrap;
     }
 
-    @Nonnegative
-    public int getProtocolVersion() {
-        return protocolVersion;
-    }
-
-    public void setProtocolVersion(@Nonnegative int protocolVersion) {
-        this.protocolVersion = protocolVersion;
-    }
-
-    public InetSocketAddress getBindAddress() {
-        return bindAddress;
-    }
+    public abstract InetSocketAddress getBindAddress();
 
     public long getGuid() {
-        return guid;
+        return this.guid;
+    }
+
+    protected EventLoopGroup getEventLoopGroup() {
+        return this.bootstrap.config().group();
     }
 }
