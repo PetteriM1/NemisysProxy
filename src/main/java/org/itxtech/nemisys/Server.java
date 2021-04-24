@@ -33,11 +33,11 @@ import java.io.File;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author MagicDroidX &amp; Box
@@ -863,8 +863,8 @@ public class Server {
 
     private void adjustPoolSize() {
         int threads = Math.min(Math.max(1, players.size() / this.playersPerThread), Runtime.getRuntime().availableProcessors());
-        if (playerTicker.getMaximumPoolSize() != threads) {
-            playerTicker.setMaximumPoolSize(threads);
+        if (playerTicker.getCorePoolSize() != threads) {
+            playerTicker.setCorePoolSize(threads);
         }
     }
 

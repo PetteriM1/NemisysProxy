@@ -20,7 +20,7 @@ public class RedirectPacket extends SynapseDataPacket {
     public void encode() {
         this.reset();
         this.putUUID(this.uuid);
-        this.putByte(this.direct ? (byte) 1 : (byte) 0);
+        this.putBoolean(this.direct);
         this.putUnsignedVarInt(this.mcpeBuffer.length);
         this.put(this.mcpeBuffer);
     }
@@ -28,7 +28,7 @@ public class RedirectPacket extends SynapseDataPacket {
     @Override
     public void decode() {
         this.uuid = this.getUUID();
-        this.direct = this.getByte() == 1;
+        this.direct = this.getBoolean();
         this.mcpeBuffer = this.get((int) this.getUnsignedVarInt());
     }
 }
