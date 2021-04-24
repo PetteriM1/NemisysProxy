@@ -864,6 +864,7 @@ public class Server {
     private void adjustPoolSize() {
         int threads = Math.min(Math.max(1, players.size() / this.playersPerThread), Runtime.getRuntime().availableProcessors());
         if (playerTicker.getCorePoolSize() != threads) {
+            playerTicker.setMaximumPoolSize(threads);
             playerTicker.setCorePoolSize(threads);
         }
     }
