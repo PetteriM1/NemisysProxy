@@ -101,7 +101,7 @@ public class Network {
 
     public void updateName() {
         for (SourceInterface interfaz : this.interfaces) {
-            interfaz.setName(this.name + "!@#Proxy");
+            interfaz.setName(this.name);
         }
     }
 
@@ -155,7 +155,6 @@ public class Network {
                         packets.add(pk);
                     }
                 }
-                buf = null;
             }
 
             processPackets(player, packets);
@@ -166,7 +165,6 @@ public class Network {
                 this.server.getLogger().logException(e);
             }
         }
-        data = null;
     }
 
     /**

@@ -788,8 +788,41 @@ public class Server {
         return synapse;
     }
 
-    public void batchPackets(Player[] players, DataPacket[] packets) {
-        if (players == null || packets == null || players.length == 0 || packets.length == 0) {
+    public void batchPacket(Player player, DataPacket packet) {
+        if (player == null || packet == null) {
+            return;
+        }
+
+        BinaryStream batched = new BinaryStream();
+        if (packet instanceof BatchPacket) {
+            throw new RuntimeException("Cannot batch BatchPacket");
+        }
+        if (!packet.isEncoded) {
+            packet.encode();
+            packet.isEncoded = true;
+        }
+        byte[] buf = packet.getBuffer();
+        batched.putUnsignedVarInt(buf.length);
+        batched.put(buf);
+
+        if (!player.closed) {
+            try {
+                byte[] bytes = Binary.appendBytes(batched.getBuffer());
+                BatchPacket pk = new BatchPacket();
+                if (player.raknetProtocol >= 10) {
+                    pk.payload = Zlib.deflateRaw(bytes, compressionLevel);
+                } else {
+                    pk.payload = Zlib.deflate(bytes, compressionLevel);
+                }
+                player.sendDataPacket(pk, true, false);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    void batchPackets(Player player, DataPacket[] packets) {
+        if (player == null || packets == null || packets.length == 0) {
             return;
         }
 
@@ -807,38 +840,19 @@ public class Server {
             batched.put(buf);
         }
 
-        List<Player> targets = new ArrayList<>();
-        List<Player> targetsOld = new ArrayList<>();
-        for (Player p : players) {
-            if (!p.closed) {
-                if (p.raknetProtocol >= 10) {
-                    targets.add(p);
+        if (!player.closed) {
+            try {
+                byte[] bytes = Binary.appendBytes(batched.getBuffer());
+                BatchPacket pk = new BatchPacket();
+                if (player.raknetProtocol >= 10) {
+                    pk.payload = Zlib.deflateRaw(bytes, compressionLevel);
                 } else {
-                    targetsOld.add(p);
+                    pk.payload = Zlib.deflate(bytes, compressionLevel);
                 }
+                player.sendDataPacket(pk, true, false);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        }
-
-        try {
-            byte[] bytes = Binary.appendBytes(batched.getBuffer());
-            if (!targets.isEmpty()) {
-                this.broadcastPacketsCallback(Zlib.deflateRaw(bytes, compressionLevel), targets);
-            }
-            if (!targetsOld.isEmpty()) {
-                this.broadcastPacketsCallback(Zlib.deflate(bytes, compressionLevel), targetsOld);
-            }
-            bytes = null;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void broadcastPacketsCallback(byte[] data, List<Player> targets) {
-        BatchPacket pk = new BatchPacket();
-        pk.payload = data;
-
-        for (Player p : targets) {
-            p.sendDataPacket(pk, true, false);
         }
     }
 

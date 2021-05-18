@@ -28,7 +28,6 @@ public abstract class Zlib {
         }
         byte[] out = bos.toByteArray();
         bos.close();
-        bos = null;
         return out;
     }
 
@@ -49,7 +48,6 @@ public abstract class Zlib {
         }
         byte[] out = bos.toByteArray();
         bos.close();
-        bos = null;
         return out;
     }
 
@@ -70,9 +68,7 @@ public abstract class Zlib {
         buffer = outputStream.toByteArray();
         outputStream.flush();
         outputStream.close();
-        outputStream = null;
         inputStream.close();
-        inputStream = null;
         return buffer;
     }
 
@@ -96,9 +92,7 @@ public abstract class Zlib {
             buffer = outputStream.toByteArray();
             outputStream.flush();
             outputStream.close();
-            outputStream = null;
             inputStream.close();
-            inputStream = null;
             return buffer;
         } catch (Exception ex) {
             ex.printStackTrace();

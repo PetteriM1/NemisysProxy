@@ -43,7 +43,7 @@ public class Player implements CommandSender {
     @Getter
     private final InetSocketAddress socketAddress;
     @Getter
-    private long clientId;
+    private final long clientId;
     @Getter
     private long randomClientId;
     @Getter
@@ -84,17 +84,17 @@ public class Player implements CommandSender {
                 return;
             }
 
+            if (packet instanceof BatchPacket) {
+                this.getServer().getNetwork().processBatch((BatchPacket) packet, this);
+                return;
+            }
+
             if (this.getServer().callDataPkEv) {
                 DataPacketReceiveEvent ev = new DataPacketReceiveEvent(this, packet);
                 this.getServer().getPluginManager().callEvent(ev);
                 if (ev.isCancelled()) {
                     return;
                 }
-            }
-
-            if (packet instanceof BatchPacket) {
-                this.getServer().getNetwork().processBatch((BatchPacket) packet, this);
-                return;
             }
 
             switch (packet.pid()) {
@@ -229,14 +229,13 @@ public class Player implements CommandSender {
         pk.direct = false;
         pk.mcpeBuffer = buffer;
         if (pk.mcpeBuffer.length >= 5240000) {
-            pk = null;
             this.close("Too big data packet");
         } else {
             this.client.sendDataPacket(pk);
         }
     }
 
-    public void addIncomingPacket(DataPacket pk, boolean direct) {
+    public void addIncomingPacket(DataPacket pk) {
         this.incomingPackets.offer(pk);
     }
 
@@ -266,25 +265,25 @@ public class Player implements CommandSender {
                 toBatch.add(packet);
             }
             DataPacket[] arr = toBatch.toArray(new DataPacket[0]);
-            getServer().batchPackets(new Player[]{this}, arr);
+            getServer().batchPackets(this, arr);
         }
 
         ticking.set(false);
     }
 
     public void despawnEntities() {
-        if (this.spawnedEntities.isEmpty())
+        if (this.spawnedEntities.isEmpty()) {
             return;
+        }
 
         DataPacket[] packets = spawnedEntities.stream().map((id) -> {
             RemoveEntityPacket rpk = new RemoveEntityPacket();
             rpk.eid = id;
-
             return rpk;
         }).toArray(DataPacket[]::new);
         this.spawnedEntities.clear();
 
-        getServer().batchPackets(new Player[]{this}, packets);
+        getServer().batchPackets(this, packets);
     }
 
     public void removeScoreboards() {
@@ -431,8 +430,6 @@ public class Player implements CommandSender {
             packet.payload = null;
 
             BinaryStream buffer = new BinaryStream(payload);
-            payload = null;
-            List<DataPacket> packets = new ArrayList<>();
 
             while (!buffer.feof()) {
                 try {
@@ -445,16 +442,11 @@ public class Player implements CommandSender {
                         pk.decode();
                         pk.isEncoded = true;
 
-                        packets.add(pk);
+                        handleIncomingPacket(pk);
                     }
-                    data = null;
                 } catch (Exception e) {
                     this.getServer().getLogger().warning("Processing incoming batch packet failed!");
                 }
-            }
-
-            for (DataPacket dataPacket : packets) {
-                handleIncomingPacket(dataPacket);
             }
         } catch (Exception e) {
             MainLogger.getLogger().logException(e);

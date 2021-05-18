@@ -148,7 +148,6 @@ public class Client {
                 if (pl != null) {
                     byte[] buffer = ((RedirectPacket) packet).mcpeBuffer;
                     boolean direct = ((RedirectPacket) packet).direct;
-                    packet = null;
                     if (buffer.length == 0) {
                         server.getLogger().warning("Redirect packet with buffer length 0");
                         return;
@@ -166,11 +165,10 @@ public class Client {
                         send.setBuffer(buffer, 1);
                     }
 
-                    buffer = null;
                     send.decode();
                     send.isEncoded = true;
 
-                    pl.addIncomingPacket(send, direct);
+                    pl.addIncomingPacket(send);
                 }
                 break;
             case SynapseInfo.TRANSFER_PACKET:

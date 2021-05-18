@@ -113,13 +113,17 @@ public class QueryRegenerateEvent extends ServerEvent {
 
     public void setExtraData(Map<String, String> extraData) {}
 
+    private static final byte[] SPLITNUM = "splitnum".getBytes();
+    private static final byte[] SMP = "SMP".getBytes(StandardCharsets.UTF_8);
+    private static final byte B = 0x00;
+
     public byte[] getLongQuery() {
         ByteBuffer query = ByteBuffer.allocate(65536);
 
-        query.put("splitnum".getBytes());
-        query.put((byte) 0x00);
+        query.put(SPLITNUM);
+        query.put(B);
         query.put((byte) 128);
-        query.put((byte) 0x00);
+        query.put(B);
 
         LinkedHashMap<String, String> KVdata = new LinkedHashMap<>();
         KVdata.put("hostname", this.serverName);
@@ -137,9 +141,9 @@ public class QueryRegenerateEvent extends ServerEvent {
 
         for (Map.Entry<String, String> entry : KVdata.entrySet()) {
             query.put(entry.getKey().getBytes(StandardCharsets.UTF_8));
-            query.put((byte) 0x00);
+            query.put(B);
             query.put(entry.getValue().getBytes(StandardCharsets.UTF_8));
-            query.put((byte) 0x00);
+            query.put(B);
         }
 
         query.put(new byte[]{0x00, 0x01}).put("player_".getBytes()).put(new byte[]{0x00, 0x00});
@@ -147,33 +151,29 @@ public class QueryRegenerateEvent extends ServerEvent {
         for (Player player : this.players) {
             try {
                 query.put(player.getName().getBytes(StandardCharsets.UTF_8));
-                query.put((byte) 0x00);
+                query.put(B);
             } catch (Exception ignore) {}
         }
 
-        query.put((byte) 0x00);
-        byte[] copy = Arrays.copyOf(query.array(), query.position());
-        query = null;
-        return copy;
+        query.put(B);
+        return Arrays.copyOf(query.array(), query.position());
     }
 
     public byte[] getShortQuery() {
         ByteBuffer query = ByteBuffer.allocate(65536);
         query.put(this.serverName.getBytes(StandardCharsets.UTF_8));
-        query.put((byte) 0x00);
-        query.put("SMP".getBytes(StandardCharsets.UTF_8));
-        query.put((byte) 0x00);
+        query.put(B);
+        query.put(SMP);
+        query.put(B);
         query.put(this.map.getBytes(StandardCharsets.UTF_8));
-        query.put((byte) 0x00);
+        query.put(B);
         query.put(String.valueOf(this.numPlayers).getBytes(StandardCharsets.UTF_8));
-        query.put((byte) 0x00);
+        query.put(B);
         query.put(String.valueOf(this.maxPlayers).getBytes(StandardCharsets.UTF_8));
-        query.put((byte) 0x00);
+        query.put(B);
         query.put(Binary.writeLShort(this.port));
         query.put(this.ip.getBytes(StandardCharsets.UTF_8));
-        query.put((byte) 0x00);
-        byte[] copy = Arrays.copyOf(query.array(), query.position());
-        query = null;
-        return copy;
+        query.put(B);
+        return Arrays.copyOf(query.array(), query.position());
     }
 }

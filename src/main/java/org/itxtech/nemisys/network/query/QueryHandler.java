@@ -23,7 +23,7 @@ public class QueryHandler {
     private static final byte HANDSHAKE = 0x09;
     private static final byte STATISTICS = 0x00;
 
-    private Server server;
+    private final Server server;
     private byte[] lastToken;
     private byte[] token;
     private byte[] longData;
