@@ -44,6 +44,7 @@ public class SetScorePacket extends DataPacket {
         action = Action.values()[getByte()];
 
         int length = (int) getUnsignedVarInt();
+        if (length > 10000) throw new IllegalArgumentException("Score infos too long");
         List<ScoreInfo> infos = new ArrayList<>(length);
 
         for (int i = 0; i < length; i++) {

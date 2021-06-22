@@ -193,8 +193,7 @@ public class Player implements CommandSender {
                     spawnedEntities.remove(((RemoveEntityPacket) pk).eid);
                     break;
                 case ProtocolInfo.SET_DISPLAY_OBJECTIVE_PACKET:
-                    SetDisplayObjectivePacket sdop = (SetDisplayObjectivePacket) pk;
-                    scoreboards.putIfAbsent(sdop.objective, new HashSet<>());
+                    scoreboards.putIfAbsent(((SetDisplayObjectivePacket) pk).objective, new HashSet<>());
                     break;
                 case ProtocolInfo.SET_SCORE_PACKET:
                     SetScorePacket ssp = (SetScorePacket) pk;
