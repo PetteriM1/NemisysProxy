@@ -139,6 +139,7 @@ public class RakNetServer extends RakNet {
                 }
             }
         } else {
+            session.setMtu(mtu);
             session.sendOpenConnectionReply1(); // Probably a packet loss occurred, send the reply again
         }
     }

@@ -75,11 +75,11 @@ public class StatusCommand extends VanillaCommand {
             usageColor = "" + TextFormat.GOLD;
         }
 
-        sender.sendMessage(TextFormat.GOLD + "Used memory: " + usageColor + usedMB + " MB. (" + NemisysMath.round(usage, 2) + "%)");
+        sender.sendMessage(TextFormat.GOLD + "Used memory: " + usageColor + usedMB + " MB (" + NemisysMath.round(usage, 2) + "%)");
 
-        sender.sendMessage(TextFormat.GOLD + "Total memory: " + TextFormat.RED + totalMB + " MB.");
+        sender.sendMessage(TextFormat.GOLD + "Total memory: " + TextFormat.RED + totalMB + " MB");
 
-        sender.sendMessage(TextFormat.GOLD + "Maximum VM memory: " + TextFormat.RED + maxMB + " MB.");
+        sender.sendMessage(TextFormat.GOLD + "Maximum VM memory: " + TextFormat.RED + maxMB + " MB");
 
         sender.sendMessage(TextFormat.GOLD + "Available processors: " + TextFormat.GREEN + runtime.availableProcessors());
 
@@ -90,7 +90,7 @@ public class StatusCommand extends VanillaCommand {
         }
 
         sender.sendMessage(TextFormat.GOLD + "Players: " + playerColor + server.getOnlinePlayers().size() + TextFormat.GREEN + " online, " +
-                TextFormat.RED + server.getMaxPlayers() + TextFormat.GREEN + " max. ");
+                TextFormat.RED + server.getMaxPlayers() + TextFormat.GREEN + " max");
 
         return true;
     }
