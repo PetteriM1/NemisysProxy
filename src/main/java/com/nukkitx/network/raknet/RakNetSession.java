@@ -15,6 +15,7 @@ import io.netty.util.internal.logging.InternalLoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
 import org.itxtech.nemisys.Nemisys;
+import org.itxtech.nemisys.Server;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
@@ -230,12 +231,15 @@ public abstract class RakNetSession implements SessionConnection<ByteBuf> {
             // Check if we have received acknowledge datagram
             if ((potentialFlags & FLAG_ACK) != 0) {
                 this.onAcknowledge(buffer, this.incomingAcks, false);
-            } else if((potentialFlags & FLAG_NACK) != 0) {
+            } else if ((potentialFlags & FLAG_NACK) != 0) {
                 this.onAcknowledge(buffer, this.incomingNaks, true);
             } else {
                 buffer.readerIndex(0);
                 this.onRakNetDatagram(buffer);
             }
+        } catch (Exception ex) {
+            Server.getInstance().getLogger().error("Received bad datagram from " + this.address, ex);
+            this.disconnect(DisconnectReason.BAD_PACKET);
         } finally {
             buffer.release();
         }
