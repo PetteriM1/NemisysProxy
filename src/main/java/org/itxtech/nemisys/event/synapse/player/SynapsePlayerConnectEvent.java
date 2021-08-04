@@ -10,7 +10,7 @@ import org.itxtech.nemisys.synapse.SynapsePlayer;
 public class SynapsePlayerConnectEvent extends SynapsePlayerEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
-    private boolean firstTime;
+    private final boolean firstTime;
 
     public SynapsePlayerConnectEvent(SynapsePlayer player) {
         this(player, true);

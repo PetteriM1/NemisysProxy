@@ -43,6 +43,7 @@ public final class ClientChainData {
     private String tenantId;
     private int UIProfile;
     private final BinaryStream bs = new BinaryStream();
+    private static final Gson GSON = new Gson();
 
     private ClientChainData(byte[] buffer) {
         bs.setBuffer(buffer, 0);
@@ -138,7 +139,7 @@ public final class ClientChainData {
             throw new RuntimeException("The chain data is too big: " + size);
         }
 
-        Map<String, List<String>> map = new Gson().fromJson(new String(bs.get(size), StandardCharsets.UTF_8),
+        Map<String, List<String>> map = GSON.fromJson(new String(bs.get(size), StandardCharsets.UTF_8),
                 new MapTypeToken().getType());
         if (map.isEmpty() || !map.containsKey("chain") || map.get("chain").isEmpty()) return;
         for (String c : map.get("chain")) {
@@ -180,7 +181,7 @@ public final class ClientChainData {
     private JsonObject decodeToken(String token) {
         String[] base = token.split("\\.");
         if (base.length < 2) return null;
-        return new Gson().fromJson(new String(Base64.getDecoder().decode(base[1]), StandardCharsets.UTF_8), JsonObject.class);
+        return GSON.fromJson(new String(Base64.getDecoder().decode(base[1]), StandardCharsets.UTF_8), JsonObject.class);
     }
 
     private static class MapTypeToken extends TypeToken<Map<String, List<String>>> {

@@ -20,7 +20,7 @@ public class QueryRegenerateEvent extends ServerEvent {
     private int timeout;
     private String serverName;
     private Player[] players;
-    private String version;
+    private final String version;
     private String map;
     private int numPlayers;
     private int maxPlayers;
@@ -67,7 +67,8 @@ public class QueryRegenerateEvent extends ServerEvent {
         this.serverName = serverName;
     }
 
-    public void setListPlugins(boolean listPlugins){}
+    public void setListPlugins(boolean listPlugins) {
+    }
 
     public Plugin[] getPlugins() {
         return new Plugin[0];

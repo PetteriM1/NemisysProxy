@@ -29,10 +29,10 @@ public class RCONServer extends Thread {
     private final List<RCONCommand> receiveQueue = new ArrayList<>();
     private final Map<SocketChannel, List<RCONPacket>> sendQueues = new HashMap<>();
     private volatile boolean running;
-    private ServerSocketChannel serverChannel;
-    private Selector selector;
-    private String password;
-    private Set<SocketChannel> rconSessions = new HashSet<>();
+    private final ServerSocketChannel serverChannel;
+    private final Selector selector;
+    private final String password;
+    private final Set<SocketChannel> rconSessions = new HashSet<>();
 
     public RCONServer(String address, int port, String password) throws IOException {
         this.setName("RCON");

@@ -14,8 +14,8 @@ public abstract class Command {
     protected String description;
     protected String usageMessage;
     private String permission = null;
-    private String permissionMessage = null;
-    private String name;
+    private final String permissionMessage = null;
+    private final String name;
     private String nextLabel;
     private String label;
     private String[] aliases;

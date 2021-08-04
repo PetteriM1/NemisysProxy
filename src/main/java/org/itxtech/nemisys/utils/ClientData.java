@@ -21,14 +21,14 @@ public class ClientData {
     }
 
     public static class Entry {
-        private String ip;
-        private int port;
-        private int playerCount;
-        private int maxPlayers;
-        private String description;
-        private float tps;
-        private float load;
-        private long upTime;
+        private final String ip;
+        private final int port;
+        private final int playerCount;
+        private final int maxPlayers;
+        private final String description;
+        private final float tps;
+        private final float load;
+        private final long upTime;
 
         public Entry(String ip, int port, int playerCount, int maxPlayers, String description, float tps, float load, long upTime) {
             this.ip = ip;

@@ -105,7 +105,7 @@ public class PluginDescription {
     private String version;
     private Map<String, Object> commands = new HashMap<>();
     private String description;
-    private List<String> authors = new ArrayList<>();
+    private final List<String> authors = new ArrayList<>();
     private String website;
     private String prefix;
 

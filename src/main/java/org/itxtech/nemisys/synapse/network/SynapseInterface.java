@@ -13,8 +13,8 @@ import java.util.Map;
 public class SynapseInterface {
 
     private static final Map<Byte, SynapseDataPacket> packetPool = new HashMap<>();
-    private SynapseEntry synapse;
-    private SynapseClient client;
+    private final SynapseEntry synapse;
+    private final SynapseClient client;
     private boolean connected = false;
 
     public SynapseInterface(SynapseEntry server, String ip, int port) {

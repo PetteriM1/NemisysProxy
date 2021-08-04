@@ -15,12 +15,12 @@ import java.util.Map;
  */
 public class SessionManager {
 
-    private SynapseServer server;
-    private Map<String, Channel> sessions = new HashMap<>();
+    private final SynapseServer server;
+    private final Map<String, Channel> sessions = new HashMap<>();
     private long nextTick;
     private int tickCounter;
-    private float[] tickAverage = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
-    private float[] useAverage = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private final float[] tickAverage = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
+    private final float[] useAverage = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private float maxTick = 100;
     private float maxUse = 0;
 

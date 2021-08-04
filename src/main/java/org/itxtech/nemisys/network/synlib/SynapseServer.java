@@ -21,9 +21,9 @@ public class SynapseServer extends Thread implements InterruptibleThread {
     protected ConcurrentLinkedQueue<String> clientOpenQueue;
     protected ConcurrentLinkedQueue<String> internalClientCloseQueue;
     protected ConcurrentLinkedQueue<String> externalClientCloseQueue;
-    private ThreadedLogger logger;
-    private String interfaz;
-    private int port;
+    private final ThreadedLogger logger;
+    private final String interfaz;
+    private final int port;
     private boolean shutdown;
     private SessionManager sessionManager;
 

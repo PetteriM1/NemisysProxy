@@ -1,7 +1,5 @@
 package org.itxtech.nemisys;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import org.itxtech.nemisys.command.CommandSender;
 import org.itxtech.nemisys.event.TextContainer;
@@ -89,7 +87,7 @@ public class Player implements CommandSender {
                 return;
             }
 
-            if (this.getServer().callDataPkEv) {
+            if (this.getServer().callDataPkReceiveEv) {
                 DataPacketReceiveEvent ev = new DataPacketReceiveEvent(this, packet);
                 this.getServer().getPluginManager().callEvent(ev);
                 if (ev.isCancelled()) {
@@ -350,7 +348,7 @@ public class Player implements CommandSender {
     }
 
     public void sendDataPacket(DataPacket pk, boolean direct, boolean needACK) {
-        if (this.getServer().callDataPkEv) {
+        if (this.getServer().callDataPkSendEv) {
             DataPacketSendEvent ev = new DataPacketSendEvent(this, pk);
             this.getServer().getPluginManager().callEvent(ev);
             if (ev.isCancelled()) {
@@ -409,46 +407,35 @@ public class Player implements CommandSender {
     }
 
     protected void processIncomingBatch(BatchPacket packet) {
-        byte[] payload;
-
+        byte[] decompressedPayload;
         try {
             if (this.raknetProtocol >= 10) {
-                payload = Zlib.inflateRaw(packet.payload);
-                if (payload == null) {
-                    this.getServer().getLogger().error("Failed to process incoming batch packet: inflateRaw failed");
-                    return;
-                }
+                decompressedPayload = Zlib.inflateRaw(packet.payload, 2097152);
             } else {
-                ByteBuf buf0 = Unpooled.wrappedBuffer(packet.payload);
-                ByteBuf buf = CompressionUtil.zlibInflate(buf0);
-                buf0.release();
-                payload = new byte[buf.readableBytes()];
-                buf.readBytes(payload);
-                buf.release();
+                decompressedPayload = Zlib.inflate(packet.payload, 2097152);
+            }
+            if (decompressedPayload == null) {
+                this.getServer().getLogger().error("Failed to process incoming batch packet: decompressedPayload==null");
+                return;
             }
             packet.payload = null;
-
-            BinaryStream buffer = new BinaryStream(payload);
-
+            BinaryStream buffer = new BinaryStream(decompressedPayload);
             while (!buffer.feof()) {
                 try {
                     byte[] data = buffer.getByteArray();
-
                     DataPacket pk = getServer().getNetwork().getPacket(data[0]);
-
                     if (pk != null) {
                         pk.setBuffer(data, 1);
                         pk.decode();
                         pk.isEncoded = true;
-
                         handleIncomingPacket(pk);
                     }
-                } catch (Exception e) {
-                    this.getServer().getLogger().warning("Processing incoming batch packet failed!");
+                } catch (Exception ex) {
+                    this.getServer().getLogger().warning("Failed to process incoming packet", ex);
                 }
             }
-        } catch (Exception e) {
-            MainLogger.getLogger().logException(e);
+        } catch (Exception ex) {
+            this.getServer().getLogger().warning("Failed to process incoming batch packet", ex);
         }
     }
 

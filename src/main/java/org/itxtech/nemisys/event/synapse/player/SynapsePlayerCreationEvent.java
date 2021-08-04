@@ -10,10 +10,10 @@ import org.itxtech.nemisys.synapse.SynapsePlayer;
 public class SynapsePlayerCreationEvent extends SynapseEvent {
 
     private static final HandlerList handlers = new HandlerList();
-    private SourceInterface interfaz;
-    private Long clientId;
-    private String address;
-    private int port;
+    private final SourceInterface interfaz;
+    private final Long clientId;
+    private final String address;
+    private final int port;
     private Class<? extends SynapsePlayer> baseClass;
     private Class<? extends SynapsePlayer> playerClass;
 

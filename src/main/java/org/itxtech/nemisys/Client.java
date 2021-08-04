@@ -43,7 +43,7 @@ public class Client {
     @Getter
     private boolean lobbyServer = false;
     @Getter
-    private boolean transferOnShutdown = true;
+    private final boolean transferOnShutdown = true;
 
     @Getter
     private int maxPlayers;

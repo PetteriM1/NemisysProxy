@@ -9,7 +9,7 @@ import java.net.InetSocketAddress;
 
 public class SynapseClientHandler extends ChannelInboundHandlerAdapter {
 
-    private SynapseClient synapseClient;
+    private final SynapseClient synapseClient;
 
     public SynapseClientHandler(SynapseClient synapseClient) {
         this.synapseClient = synapseClient;

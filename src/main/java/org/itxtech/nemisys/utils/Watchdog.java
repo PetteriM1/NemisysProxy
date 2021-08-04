@@ -41,7 +41,7 @@ public class Watchdog extends Thread {
                 } else if (responding) {
                     MainLogger logger = server.getLogger();
                     logger.emergency("--------- Server stopped responding ---------");
-                    logger.emergency(Math.round(diff / 1000d) + " s");
+                    logger.emergency("Last response " + Math.round(diff / 1000d) + " seconds ago");
                     logger.emergency("---------------- Main thread ----------------");
 
                     dumpThread(ManagementFactory.getThreadMXBean().getThreadInfo(server.getPrimaryThread().getId(), Integer.MAX_VALUE), logger);

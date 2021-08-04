@@ -24,7 +24,7 @@ import io.netty.channel.socket.SocketChannel;
  */
 public class SynapseServerInitializer extends ChannelInitializer<SocketChannel> {
 
-    private SessionManager sessionManager;
+    private final SessionManager sessionManager;
 
     public SynapseServerInitializer(SessionManager sessionManager) {
         this.sessionManager = sessionManager;

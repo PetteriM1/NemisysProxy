@@ -11,7 +11,7 @@ public class Session {
     public Channel channel;
     private String ip;
     private int port;
-    private SynapseClient client;
+    private final SynapseClient client;
     private long lastCheck;
     private boolean connected;
     private long tickUseTime = 0;
@@ -130,5 +130,4 @@ public class Session {
         if (more < 0) return 100;
         return Math.round(10f / (float) this.tickUseTime) * 100;
     }
-
 }

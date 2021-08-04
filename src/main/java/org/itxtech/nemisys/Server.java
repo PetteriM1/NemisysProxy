@@ -86,7 +86,8 @@ public class Server {
     private final Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
     private Synapse synapse;
     private final int compressionLevel;
-    boolean callDataPkEv;
+    boolean callDataPkSendEv;
+    boolean callDataPkReceiveEv;
     public boolean plusOnePlayerCount;
     private final String version;
     public int dataLimit;
@@ -94,6 +95,7 @@ public class Server {
     public int uptime = 0;
     public final static Map<String, Integer> playerCountData = new ConcurrentHashMap<>();
     private final Thread currentThread;
+    private final String synapsePassword;
 
     @Getter
     @Setter
@@ -136,7 +138,9 @@ public class Server {
             }
         }
 
-        this.callDataPkEv = this.getPropertyBoolean("call-data-pk-ev", false);
+        this.synapsePassword = Hashing.md5().hashBytes(this.getPropertyString("password", "must16keyslength").getBytes(StandardCharsets.UTF_8)).toString();
+        this.callDataPkSendEv = this.getPropertyBoolean("call-data-pk-send-ev", false);
+        this.callDataPkReceiveEv = this.getPropertyBoolean("call-data-pk-receive-ev", false);
         this.compressionLevel = Math.max(Math.min(this.getPropertyInt("compression-level", 7), 9), 0);
         this.playersPerThread = this.getPropertyInt("players-per-thread", 30);
         this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
@@ -158,8 +162,6 @@ public class Server {
         Nemisys.DEBUG = this.getPropertyInt("debug", 1);
         this.logger.setLogDebug(Nemisys.DEBUG > 1);
 
-        this.logger.info(this.getLanguage().translateString("\u00A7b[\u00A7cNemisys \u00A7aPetteriM1 Edition\u00A7b] Proxy started on {%0}:{%1}", new String[]{this.getIp().isEmpty() ? "*" : this.getIp(), String.valueOf(this.getPort())}));
-
         this.network = new Network(this);
         this.network.setName(this.getMotd());
 
@@ -170,8 +172,9 @@ public class Server {
         this.pluginManager.registerInterface(JavaPluginLoader.class);
         this.queryRegenerateEvent = new QueryRegenerateEvent(this, 5);
         this.network.registerInterface(new RakNetInterface(this));
-
         this.synapseInterface = new SynapseInterface(this, this.getSynapseIp(), this.getSynapsePort());
+
+        this.logger.info(this.getLanguage().translateString("\u00A7b[\u00A7cNemisys \u00A7aPetteriM1 Edition\u00A7b] Proxy started on {%0}:{%1}", new String[]{this.getIp().isEmpty() ? "*" : this.getIp(), String.valueOf(this.getPort())}));
 
         this.pluginManager.loadPlugins(this.pluginPath);
         this.enablePlugins();
@@ -269,8 +272,7 @@ public class Server {
     }
 
     public boolean comparePassword(String pass) {
-        String truePass = this.getPropertyString("password", "must16keyslength");
-        return Hashing.md5().hashBytes(truePass.getBytes(StandardCharsets.UTF_8)).toString().equals(pass);
+        return synapsePassword.equals(pass);
     }
 
     public void enablePlugins() {
@@ -909,11 +911,12 @@ public class Server {
             put("enable-synapse-client", false);
             put("ansi", true);
             put("send-start-message", false);
-            put("compression-level", 7);
-            put("call-data-pk-ev", false);
-            put("query-version", "1.16.200");
+            put("compression-level", 6);
+            put("query-version", "1.17.10");
             put("data-limit", 2097152);
             put("thread-watchdog", true);
+            put("call-data-pk-send-ev", false);
+            put("call-data-pk-receive-ev", false);
         }
     }
 }

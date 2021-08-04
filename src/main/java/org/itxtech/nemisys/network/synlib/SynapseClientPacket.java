@@ -11,8 +11,8 @@ import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
  */
 public class SynapseClientPacket {
 
-    private String hash;
-    private SynapseDataPacket packet;
+    private final String hash;
+    private final SynapseDataPacket packet;
 
     public SynapseClientPacket(String hash, SynapseDataPacket packet) {
         this.hash = hash;

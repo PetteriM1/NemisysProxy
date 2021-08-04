@@ -16,9 +16,9 @@ public class PermissionAttachment {
 
     private final Map<String, Boolean> permissions = new ConcurrentHashMap<>();
 
-    private Permissible permissible;
+    private final Permissible permissible;
 
-    private Plugin plugin;
+    private final Plugin plugin;
 
     public PermissionAttachment(Plugin plugin, Permissible permissible) {
         if (!plugin.isEnabled()) {

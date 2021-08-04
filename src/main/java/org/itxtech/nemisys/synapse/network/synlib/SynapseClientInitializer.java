@@ -26,7 +26,7 @@ import org.itxtech.nemisys.network.synlib.SynapsePacketEncoder;
  */
 public class SynapseClientInitializer extends ChannelInitializer<SocketChannel> {
 
-    private SynapseClient synapseClient;
+    private final SynapseClient synapseClient;
 
     public SynapseClientInitializer(SynapseClient synapseClient) {
         this.synapseClient = synapseClient;

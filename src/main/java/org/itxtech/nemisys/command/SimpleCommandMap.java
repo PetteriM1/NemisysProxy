@@ -19,7 +19,7 @@ public class SimpleCommandMap implements CommandMap {
 
     protected Map<String, Command> knownCommands = new ConcurrentHashMap<>();
 
-    private Server server;
+    private final Server server;
 
     public SimpleCommandMap(Server server) {
         this.server = server;
@@ -148,5 +148,4 @@ public class SimpleCommandMap implements CommandMap {
     public Map<String, Command> getCommands() {
         return knownCommands;
     }
-
 }

@@ -25,8 +25,8 @@ public class PluginManager {
 
     protected Map<String, Plugin> plugins = new LinkedHashMap<>();
     protected Map<String, PluginLoader> fileAssociations = new HashMap<>();
-    private Server server;
-    private SimpleCommandMap commandMap;
+    private final Server server;
+    private final SimpleCommandMap commandMap;
 
     protected final Map<String, Permission> permissions = new HashMap<>();
 

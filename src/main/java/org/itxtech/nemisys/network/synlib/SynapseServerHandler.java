@@ -10,7 +10,7 @@ import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
  */
 public class SynapseServerHandler extends ChannelInboundHandlerAdapter {
 
-    private SessionManager sessionManager;
+    private final SessionManager sessionManager;
 
     public SynapseServerHandler(SessionManager sessionManager) {
         this.sessionManager = sessionManager;

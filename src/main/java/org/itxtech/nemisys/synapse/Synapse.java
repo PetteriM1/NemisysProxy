@@ -21,10 +21,10 @@ import java.util.Map;
  */
 public class Synapse {
 
-    private Server server;
-    private Config config;
+    private final Server server;
+    private final Config config;
 
-    private Map<String, SynapseEntry> synapseEntries = new HashMap<>();
+    private final Map<String, SynapseEntry> synapseEntries = new HashMap<>();
 
     public Synapse(Server server) {
         this.server = server;
@@ -90,5 +90,4 @@ public class Synapse {
         data.setBuffer(buffer, start);
         return data;
     }
-
 }

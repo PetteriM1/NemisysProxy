@@ -10,7 +10,7 @@ import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
 public class ClientSendPacketEvent extends ClientEvent {
 
     private static final HandlerList handlers = new HandlerList();
-    private SynapseDataPacket pk;
+    private final SynapseDataPacket pk;
 
     public ClientSendPacketEvent(Client client, SynapseDataPacket pk) {
         super(client);

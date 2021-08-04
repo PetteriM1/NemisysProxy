@@ -26,5 +26,4 @@ public class PlayerTransferEvent extends PlayerEvent implements Cancellable {
     public void setTargetClient(Client targetClient) {
         this.targetClient = targetClient;
     }
-
 }

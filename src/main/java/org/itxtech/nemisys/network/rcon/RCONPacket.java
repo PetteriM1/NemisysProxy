@@ -11,9 +11,9 @@ import java.nio.ByteOrder;
  */
 public class RCONPacket {
 
-    private int id;
-    private int type;
-    private byte[] payload;
+    private final int id;
+    private final int type;
+    private final byte[] payload;
 
     public RCONPacket(int id, int type, byte[] payload) {
         this.id = id;

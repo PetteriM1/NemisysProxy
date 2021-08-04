@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class SynapseEntry {
 
-    private Synapse synapse;
+    private final Synapse synapse;
 
     private boolean enable;
     private String serverIp;
@@ -34,7 +34,7 @@ public class SynapseEntry {
     private SynapseInterface synapseInterface;
     private boolean verified = false;
     private long lastUpdate;
-    private Map<UUID, SynapsePlayer> players = new HashMap<>();
+    private final Map<UUID, SynapsePlayer> players = new HashMap<>();
     private SynLibInterface synLibInterface;
     private ClientData clientData;
     private String serverDescription;
@@ -189,6 +189,8 @@ public class SynapseEntry {
         this.players.remove(uuid);
     }
 
+    private static final Gson GSON = new Gson();
+
     public void handleDataPacket(SynapseDataPacket pk) {
         switch (pk.pid()) {
             case SynapseInfo.DISCONNECT_PACKET:
@@ -216,7 +218,7 @@ public class SynapseEntry {
                         }
                         break;
                     case InformationPacket.TYPE_CLIENT_DATA:
-                        this.clientData = new Gson().fromJson(informationPacket.message, ClientData.class);
+                        this.clientData = GSON.fromJson(informationPacket.message, ClientData.class);
                         break;
                 }
                 break;

@@ -9,9 +9,9 @@ import java.nio.channels.SocketChannel;
  */
 public class RCONCommand {
 
-    private SocketChannel sender;
-    private int id;
-    private String command;
+    private final SocketChannel sender;
+    private final int id;
+    private final String command;
 
     public RCONCommand(SocketChannel sender, int id, String command) {
         this.sender = sender;

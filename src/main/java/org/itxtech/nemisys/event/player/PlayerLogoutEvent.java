@@ -14,5 +14,4 @@ public class PlayerLogoutEvent extends PlayerEvent {
     public static HandlerList getHandlers() {
         return handlers;
     }
-
 }
