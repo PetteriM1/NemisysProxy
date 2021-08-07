@@ -33,6 +33,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Player implements CommandSender {
 
     public boolean closed;
+    private boolean verified;
+    private int unverifiedPackets;
     @Getter
     protected UUID uuid;
     private byte[] cachedLoginPacket = new byte[0];
@@ -87,6 +89,14 @@ public class Player implements CommandSender {
                 return;
             }
 
+            if (!verified && packet.pid() != ProtocolInfo.LOGIN_PACKET && packet.pid() != ProtocolInfo.BATCH_PACKET) {
+                this.getServer().getLogger().warning("Ignoring data packet from " + getAddress() + " due to player not verified yet");
+                if (unverifiedPackets++ > 100) {
+                    this.close("Too many failed login attempts");
+                }
+                return;
+            }
+
             if (this.getServer().callDataPkReceiveEv) {
                 DataPacketReceiveEvent ev = new DataPacketReceiveEvent(this, packet);
                 this.getServer().getPluginManager().callEvent(ev);
@@ -118,6 +128,7 @@ public class Player implements CommandSender {
                         return;
                     }
 
+                    this.verified = true;
                     this.getServer().addOnlinePlayer(this.uuid, this);
 
                     AsyncTask loginTask = new AsyncTask() {
