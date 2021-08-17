@@ -7,15 +7,16 @@ import org.itxtech.nemisys.event.client.ClientConnectEvent;
 import org.itxtech.nemisys.event.client.ClientDisconnectEvent;
 import org.itxtech.nemisys.event.client.PluginMsgRecvEvent;
 import org.itxtech.nemisys.network.SynapseInterface;
-import org.itxtech.nemisys.network.protocol.mcpe.BatchPacket;
-import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
-import org.itxtech.nemisys.network.protocol.mcpe.GenericPacket;
-import org.itxtech.nemisys.network.protocol.mcpe.TextPacket;
+import org.itxtech.nemisys.network.protocol.mcpe.*;
 import org.itxtech.nemisys.network.protocol.spp.*;
+import org.itxtech.nemisys.network.protocol.spp.DisconnectPacket;
 import org.itxtech.nemisys.utils.BinaryStream;
 import org.itxtech.nemisys.utils.MainLogger;
 import org.itxtech.nemisys.utils.TextFormat;
+import org.itxtech.nemisys.utils.VarInt;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -152,8 +153,30 @@ public class Client {
                         server.getLogger().warning("Redirect packet with buffer length 0");
                         return;
                     }
-                    DataPacket send;
-                    if (buffer[0] == (byte) 0xfe) {
+
+
+                    ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+                    int header;
+                    try {
+                        header = (int) VarInt.readUnsignedVarInt(bais);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Unable to decode packet header", e);
+                    }
+
+                    // | Client ID | Sender ID | Packet ID |
+                    // |   2 bits  |   2 bits  |  10 bits  |
+                    int packetId = header & 0x3ff;
+
+                    DataPacket send = this.getServer().getNetwork().getPacket((byte) (packetId == 0xfe ? 0xff : packetId));
+
+                    if (send == null) {
+                        send = new GenericPacket();
+                    }
+                    send.setBuffer(buffer, buffer.length - bais.available());
+
+
+                    //DataPacket send;
+                    /*if (buffer[0] == (byte) 0xfe) {
                         send = new BatchPacket();
                         send.setBuffer(buffer, 1);
                     } else {
@@ -163,7 +186,7 @@ public class Client {
                         }
 
                         send.setBuffer(buffer, 1);
-                    }
+                    }*/
 
                     send.decode();
                     send.isEncoded = true;
