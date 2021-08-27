@@ -86,8 +86,9 @@ public class Client {
                 GenericPacket gPacket = new GenericPacket();
                 gPacket.setBuffer(((BroadcastPacket) packet).payload);
                 for (UUID uniqueId : ((BroadcastPacket) packet).entries) {
-                    if (this.players.containsKey(uniqueId)) {
-                        this.players.get(uniqueId).sendDataPacket(gPacket, ((BroadcastPacket) packet).direct);
+                    Player player = this.players.get(uniqueId);
+                    if (player != null) {
+                        player.sendDataPacket(gPacket, ((BroadcastPacket) packet).direct);
                     }
                 }
                 break;
@@ -147,7 +148,6 @@ public class Client {
                 Player pl = players.get(uuid);
                 if (pl != null) {
                     byte[] buffer = ((RedirectPacket) packet).mcpeBuffer;
-                    boolean direct = ((RedirectPacket) packet).direct;
                     if (buffer.length == 0) {
                         server.getLogger().warning("Redirect packet with buffer length 0");
                         return;
@@ -155,16 +155,15 @@ public class Client {
                     DataPacket send;
                     if (buffer[0] == (byte) 0xfe) {
                         send = new BatchPacket();
-                        send.setBuffer(buffer, 1);
                     } else {
                         send = server.getNetwork().getPacket(buffer[0]);
                         if (send == null) {
                             send = new GenericPacket();
                         }
 
-                        send.setBuffer(buffer, 1);
                     }
 
+                    send.setBuffer(buffer, 1);
                     send.decode();
                     send.isEncoded = true;
 
@@ -172,23 +171,22 @@ public class Client {
                 }
                 break;
             case SynapseInfo.TRANSFER_PACKET:
-                Map<String, Client> clients = this.server.getClients();
                 UUID uuid0 = ((TransferPacket) packet).uuid;
-                String hash = ((TransferPacket) packet).clientHash;
                 pl = players.get(uuid0);
-                if (pl == null)
+                if (pl == null) {
                     break;
+                }
 
+                String hash = ((TransferPacket) packet).clientHash;
                 if (hash.equals("lobby") && !server.getLobbyClients().isEmpty()) {
                     List<String> clnts = new ArrayList<>(server.getLobbyClients().keySet());
                     hash = clnts.get(0);
                 }
 
-                {
-                    Client c = clients.get(hash);
-                    if (c != null) {
-                        this.players.get(uuid0).transfer(c);
-                    }
+                Map<String, Client> clients = this.server.getClients();
+                Client lobby = clients.get(hash);
+                if (lobby != null) {
+                    this.players.get(uuid0).transfer(lobby);
                 }
                 break;
             case SynapseInfo.PLAYER_COUNT_PACKET:

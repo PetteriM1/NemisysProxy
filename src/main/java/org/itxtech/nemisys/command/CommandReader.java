@@ -40,7 +40,7 @@ public class CommandReader extends Thread implements InterruptibleThread {
         try {
             return reader.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            Server.getInstance().getLogger().logException(e);
         }
         return null;
     }
@@ -76,7 +76,7 @@ public class CommandReader extends Thread implements InterruptibleThread {
                 lastLine = System.currentTimeMillis();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Server.getInstance().getLogger().logException(e);
         }
     }
 
@@ -100,7 +100,7 @@ public class CommandReader extends Thread implements InterruptibleThread {
         try {
             reader.resetPromptLine("", "", 0);
         } catch (IOException e) {
-            e.printStackTrace();
+            Server.getInstance().getLogger().logException(e);
         }
     }
 }

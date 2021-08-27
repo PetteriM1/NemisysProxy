@@ -68,8 +68,9 @@ public class SessionManager {
         SynapseClientPacket data = this.server.readMainToThreadPacket();
         if (data != null) {
             String hash = data.getHash();
-            if (this.sessions.containsKey(hash)) {
-                this.sessions.get(hash).writeAndFlush(data.getPacket());
+            Channel session = this.sessions.get(hash);
+            if (session != null) {
+                session.writeAndFlush(data.getPacket());
                 Server.getInstance().getLogger().debug("server-writeAndFlush: hash=" + hash);
             }
             return true;
@@ -80,8 +81,9 @@ public class SessionManager {
     private boolean closeSessions() {
         String hash = this.server.getExternalClientCloseRequest();
         if (hash != null) {
-            if (this.sessions.containsKey(hash)) {
-                this.sessions.get(hash).close();
+            Channel session = this.sessions.get(hash);
+            if (session != null) {
+                session.close();
                 this.sessions.remove(hash);
             }
             return true;

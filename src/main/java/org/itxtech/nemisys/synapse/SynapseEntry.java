@@ -242,8 +242,8 @@ public class SynapseEntry {
             case SynapseInfo.REDIRECT_PACKET:
                 RedirectPacket redirectPacket = (RedirectPacket) pk;
                 UUID uuid = redirectPacket.uuid;
-                if (this.players.containsKey(uuid)) {
-                    Player player = this.players.get(uuid);
+                Player player = this.players.get(uuid);
+                if (player != null) {
                     DataPacket pk0 = this.getSynapse().getPacket(redirectPacket.mcpeBuffer);
                     if (pk0 != null) {
                         pk0.decode();
@@ -256,10 +256,10 @@ public class SynapseEntry {
                 break;
             case SynapseInfo.PLAYER_LOGOUT_PACKET:
                 PlayerLogoutPacket playerLogoutPacket = (PlayerLogoutPacket) pk;
-                UUID uuid1;
-                if (this.players.containsKey(uuid1 = playerLogoutPacket.uuid)) {
-                    this.players.get(uuid1).close(playerLogoutPacket.reason, true);
-                    this.removePlayer(uuid1);
+                Player player1 = this.players.get(playerLogoutPacket.uuid);
+                if (player1 != null) {
+                    player1.close(playerLogoutPacket.reason, true);
+                    this.removePlayer(playerLogoutPacket.uuid);
                 }
                 break;
         }

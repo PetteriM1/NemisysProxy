@@ -126,7 +126,7 @@ public class SynapseServer extends Thread implements InterruptibleThread {
                 Server.getInstance().shutdown();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Server.getInstance().getLogger().logException(e);
         }
     }
 

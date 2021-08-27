@@ -41,7 +41,7 @@ public class Session {
             try {
                 this.tick();
             } catch (Exception e) {
-                e.printStackTrace();
+                Server.getInstance().getLogger().logException(e);
             }
             long time = System.currentTimeMillis() - start;
             this.tickUseTime = time;

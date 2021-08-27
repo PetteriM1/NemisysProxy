@@ -418,18 +418,13 @@ public class Player implements CommandSender {
     }
 
     protected void processIncomingBatch(BatchPacket packet) {
-        byte[] decompressedPayload;
         try {
+            byte[] decompressedPayload;
             if (this.raknetProtocol >= 10) {
                 decompressedPayload = Zlib.inflateRaw(packet.payload, 2097152);
             } else {
                 decompressedPayload = Zlib.inflate(packet.payload, 2097152);
             }
-            if (decompressedPayload == null) {
-                this.getServer().getLogger().error("Failed to process incoming batch packet: decompressedPayload==null");
-                return;
-            }
-            packet.payload = null;
             BinaryStream buffer = new BinaryStream(decompressedPayload);
             while (!buffer.feof()) {
                 try {

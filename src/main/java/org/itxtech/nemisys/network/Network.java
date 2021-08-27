@@ -117,21 +117,18 @@ public class Network {
         byte[] data;
         try {
             if (player.raknetProtocol >= 10) {
-                data = Zlib.inflateRaw(packet.payload, 2097152); // 2 * 1024 * 1024
-                if (data == null) {
-                    this.getServer().getLogger().error("Failed to process batch packet: inflateRaw failed");
-                    return;
-                }
+                data = Zlib.inflateRaw(packet.payload, 2097152);
             } else {
                 data = Zlib.inflate(packet.payload, 2097152);
             }
         } catch (Exception e) {
+            player.close("Corrupted Packet");
             return;
         }
 
-        int len = data.length;
-        BinaryStream stream = new BinaryStream(data);
         try {
+            int len = data.length;
+            BinaryStream stream = new BinaryStream(data);
             List<DataPacket> packets = new ArrayList<>();
             int count = 0;
             while (stream.offset < len) {
@@ -158,12 +155,11 @@ public class Network {
             }
 
             processPackets(player, packets);
-
         } catch (Exception e) {
             if (Nemisys.DEBUG > 0) {
                 this.server.getLogger().debug("BatchPacket 0x" + Binary.bytesToHexString(packet.payload));
-                this.server.getLogger().logException(e);
             }
+            this.server.getLogger().logException(e);
         }
     }
 
@@ -191,6 +187,18 @@ public class Network {
         GenericPacket pk = new GenericPacket();
         pk.pid = id;
         return pk;
+    }
+
+    public DataPacket getPacket(int id) {
+        Class<? extends DataPacket> clazz = this.packetPool[id];
+        if (clazz != null) {
+            try {
+                return clazz.newInstance();
+            } catch (Exception e) {
+                Server.getInstance().getLogger().logException(e);
+            }
+        }
+        return null;
     }
 
     public void sendPacket(InetSocketAddress socketAddress, ByteBuf payload) {

@@ -74,7 +74,7 @@ public class QueryHandler {
 
         switch (packetId) {
             case HANDSHAKE:
-                ByteBuf reply = ByteBufAllocator.DEFAULT.ioBuffer(10); // 1 + 4 + 4 + 1
+                ByteBuf reply = ByteBufAllocator.DEFAULT.ioBuffer(10);
                 reply.writeByte(HANDSHAKE);
                 reply.writeInt(sessionId);
                 reply.writeBytes(getTokenString(this.token, address.getAddress()));

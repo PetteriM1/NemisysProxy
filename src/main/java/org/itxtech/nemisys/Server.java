@@ -191,7 +191,7 @@ public class Server {
         this.properties.save(true);
 
         if (this.getPropertyBoolean("thread-watchdog", true)) {
-            new Watchdog(this, 60000).start();
+            new Watchdog(this, 50000).start();
         }
 
         this.start();

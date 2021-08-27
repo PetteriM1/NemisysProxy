@@ -130,7 +130,7 @@ public class SynapseClient extends Thread {
             this.connect();
             this.session.run();
         } catch (Exception e) {
-            e.printStackTrace();
+            Server.getInstance().getLogger().logException(e);
         }
     }
 
@@ -148,7 +148,7 @@ public class SynapseClient extends Thread {
         } catch (Exception e) {
             Server.getInstance().getLogger().alert("Synapse Client can't connect to server: " + this.interfaz + ':' + this.port);
             Server.getInstance().getLogger().alert("Reason: " + e.getLocalizedMessage());
-            Server.getInstance().getLogger().warning("We will reconnect in 3 seconds");
+            Server.getInstance().getLogger().warning("Reconnecting in 3 seconds");
             this.reconnect();
             return false;
         }

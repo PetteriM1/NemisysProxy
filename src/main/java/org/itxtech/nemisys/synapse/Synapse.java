@@ -6,8 +6,11 @@ import org.itxtech.nemisys.network.SourceInterface;
 import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
 import org.itxtech.nemisys.utils.Config;
 import org.itxtech.nemisys.utils.MainLogger;
+import org.itxtech.nemisys.utils.VarInt;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,17 +80,25 @@ public class Synapse {
     }
 
     public DataPacket getPacket(byte[] buffer) {
-        byte pid = buffer[0];
-        byte start = 1;
-        if (pid == (byte) 0xfe) {
-            pid = buffer[1];
-            start++;
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(buffer);
+
+        int header;
+        try {
+            header = (int) VarInt.readUnsignedVarInt(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to decode packet header", e);
         }
-        DataPacket data = this.getServer().getNetwork().getPacket(pid);
-        if (data == null) {
-            return null;
+
+        // | Client ID | Sender ID | Packet ID |
+        // |   2 bits  |   2 bits  |  10 bits  |
+        int packetId = header & 0x3ff;
+
+        DataPacket packet = this.getServer().getNetwork().getPacket(packetId == 0xfe ? 0xff : packetId);
+
+        if (packet != null) {
+            packet.setBuffer(buffer, buffer.length - inputStream.available());
         }
-        data.setBuffer(buffer, start);
-        return data;
+
+        return packet;
     }
 }

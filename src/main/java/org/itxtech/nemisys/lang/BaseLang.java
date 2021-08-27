@@ -13,8 +13,6 @@ import java.util.Map;
 public class BaseLang {
 
     protected Map<String, String> lang = new HashMap<>();
-    protected Map<String, String> fallbackLang = new HashMap<>();
-
 
     public BaseLang(String lang) {
         this(lang, null);

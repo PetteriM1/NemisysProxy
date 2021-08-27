@@ -86,8 +86,9 @@ public class SynapseInterface {
     private boolean closeClients() {
         String close = this.interfaz.getInternalClientCloseRequest();
         if (close != null) {
-            if (this.clients.containsKey(close)) {
-                this.clients.get(close).close();
+            Client client = this.clients.get(close);
+            if (client != null) {
+                client.close();
                 this.clients.remove(close);
             }
             return true;
@@ -102,13 +103,13 @@ public class SynapseInterface {
     }
 
     public void handlePacket(String hash, SynapseDataPacket pk) {
-        if (!this.clients.containsKey(hash)) return;
         Client client = this.clients.get(hash);
+        if (client == null) return;
         if (pk != null) {
             pk.decode();
             client.handleDataPacket(pk);
         } else {
-            this.server.getLogger().critical("Error packet");
+            this.server.getLogger().critical("Invalid SynapseDataPacket");
         }
     }
 
