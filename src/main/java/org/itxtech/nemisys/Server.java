@@ -86,11 +86,12 @@ public class Server {
     private final Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
     private Synapse synapse;
     private final int compressionLevel;
-    boolean callDataPkSendEv;
-    boolean callDataPkReceiveEv;
-    public boolean plusOnePlayerCount;
-    private final String version;
-    public int dataLimit;
+    public final int dataLimit;
+    final boolean handleChat;
+    final boolean callDataPkSendEv;
+    final boolean callDataPkReceiveEv;
+    public final boolean plusOnePlayerCount;
+    private final String queryVersion;
     @SuppressWarnings("unused")
     public int uptime = 0;
     public final static Map<String, Integer> playerCountData = new ConcurrentHashMap<>();
@@ -148,8 +149,9 @@ public class Server {
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
         this.maxPlayers = this.getPropertyInt("max-players", 50);
-        this.version = this.getPropertyString("query-version", "1.16.40");
+        this.queryVersion = this.getPropertyString("query-version", "1.16.40");
         this.dataLimit = this.getPropertyInt("data-limit", 2097152);
+        this.handleChat = this.getPropertyBoolean("handle-chat", true);
 
         ServerScheduler.WORKERS = (int) poolSize;
 
@@ -545,7 +547,7 @@ public class Server {
     }
 
     public String getVersion() {
-        return version;
+        return queryVersion;
     }
 
     public String getFilePath() {
@@ -912,11 +914,12 @@ public class Server {
             put("ansi", true);
             put("send-start-message", false);
             put("compression-level", 6);
-            put("query-version", "1.17.10");
+            put("query-version", "1.17.40");
             put("data-limit", 2097152);
             put("thread-watchdog", true);
             put("call-data-pk-send-ev", false);
             put("call-data-pk-receive-ev", false);
+            put("handle-chat", true);
         }
     }
 }
