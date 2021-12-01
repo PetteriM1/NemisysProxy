@@ -129,7 +129,7 @@ public class Network {
         try {
             int len = data.length;
             BinaryStream stream = new BinaryStream(data);
-            List<DataPacket> packets = new ArrayList<>();
+            //List<DataPacket> packets = new ArrayList<>();
             int count = 0;
             while (stream.offset < len) {
                 count++;
@@ -149,12 +149,13 @@ public class Network {
                         } catch (Exception ignored) {
                         }
 
-                        packets.add(pk);
+                        //packets.add(pk);
+                        player.addOutgoingPacket(pk);
                     }
                 }
             }
 
-            processPackets(player, packets);
+            //processPackets(player, packets);
         } catch (Exception e) {
             if (Nemisys.DEBUG > 0) {
                 this.server.getLogger().debug("BatchPacket 0x" + Binary.bytesToHexString(packet.payload));

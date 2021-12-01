@@ -531,7 +531,7 @@ public class Server {
                     " | Load: " + this.getTickUsage() + '%' + (char) 0x07);
         }
 
-        this.network.resetStatistics();
+        //this.network.resetStatistics();
     }
 
     public QueryRegenerateEvent getQueryInformation() {
