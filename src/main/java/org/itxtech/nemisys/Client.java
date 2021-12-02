@@ -134,7 +134,7 @@ public class Client {
                     pk.message = InformationPacket.INFO_LOGIN_FAILED;
                     this.server.getLogger().emergency("Client " + this.getIp() + ':' + this.getPort() + " tried to connect with wrong password!");
                     this.sendDataPacket(pk);
-                    this.close("Authentication failed!");
+                    this.close("authentication failed");
                     return;
                 }
                 this.server.getPluginManager().callEvent(new ClientAuthEvent(this, connectPacket.password));

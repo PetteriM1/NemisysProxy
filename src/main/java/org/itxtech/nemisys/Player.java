@@ -273,8 +273,7 @@ public class Player implements CommandSender {
             while ((packet = this.packetQueue.poll()) != null) {
                 toBatch.add(packet);
             }
-            DataPacket[] arr = toBatch.toArray(new DataPacket[0]);
-            getServer().batchPackets(this, arr);
+            getServer().batchPackets(this, toBatch);
         }
 
         ticking.set(false);

@@ -325,6 +325,9 @@ public class Server {
     }
 
     public void forceShutdown() {
+        this.forceShutdown("§cProxy server closed");
+    }
+    public void forceShutdown(String reason) {
         if (this.hasStopped) {
             return;
         }
@@ -334,14 +337,16 @@ public class Server {
 
             this.hasStopped = true;
 
+            this.getLogger().debug("Disconnecting all clients...");
             for (Client client : new ArrayList<>(this.clients.values())) {
                 for (Player player : new ArrayList<>(client.getPlayers().values())) {
-                    player.close("§cProxy server closed");
+                    player.close(reason);
                 }
-                client.close("§cProxy server closed");
+                client.close(reason);
             }
 
             if (this.rcon != null) {
+                this.getLogger().debug("Closing RCON...");
                 this.rcon.close();
             }
 
@@ -809,20 +814,7 @@ public class Server {
         batched.putUnsignedVarInt(buf.length);
         batched.put(buf);
 
-        if (!player.closed) {
-            try {
-                byte[] bytes = Binary.appendBytes(batched.getBuffer());
-                BatchPacket pk = new BatchPacket();
-                if (player.raknetProtocol >= 10) {
-                    pk.payload = Zlib.deflateRaw(bytes, compressionLevel);
-                } else {
-                    pk.payload = Zlib.deflate(bytes, compressionLevel);
-                }
-                player.sendDataPacket(pk, true, false);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
+        batchCommon(player, batched);
     }
 
     void batchPackets(Player player, DataPacket[] packets) {
@@ -844,6 +836,32 @@ public class Server {
             batched.put(buf);
         }
 
+        batchCommon(player, batched);
+    }
+
+    void batchPackets(Player player, List<DataPacket> packets) {
+        if (player == null || packets == null || packets.isEmpty()) {
+            return;
+        }
+
+        BinaryStream batched = new BinaryStream();
+        for (DataPacket packet : packets) {
+            if (packet instanceof BatchPacket) {
+                throw new RuntimeException("Cannot batch BatchPacket");
+            }
+            if (!packet.isEncoded) {
+                packet.encode();
+                packet.isEncoded = true;
+            }
+            byte[] buf = packet.getBuffer();
+            batched.putUnsignedVarInt(buf.length);
+            batched.put(buf);
+        }
+
+        batchCommon(player, batched);
+    }
+
+    private void batchCommon(Player player, BinaryStream batched) {
         if (!player.closed) {
             try {
                 byte[] bytes = Binary.appendBytes(batched.getBuffer());
