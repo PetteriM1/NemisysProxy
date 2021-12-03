@@ -157,7 +157,7 @@ public class Player implements CommandSender {
 
                     return;
                 case ProtocolInfo.TEXT_PACKET:
-                    if (!this.getServer().handleChat) return;
+                    if (!this.getServer().handleChat) break;
                     TextPacket textPacket = (TextPacket) packet;
 
                     if (textPacket.type == TextPacket.TYPE_CHAT) {
