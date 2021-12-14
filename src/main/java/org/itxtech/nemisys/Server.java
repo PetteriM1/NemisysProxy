@@ -149,7 +149,7 @@ public class Server {
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
         this.maxPlayers = this.getPropertyInt("max-players", 50);
-        this.queryVersion = this.getPropertyString("query-version", "1.16.40");
+        this.queryVersion = this.getPropertyString("query-version", "1.18.0");
         this.dataLimit = this.getPropertyInt("data-limit", 2097152);
         this.handleChat = this.getPropertyBoolean("handle-chat", true);
 
@@ -932,12 +932,14 @@ public class Server {
             put("ansi", true);
             put("send-start-message", false);
             put("compression-level", 6);
-            put("query-version", "1.17.40");
+            put("query-version", "1.18.0");
             put("data-limit", 2097152);
             put("thread-watchdog", true);
             put("call-data-pk-send-ev", false);
             put("call-data-pk-receive-ev", false);
             put("handle-chat", true);
+            put("min-mtu", 576);
+            put("max-mtu", 1492);
         }
     }
 }
