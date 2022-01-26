@@ -38,8 +38,8 @@ public class RakNetSlidingWindow {
     }
 
     public void onResend(long curSequenceIndex) {
-        if (!this.backoffThisBlock && this.cwnd > this.mtu << 1) {
-            this.ssThresh = this.cwnd / 2;
+        if (!this.backoffThisBlock && this.cwnd > this.mtu * 2) {
+            this.ssThresh = this.cwnd / 2D;
 
             if (this.ssThresh < this.mtu) {
                 this.ssThresh = this.mtu;
@@ -64,9 +64,10 @@ public class RakNetSlidingWindow {
             this.estimatedRTT = rtt;
             this.deviationRTT = rtt;
         } else {
+            double d = 0.05D;
             double difference = rtt - this.estimatedRTT;
-            this.estimatedRTT += 0.5D * difference;
-            this.deviationRTT += 0.5 * (Math.abs(difference) - this.deviationRTT);
+            this.estimatedRTT += d * difference;
+            this.deviationRTT += d * (Math.abs(difference) - this.deviationRTT);
         }
 
         boolean isNewCongestionControlPeriod = sequenceIndex > this.nextCongestionControlBlock;
@@ -95,14 +96,14 @@ public class RakNetSlidingWindow {
         this.oldestUnsentAck = 0;
     }
 
+    @SuppressWarnings("ManualMinMaxCalculation")
     public long getRtoForRetransmission() {
         if (this.estimatedRTT == -1) {
             return CC_MAXIMUM_THRESHOLD;
         }
 
         long threshold = (long) ((2.0D * this.estimatedRTT + 4.0D * this.deviationRTT) + CC_ADDITIONAL_VARIANCE);
-
-        return Math.min(threshold, CC_MAXIMUM_THRESHOLD);
+        return threshold > CC_MAXIMUM_THRESHOLD ? CC_MAXIMUM_THRESHOLD : threshold;
     }
 
     public double getRTT() {

@@ -17,10 +17,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -45,7 +42,7 @@ public class RakNetServer extends RakNet {
     private final ServerChannelInitializer initializer = new ServerChannelInitializer();
     private final ServerMessageHandler messageHandler = new ServerMessageHandler(this);
     private final ServerDatagramHandler serverDatagramHandler = new ServerDatagramHandler(this);
-    private final RakExceptionHandler exceptionHandler = new RakExceptionHandler();
+    private final RakExceptionHandler exceptionHandler = new RakExceptionHandler(this);
 
     private volatile RakNetServerListener listener = null;
 
@@ -58,6 +55,10 @@ public class RakNetServer extends RakNet {
     }
 
     public RakNetServer(InetSocketAddress bindAddress, int bindThreads, EventLoopGroup eventLoopGroup) {
+        this(bindAddress, bindThreads, eventLoopGroup, false);
+    }
+
+    public RakNetServer(InetSocketAddress bindAddress, int bindThreads, EventLoopGroup eventLoopGroup, boolean useProxyProtocol) {
         super(eventLoopGroup);
         this.bindThreads = bindThreads;
         this.bindAddress = bindAddress;
@@ -210,7 +211,7 @@ public class RakNetServer extends RakNet {
 
     private void sendIncompatibleProtocolVersion(ChannelHandlerContext ctx, InetSocketAddress recipient) {
         ByteBuf buffer = ctx.alloc().ioBuffer(26, 26);
-        buffer.writeByte(RakNetConstants.ID_INCOMPATIBLE_PROTOCOL_VERSION);
+        buffer.writeByte(ID_INCOMPATIBLE_PROTOCOL_VERSION);
         buffer.writeByte(RAKNET_PROTOCOL_VERSION);
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
@@ -224,7 +225,7 @@ public class RakNetServer extends RakNet {
         @Override
         protected void initChannel(Channel channel) throws Exception {
             ChannelPipeline pipeline = channel.pipeline();
-            pipeline.addLast(RakOutboundHandler.NAME, new RakOutboundHandler());
+            pipeline.addLast(RakOutboundHandler.NAME, new RakOutboundHandler(RakNetServer.this));
             pipeline.addLast(ServerMessageHandler.NAME, RakNetServer.this.messageHandler);
             pipeline.addLast(ServerDatagramHandler.NAME, RakNetServer.this.serverDatagramHandler);
             pipeline.addLast(RakExceptionHandler.NAME, RakNetServer.this.exceptionHandler);

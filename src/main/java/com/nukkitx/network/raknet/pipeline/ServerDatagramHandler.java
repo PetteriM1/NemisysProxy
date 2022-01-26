@@ -46,9 +46,7 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
                 ByteBuf buf = buffer.retain();
                 session.getEventLoop().execute(() -> session.onDatagram(buf));
             }
-        }
-
-        if (this.server.getListener() != null) {
+        } else if (this.server.getListener() != null) {
             this.server.getListener().onUnhandledDatagram(ctx, packet);
         }
     }
