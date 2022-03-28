@@ -1,6 +1,7 @@
 package org.itxtech.nemisys.utils;
 
 import org.fusesource.jansi.AnsiConsole;
+import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.command.CommandReader;
 
 import java.io.*;
@@ -170,6 +171,21 @@ import java.util.concurrent.ConcurrentLinkedQueue;
                  logFile.createNewFile();
              } catch (IOException e) {
                  this.logException(e);
+             }
+         } else {
+             File oldLogs = new File(Nemisys.DATA_PATH, "logs");
+             if (!oldLogs.exists()) {
+                 oldLogs.mkdirs();
+             }
+             String newName = new SimpleDateFormat("y-M-d HH.mm.ss").format(new Date(logFile.lastModified())) + ".log";
+             logFile.renameTo(new File(oldLogs, newName));
+             logFile = new File(logPath);
+             if (!logFile.exists()) {
+                 try {
+                     logFile.createNewFile();
+                 } catch (IOException e) {
+                     this.logException(e);
+                 }
              }
          }
          /*replacements.put(TextFormat.BLACK, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).boldOff().toString());
