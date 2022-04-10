@@ -493,10 +493,6 @@ public class Server {
                 }
             }
 
-            if ((this.tickCounter & 0b1111111111) == 0) {
-                Runtime.getRuntime().gc();
-            }
-
             this.getNetwork().updateName();
         }
 

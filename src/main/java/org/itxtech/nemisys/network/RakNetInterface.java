@@ -149,7 +149,7 @@ public class RakNetInterface implements RakNetServerListener, AdvancedSourceInte
         StringJoiner joiner = new StringJoiner(";")
                 .add("MCPE")
                 .add(Utils.rtrim(name.replace(";", "\\;"), '\\'))
-                .add(Integer.toString(407))
+                .add("407")
                 .add(server.getVersion())
                 .add(Integer.toString(info.getPlayerCount()))
                 .add(Integer.toString(info.getMaxPlayerCount()))
