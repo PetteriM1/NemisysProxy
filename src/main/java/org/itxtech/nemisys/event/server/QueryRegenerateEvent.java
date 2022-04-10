@@ -114,7 +114,7 @@ public class QueryRegenerateEvent extends ServerEvent {
 
     public void setExtraData(Map<String, String> extraData) {}
 
-    private static final byte[] SPLITNUM = "splitnum".getBytes();
+    private static final byte[] SPLITNUM = "splitnum".getBytes(StandardCharsets.UTF_8);
     private static final byte[] SMP = "SMP".getBytes(StandardCharsets.UTF_8);
     private static final byte B = 0x00;
 
@@ -147,7 +147,7 @@ public class QueryRegenerateEvent extends ServerEvent {
             query.put(B);
         }
 
-        query.put(new byte[]{0x00, 0x01}).put("player_".getBytes()).put(new byte[]{0x00, 0x00});
+        query.put(new byte[]{0x00, 0x01}).put("player_".getBytes(StandardCharsets.UTF_8)).put(new byte[]{0x00, 0x00});
 
         for (Player player : this.players) {
             try {

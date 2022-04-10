@@ -19,7 +19,6 @@ import org.itxtech.nemisys.network.SynapseInterface;
 import org.itxtech.nemisys.network.protocol.mcpe.BatchPacket;
 import org.itxtech.nemisys.network.protocol.mcpe.DataPacket;
 import org.itxtech.nemisys.network.query.QueryHandler;
-import org.itxtech.nemisys.network.rcon.RCON;
 import org.itxtech.nemisys.permission.DefaultPermissions;
 import org.itxtech.nemisys.plugin.JavaPluginLoader;
 import org.itxtech.nemisys.plugin.Plugin;
@@ -67,7 +66,6 @@ public class Server {
     private final int port;
     private final String ip;
     private final String motd;
-    private RCON rcon;
     private final Network network;
     private final BaseLang baseLang;
     private final String filePath;
@@ -154,12 +152,7 @@ public class Server {
         this.handleChat = this.getPropertyBoolean("handle-chat", true);
 
         ServerScheduler.WORKERS = (int) poolSize;
-
         this.scheduler = new ServerScheduler();
-
-        if (this.getPropertyBoolean("enable-rcon", false)) {
-            this.rcon = new RCON(this, this.getPropertyString("rcon.password", ""), (!this.getIp().isEmpty()) ? this.getIp() : "0.0.0.0", this.getPropertyInt("rcon.port", this.getPort()));
-        }
 
         Nemisys.DEBUG = this.getPropertyInt("debug", 1);
         this.logger.setLogDebug(Nemisys.DEBUG > 1);
@@ -345,11 +338,6 @@ public class Server {
                 client.close(reason);
             }
 
-            if (this.rcon != null) {
-                this.getLogger().debug("Closing RCON...");
-                this.rcon.close();
-            }
-
             this.getLogger().debug("Disabling all plugins...");
             this.pluginManager.disablePlugins();
 
@@ -447,26 +435,22 @@ public class Server {
 
     private void tick() {
         long tickTime = System.currentTimeMillis();
-        long tickTimeNano = System.nanoTime();
         if ((tickTime - this.nextTick) < -5) {
             return;
         }
 
+        long tickTimeNano = System.nanoTime();
         ++this.tickCounter;
 
         this.network.processInterfaces();
         this.synapseInterface.process();
-
-        if (this.rcon != null) {
-            this.rcon.check();
-        }
-
         this.scheduler.mainThreadHeartbeat(this.tickCounter);
 
         for (Player player : new ArrayList<>(this.players.values())) {
             playerTicker.execute(() -> {
-                if (player.canTick())
+                if (player.canTick()) {
                     player.onUpdate(this.tickCounter);
+                }
             });
         }
 
@@ -921,8 +905,6 @@ public class Server {
             put("plus-one-max-count", true);
             put("players-per-thread", 30);
             put("enable-query", true);
-            put("enable-rcon", false);
-            put("rcon.password", Base64.getEncoder().encodeToString(UUID.randomUUID().toString().replace("-", "").getBytes()).substring(3, 13));
             put("debug", 1);
             put("enable-synapse-client", false);
             put("ansi", true);

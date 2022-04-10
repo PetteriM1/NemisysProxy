@@ -113,7 +113,7 @@ public class Player implements CommandSender {
                     this.uuid = loginPacket.clientUUID;
                     if (this.uuid == null) {
                         this.close(TextFormat.RED + "Error");
-                        break;
+                        return;
                     }
                     this.randomClientId = loginPacket.clientId;
                     this.protocol = loginPacket.protocol;
@@ -237,7 +237,7 @@ public class Player implements CommandSender {
         pk.uuid = this.uuid;
         pk.direct = false;
         pk.mcpeBuffer = buffer;
-        if (pk.mcpeBuffer.length >= 5240000) {
+        if (pk.mcpeBuffer.length >= 5242880) {
             this.close("Too big data packet");
         } else {
             this.client.sendDataPacket(pk);

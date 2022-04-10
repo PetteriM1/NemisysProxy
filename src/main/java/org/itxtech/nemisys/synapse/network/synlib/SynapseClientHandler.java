@@ -2,6 +2,7 @@ package org.itxtech.nemisys.synapse.network.synlib;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
 
@@ -21,18 +22,18 @@ public class SynapseClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        Server.getInstance().getLogger().debug("client-ChannelActive");
+        if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("client-ChannelActive");
         this.getSynapseClient().getSession().channel = ctx.channel();
         InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
         this.getSynapseClient().getSession().updateAddress(address);
         this.getSynapseClient().getSession().setConnected(true);
         this.getSynapseClient().setConnected(true);
-        Server.getInstance().getLogger().notice("Synapse Client has connected to " + address.getAddress().getHostAddress() + ':' + address.getPort());
+        if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().notice("Synapse Client has connected to " + address.getAddress().getHostAddress() + ':' + address.getPort());
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        Server.getInstance().getLogger().debug("client-ChannelInactive");
+        if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("client-ChannelInactive");
         this.getSynapseClient().setConnected(false);
         this.getSynapseClient().reconnect();
     }

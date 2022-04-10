@@ -1,6 +1,7 @@
 package org.itxtech.nemisys.synapse.network.synlib;
 
 import io.netty.channel.Channel;
+import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
 
@@ -120,7 +121,7 @@ public class Session {
 
     public void writePacket(SynapseDataPacket pk) {
         if (this.channel != null) {
-            Server.getInstance().getLogger().debug("client-ChannelWrite: pk=" + pk.getClass().getSimpleName() + " pkLen=" + pk.getBuffer().length);
+            if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("client-ChannelWrite: pk=" + pk.getClass().getSimpleName() + " pkLen=" + pk.getBuffer().length);
             this.channel.writeAndFlush(pk);
         }
     }

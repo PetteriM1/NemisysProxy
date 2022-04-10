@@ -1,6 +1,7 @@
 package org.itxtech.nemisys.network.synlib;
 
 import io.netty.channel.Channel;
+import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.math.NemisysMath;
 import org.itxtech.nemisys.utils.MainLogger;
@@ -71,7 +72,7 @@ public class SessionManager {
             Channel session = this.sessions.get(hash);
             if (session != null) {
                 session.writeAndFlush(data.getPacket());
-                Server.getInstance().getLogger().debug("server-writeAndFlush: hash=" + hash);
+                if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("server-writeAndFlush: hash=" + hash);
             }
             return true;
         }

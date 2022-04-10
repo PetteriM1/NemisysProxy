@@ -2,6 +2,7 @@ package org.itxtech.nemisys.network.synlib;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.network.protocol.spp.SynapseDataPacket;
 
@@ -23,7 +24,7 @@ public class SynapseServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         String hash = SessionManager.getChannelHash(ctx.channel());
-        Server.getInstance().getLogger().debug("server-ChannelActive: hash=" + hash);
+        if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("server-ChannelActive: hash=" + hash);
         this.getSessionManager().getSessions().put(hash, ctx.channel());
         this.getSessionManager().getServer().addClientOpenRequest(hash);
     }
@@ -31,7 +32,7 @@ public class SynapseServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String hash = SessionManager.getChannelHash(ctx.channel());
-        Server.getInstance().getLogger().debug("server-ChannelInactive: hash=" + hash);
+        if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("server-ChannelInactive: hash=" + hash);
         this.getSessionManager().getServer().addInternalClientCloseRequest(hash);
         this.getSessionManager().getSessions().remove(hash);
     }
@@ -41,7 +42,7 @@ public class SynapseServerHandler extends ChannelInboundHandlerAdapter {
         if (msg instanceof SynapseDataPacket) {
             SynapseDataPacket packet = (SynapseDataPacket) msg;
             String hash = SessionManager.getChannelHash(ctx.channel());
-            Server.getInstance().getLogger().debug("server-ChannelRead: hash=" + hash + " pk=" + packet.getClass().getSimpleName() + " pkLen=" + packet.getBuffer().length);
+            if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("server-ChannelRead: hash=" + hash + " pk=" + packet.getClass().getSimpleName() + " pkLen=" + packet.getBuffer().length);
             this.getSessionManager().getServer().pushThreadToMainPacket(new SynapseClientPacket(hash, packet));
         }
     }

@@ -16,8 +16,6 @@ import java.util.List;
  */
 public class SynapsePacketDecoder extends ReplayingDecoder<SynapsePacketDecoder.State> {
 
-    private static final int MAX_BODY_SIZE = 5242880; // 1024 * 1024 * 5
-
     private final SynapseProtocolHeader header = new SynapseProtocolHeader();
 
     public SynapsePacketDecoder() {
@@ -39,22 +37,19 @@ public class SynapsePacketDecoder extends ReplayingDecoder<SynapsePacketDecoder.
                 header.bodyLength(in.readInt());
                 checkpoint(State.BODY);
             case BODY:
-                int bodyLength = checkBodyLength(header.bodyLength());
-                byte[] bytes = new byte[bodyLength];
-                in.readBytes(bytes);
-                out.add(SynapseInterface.getPacket((byte) header.pid(), bytes));
-                break;
+                int bodyLength = header.bodyLength();
+                if (bodyLength < 6291456) {
+                    byte[] bytes = new byte[bodyLength];
+                    in.readBytes(bytes);
+                    out.add(SynapseInterface.getPacket((byte) header.pid(), bytes));
+                    break;
+                } else {
+                    throw new SynapseContextException("Body of request is bigger than limit value 5242880");
+                }
             default:
                 break;
         }
         checkpoint(State.HEADER_MAGIC);
-    }
-
-    private static int checkBodyLength(int bodyLength) throws SynapseContextException {
-        if (bodyLength > MAX_BODY_SIZE) {
-            throw new SynapseContextException("Body of request is bigger than limit value 5242880");
-        }
-        return bodyLength;
     }
 
     enum State {
