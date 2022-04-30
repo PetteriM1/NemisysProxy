@@ -109,7 +109,7 @@ public class QueryRegenerateEvent extends ServerEvent {
     }
 
     public Map<String, String> getExtraData() {
-        return new HashMap<String, String>();
+        return new HashMap<>();
     }
 
     public void setExtraData(Map<String, String> extraData) {}

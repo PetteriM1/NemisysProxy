@@ -1,7 +1,5 @@
 package org.itxtech.nemisys.utils;
 
-import com.google.common.collect.Maps;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -107,17 +105,14 @@ public enum TextFormat {
     public static final char ESCAPE = '\u00A7';
 
     private static final Pattern CLEAN_PATTERN = Pattern.compile("(?i)" + ESCAPE + "[0-9A-GK-OR]");
-    private final static Map<Integer, TextFormat> BY_ID = Maps.newTreeMap();
     private final static Map<Character, TextFormat> BY_CHAR = new HashMap<>();
 
     static {
         for (TextFormat color : values()) {
-            BY_ID.put(color.intCode, color);
             BY_CHAR.put(color.code, color);
         }
     }
 
-    private final int intCode;
     private final char code;
     private final boolean isFormat;
     private final String toString;
@@ -128,7 +123,6 @@ public enum TextFormat {
 
     TextFormat(char code, int intCode, boolean isFormat) {
         this.code = code;
-        this.intCode = intCode;
         this.isFormat = isFormat;
         this.toString = new String(new char[]{ESCAPE, code});
     }

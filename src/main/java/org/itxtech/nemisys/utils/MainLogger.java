@@ -22,8 +22,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
      protected AtomicBoolean shutdown = new AtomicBoolean(false);
      protected AtomicBoolean isShutdown = new AtomicBoolean(false);
      protected LogLevel logLevel = LogLevel.DEFAULT_LEVEL;
-     //private final Map<TextFormat, String> replacements = new EnumMap<>(TextFormat.class);
-     //private final TextFormat[] colors = TextFormat.values();
 
      protected static MainLogger logger;
      private File logFile;
@@ -33,9 +31,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
      }
  
      public MainLogger(String logFile, LogLevel logLevel) {
- 
          if (logger != null) {
-             throw new RuntimeException("MainLogger has been already created");
+             throw new RuntimeException("MainLogger has been created already");
          }
          logger = this;
          this.logPath = logFile;
@@ -134,23 +131,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
          logBuffer.add(message);
      }
  
-    /*private String colorize(String string) {
-         if (string.indexOf(TextFormat.ESCAPE) < 0) {
-             return string;
-         } else if (Nemisys.ANSI) {
-             for (TextFormat color : colors) {
-                 if (replacements.containsKey(color)) {
-                     string = string.replaceAll("(?i)" + color, replacements.get(color));
-                 } else {
-                     string = string.replaceAll("(?i)" + color, "");
-                 }
-             }
-         } else {
-             return TextFormat.clean(string);
-         }
-         return string + Ansi.ansi().reset();
-     }*/
- 
      @Override
      public void run() {
          do {
@@ -188,27 +168,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
                  }
              }
          }
-         /*replacements.put(TextFormat.BLACK, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).boldOff().toString());
-         replacements.put(TextFormat.DARK_BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).boldOff().toString());
-         replacements.put(TextFormat.DARK_GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).boldOff().toString());
-         replacements.put(TextFormat.DARK_AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).boldOff().toString());
-         replacements.put(TextFormat.DARK_RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).boldOff().toString());
-         replacements.put(TextFormat.DARK_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).boldOff().toString());
-         replacements.put(TextFormat.GOLD, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).boldOff().toString());
-         replacements.put(TextFormat.GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).boldOff().toString());
-         replacements.put(TextFormat.DARK_GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).bold().toString());
-         replacements.put(TextFormat.BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).bold().toString());
-         replacements.put(TextFormat.GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).bold().toString());
-         replacements.put(TextFormat.AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).bold().toString());
-         replacements.put(TextFormat.RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).bold().toString());
-         replacements.put(TextFormat.LIGHT_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).bold().toString());
-         replacements.put(TextFormat.YELLOW, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).bold().toString());
-         replacements.put(TextFormat.WHITE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).bold().toString());
-         replacements.put(TextFormat.BOLD, Ansi.ansi().a(Ansi.Attribute.UNDERLINE_DOUBLE).toString());
-         replacements.put(TextFormat.STRIKETHROUGH, Ansi.ansi().a(Ansi.Attribute.STRIKETHROUGH_ON).toString());
-         replacements.put(TextFormat.UNDERLINE, Ansi.ansi().a(Ansi.Attribute.UNDERLINE).toString());
-         replacements.put(TextFormat.ITALIC, Ansi.ansi().a(Ansi.Attribute.ITALIC).toString());
-         replacements.put(TextFormat.RESET, Ansi.ansi().a(Ansi.Attribute.RESET).toString());*/
      }
  
      private void waitForMessage() {

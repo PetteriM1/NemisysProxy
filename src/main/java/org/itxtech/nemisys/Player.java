@@ -37,7 +37,7 @@ public class Player implements CommandSender {
     private int unverifiedPackets;
     @Getter
     protected UUID uuid;
-    private byte[] cachedLoginPacket = new byte[0];
+    private byte[] cachedLoginPacket;
     @Getter
     private String name;
     @Getter

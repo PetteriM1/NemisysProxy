@@ -69,7 +69,6 @@ public class Client {
         this.server.getPluginManager().callEvent(new ClientConnectEvent(this));
     }
 
-
     public String getHash() {
         return this.ip + ':' + this.port;
     }

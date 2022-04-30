@@ -80,8 +80,7 @@ public class Server {
     private final Map<String, Client> clients = new ConcurrentHashMap<>();
     private ClientData clientData = new ClientData();
     private String clientDataJson = "";
-    private final Map<String, Client> mainClients = new ConcurrentHashMap<>();
-    private final Map<String, Client> lobbyClients = new ConcurrentHashMap<>();
+    private final Map<String, Client> mainServers = new ConcurrentHashMap<>();
     private Synapse synapse;
     private final int compressionLevel;
     public final int dataLimit;
@@ -212,7 +211,7 @@ public class Server {
     public void addClient(Client client) {
         this.clients.put(client.getHash(), client);
         if (client.isLobbyServer()) {
-            this.mainClients.put(client.getHash(), client);
+            this.mainServers.put(client.getHash(), client);
         }
     }
 
@@ -228,16 +227,16 @@ public class Server {
     }
 
     public Map<String, Client> getMainClients() {
-        return this.mainClients;
+        return this.mainServers;
     }
 
     public Map<String, Client> getLobbyClients() {
-        return this.lobbyClients;
+        return this.mainServers;
     }
 
     public void removeClient(Client client) {
         if (this.clients.containsKey(client.getHash())) {
-            this.mainClients.remove(client.getHash());
+            this.mainServers.remove(client.getHash());
             this.clients.remove(client.getHash());
         }
     }
@@ -386,6 +385,8 @@ public class Server {
         this.forceShutdown();
     }
 
+    private static final byte[] PREFIX = {(byte) 0xfe, (byte) 0xfd};
+
     public void handlePacket(InetSocketAddress address, ByteBuf payload) {
         try {
             if (!payload.isReadable(3)) {
@@ -394,7 +395,7 @@ public class Server {
             byte[] prefix = new byte[2];
             payload.readBytes(prefix);
 
-            if (!Arrays.equals(prefix, new byte[]{(byte) 0xfe, (byte) 0xfd})) {
+            if (!Arrays.equals(prefix, PREFIX)) {
                 return;
             }
             if (this.queryHandler != null) {
@@ -402,8 +403,7 @@ public class Server {
             }
         } catch (Exception e) {
             this.logger.logException(e);
-
-            this.network.blockAddress(address.getAddress(), -1);
+            this.network.blockAddress(address.getAddress(), 300);
         }
     }
 
@@ -879,8 +879,8 @@ public class Server {
 
     private void adjustPoolSize() {
         int threads = Math.min(Math.max(1, players.size() / this.playersPerThread), Runtime.getRuntime().availableProcessors());
-        if (playerTicker.getMaximumPoolSize() != threads) {
-            playerTicker.setMaximumPoolSize(threads);
+        if (playerTicker.getCorePoolSize() != threads) {
+            playerTicker.setCorePoolSize(threads);
         }
     }
 

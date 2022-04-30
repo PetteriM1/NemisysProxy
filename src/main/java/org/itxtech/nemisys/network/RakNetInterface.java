@@ -127,11 +127,13 @@ public class RakNetInterface implements RakNetServerListener, AdvancedSourceInte
     @Override
     public void blockAddress(InetAddress address) {
         this.raknet.block(address);
+        this.server.getLogger().info("Blocked " + address + " permanently");
     }
 
     @Override
     public void blockAddress(InetAddress address, int timeout) {
         this.raknet.block(address, timeout, TimeUnit.SECONDS);
+        this.server.getLogger().info("Blocked " + address + " for " + timeout + " seconds");
     }
 
     public void unblockAddress(InetAddress address) {
