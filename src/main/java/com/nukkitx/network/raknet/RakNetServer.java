@@ -1,7 +1,6 @@
 package com.nukkitx.network.raknet;
 
 import com.nukkitx.network.raknet.pipeline.*;
-import com.nukkitx.network.raknet.util.RoundRobinIterator;
 import com.nukkitx.network.util.Bootstraps;
 import com.nukkitx.network.util.DisconnectReason;
 import com.nukkitx.network.util.EventLoops;
@@ -36,15 +35,13 @@ public class RakNetServer extends RakNet {
     private final InetSocketAddress bindAddress;
     private final int bindThreads;
 
-    private final Set<Channel> channels = new HashSet<>();
-    private final Iterator<Channel> channelIterator = new RoundRobinIterator<>(channels);
-
     private final ServerChannelInitializer initializer = new ServerChannelInitializer();
     private final ServerMessageHandler messageHandler = new ServerMessageHandler(this);
     private final ServerDatagramHandler serverDatagramHandler = new ServerDatagramHandler(this);
     private final RakExceptionHandler exceptionHandler = new RakExceptionHandler(this);
 
     private volatile RakNetServerListener listener = null;
+    private volatile Channel channel;
 
     public RakNetServer(InetSocketAddress bindAddress) {
         this(bindAddress, 1);
@@ -76,7 +73,9 @@ public class RakNetServer extends RakNet {
     }
 
     public void send(InetSocketAddress address, ByteBuf buffer) {
-        this.channelIterator.next().writeAndFlush(new DatagramPacket(buffer, address));
+        if (this.channel != null) {
+            this.channel.writeAndFlush(new DatagramPacket(buffer, address));
+        }
     }
 
     @Override
@@ -85,8 +84,8 @@ public class RakNetServer extends RakNet {
         for (RakNetServerSession session : this.sessionsByAddress.values()) {
             session.disconnect(DisconnectReason.SHUTTING_DOWN);
         }
-        for (Channel channel : this.channels) {
-            channel.close().syncUninterruptibly();
+        if (this.channel != null) {
+            this.channel.close().syncUninterruptibly();
         }
     }
 
@@ -229,7 +228,7 @@ public class RakNetServer extends RakNet {
             pipeline.addLast(ServerMessageHandler.NAME, RakNetServer.this.messageHandler);
             pipeline.addLast(ServerDatagramHandler.NAME, RakNetServer.this.serverDatagramHandler);
             pipeline.addLast(RakExceptionHandler.NAME, RakNetServer.this.exceptionHandler);
-            RakNetServer.this.channels.add(channel);
+            RakNetServer.this.channel = channel;
         }
     }
 }

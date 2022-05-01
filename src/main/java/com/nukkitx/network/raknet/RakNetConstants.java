@@ -80,7 +80,7 @@ public class RakNetConstants {
     /**
      * Magic used to identify RakNet packets
      */
-    static final byte[] RAKNET_UNCONNECTED_MAGIC = new byte[]{
+    static final byte[] RAKNET_UNCONNECTED_MAGIC = {
             0, -1, -1, 0, -2, -2, -2, -2, -3, -3, -3, -3, 18, 52, 86, 120
     };
 
