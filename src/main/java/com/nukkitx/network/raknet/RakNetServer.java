@@ -31,6 +31,7 @@ public class RakNetServer extends RakNet {
 
     private final ConcurrentMap<InetAddress, Long> blockAddresses = new ConcurrentHashMap<>();
     final ConcurrentMap<InetSocketAddress, RakNetServerSession> sessionsByAddress = new ConcurrentHashMap<>();
+    public final ConcurrentMap<InetAddress, Integer> packetsPerSecond = new ConcurrentHashMap<>();
 
     private final InetSocketAddress bindAddress;
     private final int bindThreads;
@@ -59,6 +60,7 @@ public class RakNetServer extends RakNet {
         super(eventLoopGroup);
         this.bindThreads = bindThreads;
         this.bindAddress = bindAddress;
+        Server.getInstance().getScheduler().scheduleRepeatingTask(packetsPerSecond::clear, 20, true);
     }
 
     @Override
@@ -196,7 +198,7 @@ public class RakNetServer extends RakNet {
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
         ctx.writeAndFlush(new DatagramPacket(buffer, recipient));
-        Server.getInstance().getLogger().debug("Already connected");
+        Server.getInstance().getLogger().info(recipient + " already connected");
     }
 
     private void sendConnectionBanned(ChannelHandlerContext ctx, InetSocketAddress recipient) {
@@ -205,7 +207,7 @@ public class RakNetServer extends RakNet {
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
         ctx.writeAndFlush(new DatagramPacket(buffer, recipient));
-        Server.getInstance().getLogger().debug("Connection banned");
+        Server.getInstance().getLogger().info(recipient + " connection banned");
     }
 
     private void sendIncompatibleProtocolVersion(ChannelHandlerContext ctx, InetSocketAddress recipient) {
@@ -215,7 +217,7 @@ public class RakNetServer extends RakNet {
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
         ctx.writeAndFlush(new DatagramPacket(buffer, recipient));
-        Server.getInstance().getLogger().debug("Incompatible protocol");
+        Server.getInstance().getLogger().info(recipient + " incompatible protocol");
     }
 
     @ChannelHandler.Sharable

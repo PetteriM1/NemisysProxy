@@ -28,7 +28,7 @@ public class SynapseClientHandler extends ChannelInboundHandlerAdapter {
         this.getSynapseClient().getSession().updateAddress(address);
         this.getSynapseClient().getSession().setConnected(true);
         this.getSynapseClient().setConnected(true);
-        if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().notice("Synapse Client has connected to " + address.getAddress().getHostAddress() + ':' + address.getPort());
+        Server.getInstance().getLogger().notice("Synapse Client has connected to " + address.getAddress().getHostAddress() + ':' + address.getPort());
     }
 
     @Override

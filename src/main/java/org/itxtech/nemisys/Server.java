@@ -84,6 +84,7 @@ public class Server {
     private Synapse synapse;
     private final int compressionLevel;
     public final int dataLimit;
+    public static int packetLimit = 1000;
     final boolean handleChat;
     final boolean callDataPkSendEv;
     final boolean callDataPkReceiveEv;
@@ -149,6 +150,7 @@ public class Server {
         this.queryVersion = this.getPropertyString("query-version", "1.18.0");
         this.dataLimit = this.getPropertyInt("data-limit", 2097152);
         this.handleChat = this.getPropertyBoolean("handle-chat", true);
+        packetLimit = this.getPropertyInt("packet-limit", 1000);
 
         ServerScheduler.WORKERS = (int) poolSize;
         this.scheduler = new ServerScheduler();
@@ -403,7 +405,7 @@ public class Server {
             }
         } catch (Exception e) {
             this.logger.logException(e);
-            this.network.blockAddress(address.getAddress(), 300);
+            this.network.blockAddress(address.getAddress(), 120);
         }
     }
 
@@ -918,6 +920,7 @@ public class Server {
             put("handle-chat", true);
             put("min-mtu", 576);
             put("max-mtu", 1492);
+            put("packet-limit", 1000);
         }
     }
 }
