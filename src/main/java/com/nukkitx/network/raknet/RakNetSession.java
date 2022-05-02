@@ -73,6 +73,8 @@ public abstract class RakNetSession implements SessionConnection<ByteBuf> {
     private Queue<IntRange> outgoingNaks;
     private int unackedBytes;
     private long lastMinWeight;
+    public volatile int pps;
+    private long lastUpdate;
 
     RakNetSession(InetSocketAddress address, Channel channel, EventLoop eventLoop, int mtu, int protocolVersion) {
         this.address = address;
@@ -411,6 +413,10 @@ public abstract class RakNetSession implements SessionConnection<ByteBuf> {
             return;
         }
         this.tick(curTime);
+        if (curTime - this.lastUpdate > 1000) {
+            this.pps = 0;
+            this.lastUpdate = curTime;
+        }
     }
 
     protected void tick(long curTime) {
@@ -432,16 +438,11 @@ public abstract class RakNetSession implements SessionConnection<ByteBuf> {
 
         // Send known outgoing acknowledge packets.
         final int mtu = this.adjustedMtu - RAKNET_DATAGRAM_HEADER_SIZE;
-        int writtenAcks = 0;
-        int writtenNacks = 0;
-
-        // if (this.slidingWindow.shouldSendAcks(curTime)) {
-        // }
 
         while (!this.outgoingAcks.isEmpty()) {
             ByteBuf buffer = this.allocateBuffer(mtu);
             buffer.writeByte(FLAG_VALID | FLAG_ACK);
-            writtenAcks += RakNetUtils.writeIntRanges(buffer, this.outgoingAcks, mtu - 1);
+            RakNetUtils.writeIntRanges(buffer, this.outgoingAcks, mtu - 1);
             this.sendDirect(buffer);
             this.slidingWindow.onSendAck();
         }
@@ -449,7 +450,7 @@ public abstract class RakNetSession implements SessionConnection<ByteBuf> {
         while (!this.outgoingNaks.isEmpty()) {
             ByteBuf buffer = this.allocateBuffer(mtu);
             buffer.writeByte(FLAG_VALID | FLAG_NACK);
-            writtenNacks += RakNetUtils.writeIntRanges(buffer, this.outgoingNaks, mtu - 1);
+            RakNetUtils.writeIntRanges(buffer, this.outgoingNaks, mtu - 1);
             this.sendDirect(buffer);
         }
 

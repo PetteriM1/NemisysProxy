@@ -3,11 +3,16 @@ package com.nukkitx.network.raknet.pipeline;
 import com.nukkitx.network.raknet.RakNetServer;
 import com.nukkitx.network.raknet.RakNetServerSession;
 import com.nukkitx.network.raknet.RakNetUtils;
+import com.nukkitx.network.util.DisconnectReason;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
+import org.itxtech.nemisys.Server;
+
+import java.net.InetAddress;
+import java.util.concurrent.TimeUnit;
 
 import static com.nukkitx.network.raknet.RakNetConstants.*;
 
@@ -23,6 +28,31 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
+        RakNetServerSession session = this.server.getSession(packet.sender());
+
+        if (session == null) {
+            InetAddress address = packet.sender().getAddress();
+            Integer pps = this.server.packetsPerSecond.get(address);
+            if (pps == null) pps = 0;
+            pps++;
+            if (pps > Server.packetLimit) {
+                Server.getInstance().getLogger().warning("Too many packets per second from " + address);
+                this.server.block(address, 120, TimeUnit.SECONDS);
+                return;
+            }
+            this.server.packetsPerSecond.put(address, pps);
+        } else {
+            int pps = session.pps + 1;
+            if (pps > Server.packetLimit) {
+                InetAddress address = packet.sender().getAddress();
+                Server.getInstance().getLogger().warning("Too many packets per second from " + address);
+                this.server.block(address, 120, TimeUnit.SECONDS);
+                session.disconnect(DisconnectReason.BAD_PACKET);
+                return;
+            }
+            session.pps = pps;
+        }
+
         ByteBuf buffer = packet.content();
         short packetId = buffer.readByte();
 
@@ -38,16 +68,17 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
 
         buffer.readerIndex(0);
 
-        RakNetServerSession session = this.server.getSession(packet.sender());
-        if (session != null) {
+        if (session == null) {
+            if (this.server.getListener() != null) {
+                this.server.getListener().onUnhandledDatagram(ctx, packet);
+            }
+        } else {
             if (session.getEventLoop().inEventLoop()) {
                 session.onDatagram(buffer.retain());
             } else {
                 ByteBuf buf = buffer.retain();
                 session.getEventLoop().execute(() -> session.onDatagram(buf));
             }
-        } else if (this.server.getListener() != null) {
-            this.server.getListener().onUnhandledDatagram(ctx, packet);
         }
     }
 
