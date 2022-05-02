@@ -162,7 +162,7 @@ public final class ClientChainData {
             throw new SkinException("The skin data is too big: " + size);
         }
 
-        JsonObject skinToken = decodeToken(new String(bs.get(size)));
+        JsonObject skinToken = decodeToken(new String(bs.get(size), StandardCharsets.UTF_8));
         if (skinToken == null) return;
         if (skinToken.has("ClientRandomId")) this.clientId = skinToken.get("ClientRandomId").getAsLong();
         if (skinToken.has("ServerAddress")) this.serverAddress = skinToken.get("ServerAddress").getAsString();
@@ -178,7 +178,7 @@ public final class ClientChainData {
         if (skinToken.has("UIProfile")) this.UIProfile = skinToken.get("UIProfile").getAsInt();
     }
 
-    private JsonObject decodeToken(String token) {
+    private static JsonObject decodeToken(String token) {
         String[] base = token.split("\\.");
         if (base.length < 2) return null;
         return GSON.fromJson(new String(Base64.getDecoder().decode(base[1]), StandardCharsets.UTF_8), JsonObject.class);
