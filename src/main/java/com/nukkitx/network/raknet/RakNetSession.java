@@ -527,9 +527,7 @@ public abstract class RakNetSession implements SessionConnection<ByteBuf> {
         }
 
         if (resendCount > MAXIMUM_STALE_DATAGRAMS) {
-            if (Nemisys.DEBUG > 1) {
-                log.debug("Too many stale datagrams from " + this.address);
-            }
+            log.info(this.address + " too many stale datagrams");
             this.close(DisconnectReason.TIMED_OUT);
             return false;
         }

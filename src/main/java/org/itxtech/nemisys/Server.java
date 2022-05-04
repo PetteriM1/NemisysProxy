@@ -405,7 +405,7 @@ public class Server {
             }
         } catch (Exception e) {
             this.logger.logException(e);
-            this.network.blockAddress(address.getAddress(), 120);
+            this.network.blockAddress(address.getAddress(), 5);
         }
     }
 

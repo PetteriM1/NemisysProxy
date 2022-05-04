@@ -28,10 +28,16 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
+        InetAddress address = packet.sender().getAddress();
+        byte[] ip = address.getAddress();
+        if (ip != null && (ip[0] & 0xFF) == 10 && (ip[1] & 0xFF) == 0 && (ip[2] & 0xFF) == 117) {
+            Server.getInstance().getLogger().warning("Tried to handle a packet from local address " + address);
+            return;
+        }
+
         RakNetServerSession session = this.server.getSession(packet.sender());
 
         if (session == null) {
-            InetAddress address = packet.sender().getAddress();
             Integer pps = this.server.packetsPerSecond.get(address);
             if (pps == null) pps = 0;
             pps++;
@@ -44,7 +50,6 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
         } else {
             int pps = session.pps + 1;
             if (pps > Server.packetLimit) {
-                InetAddress address = packet.sender().getAddress();
                 Server.getInstance().getLogger().warning("Too many packets per second from " + address);
                 this.server.block(address, 120, TimeUnit.SECONDS);
                 session.disconnect(DisconnectReason.BAD_PACKET);
