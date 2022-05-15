@@ -89,6 +89,7 @@ public class Server {
     final boolean callDataPkSendEv;
     final boolean callDataPkReceiveEv;
     public final boolean plusOnePlayerCount;
+    public final boolean enableQuery;
     private final String queryVersion;
     @SuppressWarnings("unused")
     public int uptime = 0;
@@ -189,6 +190,8 @@ public class Server {
         if (this.getPropertyBoolean("thread-watchdog", true)) {
             new Watchdog(this, 50000).start();
         }
+
+        this.enableQuery = this.getPropertyBoolean("enable-query", true);
 
         this.start();
     }
@@ -377,7 +380,7 @@ public class Server {
             this.getLogger().info("Done (" + (double) (System.currentTimeMillis() - Nemisys.START_TIME) / 1000 + "s)! For help, type \"help\"");
         }
 
-        if (this.getPropertyBoolean("enable-query", true)) {
+        if (enableQuery) {
             this.queryHandler = new QueryHandler();
         }
 

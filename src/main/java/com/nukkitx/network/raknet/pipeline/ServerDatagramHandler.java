@@ -42,7 +42,7 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
             if (pps == null) pps = 0;
             pps++;
             if (pps > Server.packetLimit) {
-                Server.getInstance().getLogger().warning("Too many packets per second from " + address);
+                Server.getInstance().getLogger().warning("[No Session] Too many packets per second from " + address);
                 this.server.block(address, 120, TimeUnit.SECONDS);
                 return;
             }
@@ -50,7 +50,7 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
         } else {
             int pps = session.pps + 1;
             if (pps > Server.packetLimit) {
-                Server.getInstance().getLogger().warning("Too many packets per second from " + address);
+                Server.getInstance().getLogger().warning("[RakNetServerSession] Too many packets per second from " + address);
                 this.server.block(address, 120, TimeUnit.SECONDS);
                 session.disconnect(DisconnectReason.BAD_PACKET);
                 return;
@@ -71,13 +71,15 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
                 return;
         }
 
-        buffer.readerIndex(0);
-
         if (session == null) {
-            if (this.server.getListener() != null) {
-                this.server.getListener().onUnhandledDatagram(ctx, packet);
+            if (Server.getInstance().enableQuery) {
+                buffer.readerIndex(0);
+                if (this.server.getListener() != null) {
+                    this.server.getListener().onUnhandledDatagram(ctx, packet);
+                }
             }
         } else {
+            buffer.readerIndex(0);
             if (session.getEventLoop().inEventLoop()) {
                 session.onDatagram(buffer.retain());
             } else {
