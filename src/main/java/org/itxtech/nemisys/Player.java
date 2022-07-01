@@ -56,6 +56,7 @@ public class Player implements CommandSender {
     private boolean isFirstTimeLogin = true;
     @Getter
     private ClientChainData loginChainData;
+    private boolean loggedIn;
 
     protected Set<Long> spawnedEntities = new HashSet<>();
 
@@ -107,6 +108,11 @@ public class Player implements CommandSender {
 
             switch (packet.pid()) {
                 case ProtocolInfo.LOGIN_PACKET:
+                    if (loggedIn) {
+                        this.close("Invalid Login Packet");
+                        return;
+                    }
+                    this.loggedIn = true;
                     LoginPacket loginPacket = (LoginPacket) packet;
                     this.cachedLoginPacket = loginPacket.cacheBuffer;
                     this.name = loginPacket.username;
@@ -120,7 +126,7 @@ public class Player implements CommandSender {
                     try {
                         this.loginChainData = ClientChainData.read(loginPacket);
                     } catch (SkinException ex) {
-                        this.close("Invalid Skin Data");
+                        this.close("Too big login data (skin?!)");
                         return;
                     } catch (Exception ex) {
                         getServer().getLogger().logException(ex);

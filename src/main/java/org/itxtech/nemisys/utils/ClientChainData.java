@@ -136,7 +136,7 @@ public final class ClientChainData {
     private void decodeChainData() {
         int size = bs.getLInt();
         if (size > Server.getInstance().dataLimit) {
-            throw new RuntimeException("The chain data is too big: " + size);
+            throw new SkinException("The chain data is too big: " + size);
         }
 
         Map<String, List<String>> map = GSON.fromJson(new String(bs.get(size), StandardCharsets.UTF_8),

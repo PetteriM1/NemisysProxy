@@ -141,15 +141,15 @@ public class Server {
         this.synapsePassword = Hashing.md5().hashBytes(this.getPropertyString("password", "must16keyslength").getBytes(StandardCharsets.UTF_8)).toString();
         this.callDataPkSendEv = this.getPropertyBoolean("call-data-pk-send-ev", false);
         this.callDataPkReceiveEv = this.getPropertyBoolean("call-data-pk-receive-ev", false);
-        this.compressionLevel = Math.max(Math.min(this.getPropertyInt("compression-level", 7), 9), 0);
+        this.compressionLevel = Math.max(Math.min(this.getPropertyInt("compression-level", 6), 9), 0);
         this.playersPerThread = this.getPropertyInt("players-per-thread", 30);
         this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
         this.motd = this.getPropertyString("motd", "Nemisys Proxy");
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
         this.maxPlayers = this.getPropertyInt("max-players", 50);
-        this.queryVersion = this.getPropertyString("query-version", "1.18.0");
-        this.dataLimit = this.getPropertyInt("data-limit", 2097152);
+        this.queryVersion = this.getPropertyString("query-version", "1.19.0");
+        this.dataLimit = this.getPropertyInt("data-limit", 2621440);
         this.handleChat = this.getPropertyBoolean("handle-chat", true);
         packetLimit = this.getPropertyInt("packet-limit", 1000);
 
@@ -915,8 +915,8 @@ public class Server {
             put("ansi", true);
             put("send-start-message", false);
             put("compression-level", 6);
-            put("query-version", "1.18.0");
-            put("data-limit", 2097152);
+            put("query-version", "1.19.0");
+            put("data-limit", 2621440);
             put("thread-watchdog", true);
             put("call-data-pk-send-ev", false);
             put("call-data-pk-receive-ev", false);
