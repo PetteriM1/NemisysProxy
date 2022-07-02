@@ -83,13 +83,13 @@ public class Server {
     private final Map<String, Client> mainServers = new ConcurrentHashMap<>();
     private Synapse synapse;
     private final int compressionLevel;
-    public final int dataLimit;
+    public static int dataLimit;
     public static int packetLimit = 1000;
-    final boolean handleChat;
-    final boolean callDataPkSendEv;
-    final boolean callDataPkReceiveEv;
+    static boolean handleChat;
+    static boolean callDataPkSendEv;
+    static boolean callDataPkReceiveEv;
     public final boolean plusOnePlayerCount;
-    public final boolean enableQuery;
+    public static boolean enableQuery;
     private final String queryVersion;
     @SuppressWarnings("unused")
     public int uptime = 0;
@@ -139,8 +139,6 @@ public class Server {
         }
 
         this.synapsePassword = Hashing.md5().hashBytes(this.getPropertyString("password", "must16keyslength").getBytes(StandardCharsets.UTF_8)).toString();
-        this.callDataPkSendEv = this.getPropertyBoolean("call-data-pk-send-ev", false);
-        this.callDataPkReceiveEv = this.getPropertyBoolean("call-data-pk-receive-ev", false);
         this.compressionLevel = Math.max(Math.min(this.getPropertyInt("compression-level", 6), 9), 0);
         this.playersPerThread = this.getPropertyInt("players-per-thread", 30);
         this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
@@ -149,8 +147,10 @@ public class Server {
         this.port = this.getPropertyInt("server-port", 19132);
         this.maxPlayers = this.getPropertyInt("max-players", 50);
         this.queryVersion = this.getPropertyString("query-version", "1.19.0");
-        this.dataLimit = this.getPropertyInt("data-limit", 2621440);
-        this.handleChat = this.getPropertyBoolean("handle-chat", true);
+        callDataPkSendEv = this.getPropertyBoolean("call-data-pk-send-ev", false);
+        callDataPkReceiveEv = this.getPropertyBoolean("call-data-pk-receive-ev", false);
+        dataLimit = this.getPropertyInt("data-limit", 2621440);
+        handleChat = this.getPropertyBoolean("handle-chat", true);
         packetLimit = this.getPropertyInt("packet-limit", 1000);
 
         ServerScheduler.WORKERS = (int) poolSize;
@@ -191,7 +191,7 @@ public class Server {
             new Watchdog(this, 50000).start();
         }
 
-        this.enableQuery = this.getPropertyBoolean("enable-query", true);
+        enableQuery = this.getPropertyBoolean("enable-query", true);
 
         this.start();
     }

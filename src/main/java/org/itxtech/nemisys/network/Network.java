@@ -154,24 +154,15 @@ public class Network {
                 }
             }
 
-            processPackets(player, packets);
+            for (DataPacket pk : packets) {
+                player.addOutgoingPacket(pk);
+            }
         } catch (Exception e) {
             if (Nemisys.DEBUG > 0) {
                 this.server.getLogger().debug("BatchPacket 0x" + Binary.bytesToHexString(packet.payload));
             }
             this.server.getLogger().logException(e);
         }
-    }
-
-    /**
-     * Process packets obtained from batch packets
-     * Required to perform additional analyses and filter unnecessary packets
-     *
-     * @param packets
-     */
-    public void processPackets(Player player, List<DataPacket> packets) {
-        if (packets.isEmpty()) return;
-        packets.forEach(player::addOutgoingPacket);
     }
 
 

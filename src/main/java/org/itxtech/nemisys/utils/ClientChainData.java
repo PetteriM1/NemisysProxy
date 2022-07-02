@@ -135,7 +135,7 @@ public final class ClientChainData {
 
     private void decodeChainData() {
         int size = bs.getLInt();
-        if (size > Server.getInstance().dataLimit) {
+        if (size > Server.dataLimit) {
             throw new SkinException("The chain data is too big: " + size);
         }
 
@@ -158,7 +158,7 @@ public final class ClientChainData {
 
     private void decodeSkinData() {
         int size = bs.getLInt();
-        if (size > Server.getInstance().dataLimit) {
+        if (size > Server.dataLimit) {
             throw new SkinException("The skin data is too big: " + size);
         }
 

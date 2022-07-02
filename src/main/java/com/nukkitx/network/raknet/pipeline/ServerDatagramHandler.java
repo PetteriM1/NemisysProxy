@@ -72,7 +72,7 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
         }
 
         if (session == null) {
-            if (Server.getInstance().enableQuery) {
+            if (Server.enableQuery) {
                 buffer.readerIndex(0);
                 if (this.server.getListener() != null) {
                     this.server.getListener().onUnhandledDatagram(ctx, packet);

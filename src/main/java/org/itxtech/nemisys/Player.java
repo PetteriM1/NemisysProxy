@@ -34,48 +34,46 @@ public class Player implements CommandSender {
 
     public boolean closed;
     private boolean verified;
+    private boolean loggedIn;
+    private boolean isFirstTimeLogin = true;
     private int unverifiedPackets;
+    private final int[] receivedPackets = new int[256];
+    private final AtomicBoolean ticking = new AtomicBoolean();
     @Getter
     protected UUID uuid;
     private byte[] cachedLoginPacket;
     @Getter
-    private String name;
+    private String name = "";
     @Getter
     private final InetSocketAddress socketAddress;
     @Getter
     private final long clientId;
     @Getter
     private long randomClientId;
-    @Getter
-    private int protocol = -1;
+    public int protocol = -1;
     public int raknetProtocol;
     @Getter
     private final SourceInterface interfaz;
     @Getter
     private Client client;
-    private boolean isFirstTimeLogin = true;
     @Getter
     private ClientChainData loginChainData;
-    private boolean loggedIn;
-
-    protected Set<Long> spawnedEntities = new HashSet<>();
-
-    protected final Queue<DataPacket> incomingPackets = new ConcurrentLinkedQueue<>();
-    protected final Queue<DataPacket> outgoingPackets = new ConcurrentLinkedQueue<>();
-
-    private final AtomicBoolean ticking = new AtomicBoolean();
-
     private final PermissibleBase perm;
+    @Getter
+    private final Server server;
 
-    protected final Map<String, Set<Long>> scoreboards = new HashMap<>();
+    private final Set<Long> spawnedEntities = new HashSet<>();
+    private final Map<String, Set<Long>> scoreboards = new HashMap<>();
 
-    private final Queue<DataPacket> packetQueue = new ConcurrentLinkedDeque<>();
+    private final Queue<DataPacket> synapseIncomingPackets = new ConcurrentLinkedQueue<>();
+    private final Queue<DataPacket> synapseOutgoingPackets = new ConcurrentLinkedQueue<>();
+    private final Queue<DataPacket> outgoingPacketQueue = new ConcurrentLinkedDeque<>();
 
     public Player(SourceInterface interfaz, Long clientID, InetSocketAddress socketAddress) {
+        this.server = Server.getInstance();
         this.interfaz = interfaz;
         this.clientId = clientID;
         this.socketAddress = socketAddress;
-        this.name = "";
         this.perm = new PermissibleBase(this);
     }
 
@@ -90,6 +88,13 @@ public class Player implements CommandSender {
                 return;
             }
 
+            int count = receivedPackets[packet.pid() & 0xff];
+            if (count > Server.packetLimit) {
+                this.close("Too many packets");
+                return;
+            }
+            receivedPackets[packet.pid() & 0xff] = count + 1;
+
             if (!verified && packet.pid() != ProtocolInfo.LOGIN_PACKET && packet.pid() != ProtocolInfo.BATCH_PACKET) {
                 this.getServer().getLogger().warning("Ignoring data packet from " + getAddress() + " due to player not verified yet");
                 if (unverifiedPackets++ > 100) {
@@ -98,7 +103,7 @@ public class Player implements CommandSender {
                 return;
             }
 
-            if (this.getServer().callDataPkReceiveEv) {
+            if (Server.callDataPkReceiveEv) {
                 DataPacketReceiveEvent ev = new DataPacketReceiveEvent(this, packet);
                 this.getServer().getPluginManager().callEvent(ev);
                 if (ev.isCancelled()) {
@@ -160,10 +165,9 @@ public class Player implements CommandSender {
                     };
 
                     this.getServer().getScheduler().scheduleAsyncTask(loginTask);
-
                     return;
                 case ProtocolInfo.TEXT_PACKET:
-                    if (!this.getServer().handleChat) break;
+                    if (!Server.handleChat) break;
                     TextPacket textPacket = (TextPacket) packet;
 
                     if (textPacket.type == TextPacket.TYPE_CHAT) {
@@ -251,11 +255,11 @@ public class Player implements CommandSender {
     }
 
     public void addIncomingPacket(DataPacket pk) {
-        this.incomingPackets.offer(pk);
+        this.synapseIncomingPackets.offer(pk);
     }
 
     public void addOutgoingPacket(DataPacket pk) {
-        this.outgoingPackets.offer(pk);
+        this.synapseOutgoingPackets.offer(pk);
     }
 
     public boolean canTick() {
@@ -265,21 +269,30 @@ public class Player implements CommandSender {
     public void onUpdate(long currentTick) {
         ticking.set(true);
 
-        while (!outgoingPackets.isEmpty()) {
-            handleDataPacket(outgoingPackets.poll());
+        while (!synapseIncomingPackets.isEmpty()) {
+            handleIncomingPacket(synapseIncomingPackets.poll());
         }
 
-        while (!incomingPackets.isEmpty()) {
-            handleIncomingPacket(incomingPackets.poll());
+        while (!synapseOutgoingPackets.isEmpty()) {
+            handleDataPacket(synapseOutgoingPackets.poll());
         }
 
-        if (!this.packetQueue.isEmpty()) {
-            List<DataPacket> toBatch = new ArrayList<>();
-            DataPacket packet;
-            while ((packet = this.packetQueue.poll()) != null) {
-                toBatch.add(packet);
+        int tick = server.getTick();
+        if (tick % 5 == 0) {
+            if (!this.outgoingPacketQueue.isEmpty()) {
+                List<DataPacket> toBatch = new ArrayList<>();
+                DataPacket packet;
+                while ((packet = this.outgoingPacketQueue.poll()) != null) {
+                    toBatch.add(packet);
+                }
+                server.batchPackets(this, toBatch);
             }
-            getServer().batchPackets(this, toBatch);
+        }
+
+        if (tick % 100 == 0) {
+            for (int i = 0; i < 256; i++) {
+                receivedPackets[i] = 0;
+            }
         }
 
         ticking.set(false);
@@ -360,12 +373,12 @@ public class Player implements CommandSender {
         if (protocol < 419 || direct || pk.pid() == ProtocolInfo.BATCH_PACKET) {
             this.sendDataPacket(pk, true, false);
         } else {
-            this.packetQueue.offer(pk);
+            this.outgoingPacketQueue.offer(pk);
         }
     }
 
     public void sendDataPacket(DataPacket pk, boolean direct, boolean needACK) {
-        if (this.getServer().callDataPkSendEv) {
+        if (Server.callDataPkSendEv) {
             DataPacketSendEvent ev = new DataPacketSendEvent(this, pk);
             this.getServer().getPluginManager().callEvent(ev);
             if (ev.isCancelled()) {
@@ -602,13 +615,5 @@ public class Player implements CommandSender {
 
     public int getPort() {
         return this.socketAddress.getPort();
-    }
-
-    public InetSocketAddress getSocketAddress() {
-        return this.socketAddress;
-    }
-
-    public Server getServer() {
-        return Server.getInstance();
     }
 }

@@ -44,7 +44,7 @@ public class LoginPacket extends DataPacket {
 
     private void decodeChainData() {
         int size = this.getLInt();
-        if (size > Server.getInstance().dataLimit) {
+        if (size > Server.dataLimit) {
             throw new IllegalArgumentException("The chain data is too big: " + size);
         }
 
