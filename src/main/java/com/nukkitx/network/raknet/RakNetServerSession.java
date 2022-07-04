@@ -5,6 +5,7 @@ import com.nukkitx.network.util.DisconnectReason;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoop;
+import org.itxtech.nemisys.Server;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.InetSocketAddress;
@@ -53,10 +54,12 @@ public class RakNetServerSession extends RakNetSession {
 
     private void onOpenConnectionRequest2(ByteBuf buffer) {
         if (this.getState() != RakNetState.INITIALIZING) {
+            Server.getInstance().getLogger().info(this.address + " ocr2 while not initializing");
             return;
         }
 
         if (!RakNetUtils.verifyUnconnectedMagic(buffer)) {
+            Server.getInstance().getLogger().info(this.address + " ocr2 unverified magic");
             return;
         }
 
@@ -74,6 +77,10 @@ public class RakNetServerSession extends RakNetSession {
     }
 
     private void onConnectionRequest(ByteBuf buffer) {
+        if (this.getState() == RakNetState.CONNECTING) {
+            Server.getInstance().getLogger().info(this.address + " ocr but already connecting");
+        }
+
         long guid = buffer.readLong();
         long time = buffer.readLong();
         boolean security = buffer.readBoolean();
@@ -91,6 +98,7 @@ public class RakNetServerSession extends RakNetSession {
 
     private void onNewIncomingConnection() {
         if (this.getState() != RakNetState.CONNECTING) {
+            Server.getInstance().getLogger().info(this.address + " incoming connection while not connecting");
             return;
         }
 

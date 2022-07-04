@@ -91,11 +91,13 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
 
     private void onUnconnectedPing(ChannelHandlerContext ctx, DatagramPacket packet) {
         if (!packet.content().isReadable(24)) {
+            Server.getInstance().getLogger().info(packet.sender() + " ping unreadable");
             return;
         }
 
         long pingTime = packet.content().readLong();
         if (!RakNetUtils.verifyUnconnectedMagic(packet.content())) {
+            Server.getInstance().getLogger().info(packet.sender() + " ping with unverified magic");
             return;
         }
 

@@ -109,11 +109,13 @@ public class RakNetServer extends RakNet {
 
     public void onOpenConnectionRequest1(ChannelHandlerContext ctx, DatagramPacket packet) {
         if (!packet.content().isReadable(16)) {
+            Server.getInstance().getLogger().info(packet.sender() + " ocr1 not readable");
             return;
         }
         // We want to do as many checks as possible before creating a session so memory is not wasted.
         ByteBuf buffer = packet.content();
         if (!RakNetUtils.verifyUnconnectedMagic(buffer)) {
+            Server.getInstance().getLogger().info(packet.sender() + " ocr1 unverified magic");
             return;
         }
         int protocolVersion = buffer.readUnsignedByte();
@@ -137,12 +139,13 @@ public class RakNetServer extends RakNet {
                 if (listener != null) {
                     listener.onSessionCreation(session);
                 } else {
-                    Server.getInstance().getLogger().warning("Unable to create session for " + packet.sender().getHostName() + ": listener is null");
+                    Server.getInstance().getLogger().warning("Unable to create session for " + packet.sender() + ": listener is null");
                 }
             }
         } else {
             session.setMtu(mtu);
             session.sendOpenConnectionReply1(); // Probably a packet loss occurred, send the reply again
+            Server.getInstance().getLogger().info(packet.sender() + " new connection reply");
         }
     }
 
