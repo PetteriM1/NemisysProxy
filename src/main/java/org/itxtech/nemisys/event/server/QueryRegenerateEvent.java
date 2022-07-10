@@ -38,7 +38,7 @@ public class QueryRegenerateEvent extends ServerEvent {
         this.version = server.getVersion();
         this.map = "Proxy";
         this.numPlayers = this.players.length;
-        if (server.plusOnePlayerCount) {
+        if (Server.plusOnePlayerCount) {
             this.maxPlayers = this.numPlayers + 1;
         } else {
             this.maxPlayers = server.getMaxPlayers();

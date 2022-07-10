@@ -8,6 +8,7 @@ import io.netty.channel.EventLoop;
 import org.itxtech.nemisys.Server;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import static com.nukkitx.network.raknet.RakNetConstants.*;
@@ -42,8 +43,19 @@ public class RakNetServerSession extends RakNetSession {
 
     @Override
     protected void onClose() {
+        InetAddress address = this.address.getAddress();
+        Integer sessions = this.rakNet.sessionCount.get(address);
+        if (sessions == null) {
+            Server.getInstance().getLogger().warning("Session was not found in session counts: " + this.address);
+        } else {
+            if (sessions < 2) {
+                this.rakNet.sessionCount.remove(address);
+            } else {
+                this.rakNet.sessionCount.put(address, sessions - 1);
+            }
+        }
         if (!this.rakNet.sessionsByAddress.remove(this.address, this)) {
-            throw new IllegalStateException("Session was not found in session map");
+            throw new IllegalStateException("Session was not found in session map: " + this.address);
         }
     }
 

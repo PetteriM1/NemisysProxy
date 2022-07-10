@@ -84,15 +84,17 @@ public class Server {
     private Synapse synapse;
     private final int compressionLevel;
     public static int dataLimit;
-    public static int packetLimit = 1000;
+    public static int packetLimit;
+    public static int maxSessions;
     static boolean handleChat;
     static boolean callDataPkSendEv;
     static boolean callDataPkReceiveEv;
-    public final boolean plusOnePlayerCount;
+    public static boolean plusOnePlayerCount;
     public static boolean enableQuery;
+    public static boolean customStuff;
     private final String queryVersion;
     @SuppressWarnings("unused")
-    public int uptime = 0;
+    public int uptime;
     public final static Map<String, Integer> playerCountData = new ConcurrentHashMap<>();
     private final Thread currentThread;
     private final String synapsePassword;
@@ -140,24 +142,30 @@ public class Server {
 
         this.synapsePassword = Hashing.md5().hashBytes(this.getPropertyString("password", "must16keyslength").getBytes(StandardCharsets.UTF_8)).toString();
         this.compressionLevel = Math.max(Math.min(this.getPropertyInt("compression-level", 6), 9), 0);
-        this.playersPerThread = this.getPropertyInt("players-per-thread", 30);
+        this.playersPerThread = this.getPropertyInt("players-per-thread", 20);
         this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
         this.motd = this.getPropertyString("motd", "Nemisys Proxy");
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
-        this.maxPlayers = this.getPropertyInt("max-players", 50);
+        this.maxPlayers = this.getPropertyInt("max-players", 100);
         this.queryVersion = this.getPropertyString("query-version", "1.19.0");
         callDataPkSendEv = this.getPropertyBoolean("call-data-pk-send-ev", false);
         callDataPkReceiveEv = this.getPropertyBoolean("call-data-pk-receive-ev", false);
         dataLimit = this.getPropertyInt("data-limit", 2621440);
         handleChat = this.getPropertyBoolean("handle-chat", true);
         packetLimit = this.getPropertyInt("packet-limit", 1000);
+        maxSessions = this.getPropertyInt("max-sessions", 1000);
+        customStuff = this.getPropertyBoolean("custom-stuff", false);
 
-        ServerScheduler.WORKERS = (int) poolSize;
-        this.scheduler = new ServerScheduler();
+        if (customStuff) {
+            logger.info("[Configuration] custom-stuff=on");
+        }
 
         Nemisys.DEBUG = this.getPropertyInt("debug", 1);
         this.logger.setLogDebug(Nemisys.DEBUG > 1);
+
+        ServerScheduler.WORKERS = (int) poolSize;
+        this.scheduler = new ServerScheduler();
 
         this.network = new Network(this);
         this.network.setName(this.getMotd());
@@ -906,9 +914,9 @@ public class Server {
             put("synapse-port", 10305);
             put("password", "must16keyslength");
             put("async-workers", "auto");
-            put("max-players", 50);
+            put("max-players", 100);
             put("plus-one-max-count", true);
-            put("players-per-thread", 30);
+            put("players-per-thread", 20);
             put("enable-query", true);
             put("debug", 1);
             put("enable-synapse-client", false);
@@ -924,6 +932,7 @@ public class Server {
             put("min-mtu", 576);
             put("max-mtu", 1492);
             put("packet-limit", 1000);
+            put("max-sessions", 1000);
         }
     }
 }

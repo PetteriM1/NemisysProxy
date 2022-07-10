@@ -31,6 +31,8 @@ public class RakNetServer extends RakNet {
 
     private final ConcurrentMap<InetAddress, Long> blockAddresses = new ConcurrentHashMap<>();
     final ConcurrentMap<InetSocketAddress, RakNetServerSession> sessionsByAddress = new ConcurrentHashMap<>();
+    final ConcurrentMap<InetAddress, Integer> sessionCount = new ConcurrentHashMap<>();
+    private final ConcurrentMap<InetAddress, Integer> violationCount = new ConcurrentHashMap<>();
     public final ConcurrentMap<InetAddress, Integer> packetsPerSecond = new ConcurrentHashMap<>();
 
     private final InetSocketAddress bindAddress;
@@ -60,7 +62,10 @@ public class RakNetServer extends RakNet {
         super(eventLoopGroup);
         this.bindThreads = bindThreads;
         this.bindAddress = bindAddress;
-        Server.getInstance().getScheduler().scheduleRepeatingTask(packetsPerSecond::clear, 20, true);
+        Server.getInstance().getScheduler().scheduleRepeatingTask(() -> {
+            packetsPerSecond.clear();
+            violationCount.clear();
+        }, 20, true);
     }
 
     @Override
@@ -108,18 +113,21 @@ public class RakNetServer extends RakNet {
     }
 
     public void onOpenConnectionRequest1(ChannelHandlerContext ctx, DatagramPacket packet) {
-        if (!packet.content().isReadable(16)) {
+        ByteBuf buffer = packet.content();
+        if (!buffer.isReadable(16)) {
             Server.getInstance().getLogger().info(packet.sender() + " ocr1 not readable");
             return;
         }
+
         // We want to do as many checks as possible before creating a session so memory is not wasted.
-        ByteBuf buffer = packet.content();
         if (!RakNetUtils.verifyUnconnectedMagic(buffer)) {
             Server.getInstance().getLogger().info(packet.sender() + " ocr1 unverified magic");
             return;
         }
+
         int protocolVersion = buffer.readUnsignedByte();
-        int mtu = buffer.readableBytes() + 18 + (packet.sender().getAddress() instanceof Inet6Address ? 40 : 20) + UDP_HEADER_SIZE; // 1 (Packet ID), 16 (Magic), 1 (Protocol Version), 20/40 (IP Header)
+        InetAddress address = packet.sender().getAddress();
+        int mtu = buffer.readableBytes() + 18 + (address instanceof Inet6Address ? 40 : 20) + UDP_HEADER_SIZE; // 1 (Packet ID), 16 (Magic), 1 (Protocol Version), 20/40 (IP Header)
 
         RakNetServerSession session = this.sessionsByAddress.get(packet.sender());
 
@@ -128,8 +136,33 @@ public class RakNetServer extends RakNet {
         } else if (protocolVersion < 9) {
             this.sendIncompatibleProtocolVersion(ctx, packet.sender());
         } else if (this.listener != null && !this.listener.onConnectionRequest(packet.sender(), packet.sender())) {
-            this.sendConnectionBanned(ctx, packet.sender());
+            this.sendConnectionBanned(ctx, packet.sender(), true);
         } else if (session == null) {
+            Integer sessions = this.sessionCount.get(address);
+            if (sessions == null) {
+                this.sessionCount.put(address, 1);
+            } else {
+                if (sessions > Server.maxSessions) {
+                    Server.getInstance().getLogger().info(packet.sender() + " ocr1 too many sessions");
+                    if (Server.customStuff) {
+                        Integer violations = this.violationCount.get(address);
+                        if (violations == null) {
+                            this.violationCount.put(address, 1);
+                            this.sendConnectionBanned(ctx, packet.sender(), false);
+                        } else {
+                            if (violations > 5) {
+                                Server.getInstance().getLogger().warning("[Temp IP-Ban] Too many session limit violations from " + address);
+                                this.block(address, 120, TimeUnit.SECONDS);
+                                return;
+                            }
+                            this.violationCount.put(address, violations + 1);
+                        }
+                    }
+                    return;
+                }
+                this.sessionCount.put(address, sessions + 1);
+            }
+
             // Passed all checks. Now create the session and send the first reply.
             session = new RakNetServerSession(this, packet.sender(), ctx.channel(),
                     ctx.channel().eventLoop().next(), mtu, protocolVersion);
@@ -204,13 +237,13 @@ public class RakNetServer extends RakNet {
         Server.getInstance().getLogger().info(recipient + " already connected");
     }
 
-    private void sendConnectionBanned(ChannelHandlerContext ctx, InetSocketAddress recipient) {
+    private void sendConnectionBanned(ChannelHandlerContext ctx, InetSocketAddress recipient, boolean log) {
         ByteBuf buffer = ctx.alloc().ioBuffer(25, 25);
         buffer.writeByte(ID_CONNECTION_BANNED);
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
         ctx.writeAndFlush(new DatagramPacket(buffer, recipient));
-        Server.getInstance().getLogger().info(recipient + " connection banned");
+        if (log) Server.getInstance().getLogger().info(recipient + " connection banned");
     }
 
     private void sendIncompatibleProtocolVersion(ChannelHandlerContext ctx, InetSocketAddress recipient) {
