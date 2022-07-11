@@ -66,7 +66,7 @@ public class RakNetServerSession extends RakNetSession {
 
     private void onOpenConnectionRequest2(ByteBuf buffer) {
         if (this.getState() != RakNetState.INITIALIZING) {
-            Server.getInstance().getLogger().info(this.address + " ocr2 while not initializing");
+            Server.getInstance().getLogger().info(this.address + " ocr2 while not initializing (state=" + this.getState() + ')');
             return;
         }
 
@@ -90,7 +90,7 @@ public class RakNetServerSession extends RakNetSession {
 
     private void onConnectionRequest(ByteBuf buffer) {
         if (this.getState() == RakNetState.CONNECTING) {
-            Server.getInstance().getLogger().info(this.address + " ocr but already connecting");
+            Server.getInstance().getLogger().info(this.address + " connection request but already connecting");
         }
 
         long guid = buffer.readLong();
@@ -110,7 +110,7 @@ public class RakNetServerSession extends RakNetSession {
 
     private void onNewIncomingConnection() {
         if (this.getState() != RakNetState.CONNECTING) {
-            Server.getInstance().getLogger().info(this.address + " incoming connection while not connecting");
+            Server.getInstance().getLogger().info(this.address + " incoming connection while not connecting (state=" + this.getState() + ')');
             return;
         }
 

@@ -49,6 +49,9 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
                 return;
             }
             this.server.packetsPerSecond.put(address, pps);
+            if (pps > 200 && pps % 100 == 0) {
+                Server.getInstance().getLogger().info(address + " [No Session] pps=" + pps);
+            }
         } else {
             int pps = session.pps + 1;
             if (pps > Server.packetLimit) {
@@ -58,6 +61,9 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
                 return;
             }
             session.pps = pps;
+            if (pps > 200 && pps % 100 == 0) {
+                Server.getInstance().getLogger().info(address + " [RakNetServerSession] pps=" + pps);
+            }
         }
 
         ByteBuf buffer = packet.content();

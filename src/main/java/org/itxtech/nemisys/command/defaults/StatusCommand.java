@@ -51,11 +51,11 @@ public class StatusCommand extends VanillaCommand {
 
         sender.sendMessage(TextFormat.GOLD + "Current TPS: " + tpsColor + NemisysMath.round(tps, 2));
 
-        sender.sendMessage(TextFormat.GOLD + "Load: " + tpsColor + server.getTickUsage() + '%');
+        sender.sendMessage(TextFormat.GOLD + "Main load: " + tpsColor + server.getTickUsage() + '%');
 
         sender.sendMessage(TextFormat.GOLD + "Current SynapseLib TPS: " + synTpsColor + NemisysMath.round(synTps, 2));
 
-        sender.sendMessage(TextFormat.GOLD + "SynapseLib Load: " + synTpsColor + server.getSynapseInterface().getInterface().getSessionManager().getTickUsage() + '%');
+        sender.sendMessage(TextFormat.GOLD + "SynapseLib load: " + synTpsColor + server.getSynapseInterface().getInterface().getSessionManager().getTickUsage() + '%');
 
         sender.sendMessage(TextFormat.GOLD + "Network upload: " + TextFormat.GREEN + NemisysMath.round((server.getNetwork().getUpload() / 1024 * 1000), 2) + " kB/s");
 

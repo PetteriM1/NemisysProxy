@@ -62,10 +62,10 @@ public class RakNetServer extends RakNet {
         super(eventLoopGroup);
         this.bindThreads = bindThreads;
         this.bindAddress = bindAddress;
-        Server.getInstance().getScheduler().scheduleRepeatingTask(() -> {
-            packetsPerSecond.clear();
-            violationCount.clear();
-        }, 20, true);
+        Server.getInstance().getScheduler().scheduleRepeatingTask(packetsPerSecond::clear, 20, true);
+        if (Server.customStuff) {
+            Server.getInstance().getScheduler().scheduleRepeatingTask(violationCount::clear, 20, true);
+        }
     }
 
     @Override
@@ -178,7 +178,7 @@ public class RakNetServer extends RakNet {
         } else {
             session.setMtu(mtu);
             session.sendOpenConnectionReply1(); // Probably a packet loss occurred, send the reply again
-            Server.getInstance().getLogger().info(packet.sender() + " new connection reply");
+            Server.getInstance().getLogger().info(packet.sender() + " new connection reply (mtu=" + mtu + ')');
         }
     }
 
