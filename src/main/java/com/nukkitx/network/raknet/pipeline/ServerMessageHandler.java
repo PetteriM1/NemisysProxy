@@ -6,6 +6,8 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
+import org.itxtech.nemisys.Server;
+import org.itxtech.nemisys.utils.IPBanLogger;
 
 @ChannelHandler.Sharable
 public class ServerMessageHandler extends SimpleChannelInboundHandler<DatagramPacket> {
@@ -15,11 +17,17 @@ public class ServerMessageHandler extends SimpleChannelInboundHandler<DatagramPa
 
     public ServerMessageHandler(RakNetServer server) {
         this.server = server;
+        if (Server.customStuff) {
+            new IPBanLogger().initialize();
+        }
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
         if (this.server.isBlocked(packet.sender().getAddress())) {
+            if (Server.customStuff) {
+                IPBanLogger.log.add(packet.sender().getAddress());
+            }
             // Drop incoming traffic from blocked address
             return;
         }

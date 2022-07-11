@@ -174,7 +174,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
          while (logBuffer.isEmpty()) {
              try {
                  synchronized (this) {
-                     wait(25000);
+                     wait(20000);
                  }
                  Thread.sleep(5);
              } catch (InterruptedException ignore) {}

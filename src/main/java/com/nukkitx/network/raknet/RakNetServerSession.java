@@ -65,7 +65,7 @@ public class RakNetServerSession extends RakNetSession {
     }
 
     private void onOpenConnectionRequest2(ByteBuf buffer) {
-        if (this.getState() != RakNetState.INITIALIZING) {
+        if (this.getState() != RakNetState.INITIALIZING && this.getState() != RakNetState.INITIALIZED) { // Already INITIALIZED == probably a packet loss occurred
             Server.getInstance().getLogger().info(this.address + " ocr2 while not initializing (state=" + this.getState() + ')');
             return;
         }

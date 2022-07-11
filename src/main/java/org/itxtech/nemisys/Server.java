@@ -143,12 +143,12 @@ public class Server {
         this.synapsePassword = Hashing.md5().hashBytes(this.getPropertyString("password", "must16keyslength").getBytes(StandardCharsets.UTF_8)).toString();
         this.compressionLevel = Math.max(Math.min(this.getPropertyInt("compression-level", 6), 9), 0);
         this.playersPerThread = this.getPropertyInt("players-per-thread", 20);
-        this.plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
         this.motd = this.getPropertyString("motd", "Nemisys Proxy");
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
         this.maxPlayers = this.getPropertyInt("max-players", 100);
         this.queryVersion = this.getPropertyString("query-version", "1.19.0");
+        plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
         callDataPkSendEv = this.getPropertyBoolean("call-data-pk-send-ev", false);
         callDataPkReceiveEv = this.getPropertyBoolean("call-data-pk-receive-ev", false);
         dataLimit = this.getPropertyInt("data-limit", 2621440);
@@ -332,6 +332,7 @@ public class Server {
     public void forceShutdown() {
         this.forceShutdown("§cProxy server closed");
     }
+
     public void forceShutdown(String reason) {
         if (this.hasStopped) {
             return;
@@ -376,6 +377,10 @@ public class Server {
                 }
             }
             this.synapseInterface.getInterface().shutdown();
+
+            if (customStuff) {
+                IPBanLogger.shutdown = true;
+            }
         } catch (Exception e) {
             this.logger.logException(e);
             this.logger.emergency("Exception happened while shutting down, exit the process");
