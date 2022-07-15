@@ -65,9 +65,11 @@ public class RakNetServerSession extends RakNetSession {
     }
 
     private void onOpenConnectionRequest2(ByteBuf buffer) {
-        if (this.getState() != RakNetState.INITIALIZING && this.getState() != RakNetState.INITIALIZED) { // Already INITIALIZED == probably a packet loss occurred
+        if (this.getState() != RakNetState.INITIALIZING) {
             Server.getInstance().getLogger().info(this.address + " ocr2 while not initializing (state=" + this.getState() + ')');
-            return;
+            if (this.getState() != RakNetState.INITIALIZED) { // Already INITIALIZED == probably a packet loss occurred
+                return;
+            }
         }
 
         if (!RakNetUtils.verifyUnconnectedMagic(buffer)) {
@@ -81,8 +83,10 @@ public class RakNetServerSession extends RakNetSession {
         this.setMtu(mtu);
         this.guid = buffer.readLong();
 
-        // We can now accept RakNet datagrams.
-        this.initialize();
+        if (this.getState() == RakNetState.INITIALIZING) {
+            // We can now accept RakNet datagrams.
+            this.initialize();
+        }
 
         sendOpenConnectionReply2();
         this.setState(RakNetState.INITIALIZED);
