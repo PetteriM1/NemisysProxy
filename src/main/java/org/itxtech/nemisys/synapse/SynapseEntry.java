@@ -126,8 +126,7 @@ public class SynapseEntry {
     }
 
     public void broadcastPacket(SynapsePlayer[] players, DataPacket packet, boolean direct) {
-        packet.encode();
-        packet.isEncoded = true;
+        packet.tryEncode(); //TODO: Set protocol for multiversion compatibility
         BroadcastPacket broadcastPacket = new BroadcastPacket();
         broadcastPacket.direct = direct;
         broadcastPacket.payload = packet.getBuffer();
@@ -246,6 +245,7 @@ public class SynapseEntry {
                 if (player != null) {
                     DataPacket pk0 = this.getSynapse().getPacket(redirectPacket.mcpeBuffer);
                     if (pk0 != null) {
+                        pk0.protocol = player.protocol;
                         pk0.decode();
                         player.handleDataPacket(pk0);
                     } else {

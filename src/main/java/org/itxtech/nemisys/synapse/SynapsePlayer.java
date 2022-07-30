@@ -27,6 +27,7 @@ public class SynapsePlayer extends Player {
         if (!ev.isCancelled()) {
             DataPacket pk = this.getSynapseEntry().getSynapse().getPacket(packet.cachedLoginPacket);
             pk.setOffset(3);
+            pk.protocol = this.protocol;
             pk.decode();
             this.handleDataPacket(pk);
         }

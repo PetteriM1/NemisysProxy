@@ -14,7 +14,7 @@ import java.util.UUID;
 public class LoginPacket extends DataPacket {
 
     public String username;
-    public int protocol;
+    private int protocol_;
     public UUID clientUUID;
     public long clientId;
     public byte[] cacheBuffer;
@@ -29,7 +29,7 @@ public class LoginPacket extends DataPacket {
     @Override
     public void decode() {
         this.cacheBuffer = this.getBuffer();
-        this.protocol = this.getInt();
+        this.protocol_ = this.getInt();
         this.setBuffer(this.getByteArray(), 0);
         decodeChainData();
     }
@@ -39,7 +39,7 @@ public class LoginPacket extends DataPacket {
     }
 
     public int getProtocol() {
-        return protocol;
+        return protocol_;
     }
 
     private void decodeChainData() {

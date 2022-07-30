@@ -22,7 +22,9 @@ public class AddPlayerPacket extends DataPacket {
     public void decode() {
         uuid = getUUID();
         username = getString();
-        entityUniqueId = getEntityUniqueId();
+        if (protocol < 534) { // 1.19.10
+            entityUniqueId = getEntityUniqueId();
+        }
         entityRuntimeId = getEntityRuntimeId();
     }
 

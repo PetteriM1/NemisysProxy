@@ -142,12 +142,12 @@ public class Server {
 
         this.synapsePassword = Hashing.md5().hashBytes(this.getPropertyString("password", "must16keyslength").getBytes(StandardCharsets.UTF_8)).toString();
         this.compressionLevel = Math.max(Math.min(this.getPropertyInt("compression-level", 6), 9), 0);
-        this.playersPerThread = this.getPropertyInt("players-per-thread", 20);
+        this.playersPerThread = this.getPropertyInt("players-per-thread", 5);
         this.motd = this.getPropertyString("motd", "Nemisys Proxy");
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
         this.maxPlayers = this.getPropertyInt("max-players", 100);
-        this.queryVersion = this.getPropertyString("query-version", "1.19.0");
+        this.queryVersion = this.getPropertyString("query-version", "1.19.10");
         plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
         callDataPkSendEv = this.getPropertyBoolean("call-data-pk-send-ev", false);
         callDataPkReceiveEv = this.getPropertyBoolean("call-data-pk-receive-ev", false);
@@ -213,10 +213,10 @@ public class Server {
     }
 
     public static void broadcastPacket(Player[] players, DataPacket packet) {
-        packet.encode();
-        packet.isEncoded = true;
-
         for (Player player : players) {
+            DataPacket pk = packet.clone();
+            pk.protocol = player.protocol;
+            pk.tryEncode();
             player.sendDataPacket(packet);
         }
     }
@@ -804,10 +804,8 @@ public class Server {
         if (packet instanceof BatchPacket) {
             throw new RuntimeException("Cannot batch BatchPacket");
         }
-        if (!packet.isEncoded) {
-            packet.encode();
-            packet.isEncoded = true;
-        }
+        packet.protocol = player.protocol;
+        packet.tryEncode();
         byte[] buf = packet.getBuffer();
         batched.putUnsignedVarInt(buf.length);
         batched.put(buf);
@@ -825,10 +823,8 @@ public class Server {
             if (packet instanceof BatchPacket) {
                 throw new RuntimeException("Cannot batch BatchPacket");
             }
-            if (!packet.isEncoded) {
-                packet.encode();
-                packet.isEncoded = true;
-            }
+            packet.protocol = player.protocol;
+            packet.tryEncode();
             byte[] buf = packet.getBuffer();
             batched.putUnsignedVarInt(buf.length);
             batched.put(buf);
@@ -847,10 +843,8 @@ public class Server {
             if (packet instanceof BatchPacket) {
                 throw new RuntimeException("Cannot batch BatchPacket");
             }
-            if (!packet.isEncoded) {
-                packet.encode();
-                packet.isEncoded = true;
-            }
+            packet.protocol = player.protocol;
+            packet.tryEncode();
             byte[] buf = packet.getBuffer();
             batched.putUnsignedVarInt(buf.length);
             batched.put(buf);
@@ -921,14 +915,14 @@ public class Server {
             put("async-workers", "auto");
             put("max-players", 100);
             put("plus-one-max-count", true);
-            put("players-per-thread", 20);
+            put("players-per-thread", 5);
             put("enable-query", true);
             put("debug", 1);
             put("enable-synapse-client", false);
             put("ansi", true);
             put("send-start-message", false);
             put("compression-level", 6);
-            put("query-version", "1.19.0");
+            put("query-version", "1.19.10");
             put("data-limit", 2621440);
             put("thread-watchdog", true);
             put("call-data-pk-send-ev", false);

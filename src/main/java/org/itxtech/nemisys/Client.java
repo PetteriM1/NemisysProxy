@@ -163,6 +163,7 @@ public class Client {
                     }
 
                     send.setBuffer(buffer, 1);
+                    send.protocol = pl.protocol;
                     send.decode();
                     send.isEncoded = true;
 

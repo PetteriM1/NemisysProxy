@@ -43,8 +43,8 @@ public class SynLibInterface implements SourceInterface {
     @Override
     public Integer putPacket(Player player, DataPacket packet, boolean needACK, boolean immediate) {
         if (!player.closed) {
-            packet.encode();
-            packet.isEncoded = true;
+            packet.protocol = player.protocol;
+            packet.tryEncode();
             RedirectPacket pk = new RedirectPacket();
             pk.uuid = player.getUuid();
             pk.direct = immediate;

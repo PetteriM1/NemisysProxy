@@ -51,7 +51,7 @@ public class Player implements CommandSender {
     @Getter
     private long randomClientId;
     public int protocol = -1;
-    public int raknetProtocol;
+    public int raknetProtocol = -1;
     @Getter
     private final SourceInterface interfaz;
     @Getter
@@ -120,14 +120,14 @@ public class Player implements CommandSender {
                     this.loggedIn = true;
                     LoginPacket loginPacket = (LoginPacket) packet;
                     this.cachedLoginPacket = loginPacket.cacheBuffer;
+                    this.protocol = loginPacket.getProtocol();
                     this.name = loginPacket.username;
+                    this.randomClientId = loginPacket.clientId;
                     this.uuid = loginPacket.clientUUID;
                     if (this.uuid == null) {
                         this.close(TextFormat.RED + "Error");
                         return;
                     }
-                    this.randomClientId = loginPacket.clientId;
-                    this.protocol = loginPacket.protocol;
                     try {
                         this.loginChainData = ClientChainData.read(loginPacket);
                     } catch (SkinException ex) {
@@ -451,6 +451,7 @@ public class Player implements CommandSender {
                     DataPacket pk = getServer().getNetwork().getPacket(data[0]);
                     if (pk != null) {
                         pk.setBuffer(data, 1);
+                        pk.protocol = this.protocol;
                         pk.decode();
                         pk.isEncoded = true;
                         handleIncomingPacket(pk);

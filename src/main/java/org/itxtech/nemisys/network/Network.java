@@ -145,6 +145,7 @@ public class Network {
                         pk.setBuffer(buf, 1);
 
                         try {
+                            pk.protocol = player.protocol;
                             pk.decode();
                         } catch (Exception ignored) {
                         }
@@ -164,7 +165,6 @@ public class Network {
             this.server.getLogger().logException(e);
         }
     }
-
 
     public DataPacket getPacket(byte id) {
         Class<? extends DataPacket> clazz = this.packetPool[id & 0xff];
