@@ -362,7 +362,7 @@ public class Server {
             this.scheduler.mainThreadHeartbeat(Integer.MAX_VALUE);
 
             this.getLogger().debug("Closing console...");
-            this.console.interrupt();
+            this.console.shutdown();
 
             this.getLogger().debug("Stopping network interfaces...");
             for (SourceInterface interfaz : new ArrayList<>(this.network.getInterfaces())) {

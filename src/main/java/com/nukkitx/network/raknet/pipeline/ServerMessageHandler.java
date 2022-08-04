@@ -9,6 +9,8 @@ import io.netty.channel.socket.DatagramPacket;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.utils.IPBanLogger;
 
+import java.net.InetAddress;
+
 @ChannelHandler.Sharable
 public class ServerMessageHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
@@ -24,9 +26,10 @@ public class ServerMessageHandler extends SimpleChannelInboundHandler<DatagramPa
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
-        if (this.server.isBlocked(packet.sender().getAddress())) {
+        InetAddress address = packet.sender().getAddress();
+        if (this.server.isBlocked(address)) {
             if (Server.customStuff) {
-                IPBanLogger.log.add(packet.sender().getAddress());
+                IPBanLogger.log.add(address);
             }
             // Drop incoming traffic from blocked address
             return;

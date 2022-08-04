@@ -34,6 +34,7 @@ public class RakNetServer extends RakNet {
     private static final InternalLogger log = InternalLoggerFactory.getInstance(RakNetServer.class);
 
     private static final ConcurrentMap<InetAddress, Long> blockAddresses = new ConcurrentHashMap<>();
+    private static final Set<InetAddress> blockAddressesPermanent = new HashSet<>();
     final ConcurrentMap<InetSocketAddress, RakNetServerSession> sessionsByAddress = new ConcurrentHashMap<>();
     final ConcurrentMap<InetAddress, Integer> sessionCount = new ConcurrentHashMap<>();
     public final ConcurrentMap<InetAddress, Integer> packetsPerSecond = new ConcurrentHashMap<>();
@@ -65,17 +66,18 @@ public class RakNetServer extends RakNet {
         super(eventLoopGroup);
         this.bindThreads = bindThreads;
         this.bindAddress = bindAddress;
-        Server.getInstance().getScheduler().scheduleRepeatingTask(packetsPerSecond::clear, 20, true);
+        eventLoopGroup.scheduleAtFixedRate(packetsPerSecond::clear, 0, 1, TimeUnit.SECONDS);
         if (Server.customStuff) {
             loadIpBans();
         }
     }
 
     public static void loadIpBans() {
-        blockAddresses.clear();
+        blockAddressesPermanent.clear();
         try {
             FileReader fr = new FileReader("banned-ips.txt");
             BufferedReader in = new BufferedReader(fr);
+            List<InetAddress> addresses = new ArrayList<>();
             String line;
             int loaded = 0;
             while ((line = in.readLine()) != null) {
@@ -86,7 +88,7 @@ public class RakNetServer extends RakNet {
                             System.out.println("[banned-ips.txt] InetAddress is null: " + line);
                             continue;
                         }
-                        blockAddresses.put(address, -1L);
+                        addresses.add(address);
                         loaded++;
                     } catch (UnknownHostException e) {
                         System.out.println("[banned-ips.txt] Failed to get InetAddress: " + line);
@@ -94,6 +96,7 @@ public class RakNetServer extends RakNet {
                 }
             }
             in.close();
+            blockAddressesPermanent.addAll(addresses);
             Server.getInstance().getLogger().info("Loaded " + loaded + " banned IPs");
         } catch (FileNotFoundException ignore) {
         } catch (Exception e) {
@@ -218,7 +221,7 @@ public class RakNetServer extends RakNet {
     }
 
     public boolean isBlocked(InetAddress address) {
-        return blockAddresses.containsKey(address);
+        return blockAddressesPermanent.contains(address) || blockAddresses.containsKey(address);
     }
 
     public int getSessionCount() {

@@ -28,7 +28,7 @@ public class IPBanLogger extends Thread {
     }
 
     public void initialize() {
-        log = new ConcurrentLinkedQueue<>();
+        setName("IPBanLogger");
         logFile = new File("blocked-connections.log");
         if (!logFile.exists()) {
             try {
@@ -52,6 +52,7 @@ public class IPBanLogger extends Thread {
                 }
             }
         }
+        log = new ConcurrentLinkedQueue<>();
         start();
     }
 

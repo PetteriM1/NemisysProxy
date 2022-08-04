@@ -14,12 +14,18 @@ import java.io.IOException;
  */
 public class CommandReader extends Thread implements InterruptibleThread {
 
-    public static CommandReader instance;
+    private static CommandReader instance;
     private ConsoleReader reader;
     private CursorBuffer stashed;
+    private volatile boolean running = true;
 
     public static CommandReader getInstance() {
         return instance;
+    }
+
+    public void shutdown() {
+        running = false;
+        interrupt();
     }
 
     public CommandReader() {
@@ -46,37 +52,39 @@ public class CommandReader extends Thread implements InterruptibleThread {
     }
 
     public void run() {
-        long lastLine = System.currentTimeMillis();
-        String line;
+        while (running) {
+            long lastLine = System.currentTimeMillis();
+            String line;
 
-        try {
-            while ((line = reader.readLine()) != null) {
-                if (Server.getInstance().getConsoleSender() == null || Server.getInstance().getPluginManager() == null) {
-                    continue;
-                }
+            try {
+                while ((line = reader.readLine()) != null) {
+                    if (Server.getInstance().getConsoleSender() == null || Server.getInstance().getPluginManager() == null) {
+                        continue;
+                    }
 
-                if (!line.trim().isEmpty()) {
-                    try {
-                        ServerCommandEvent event = new ServerCommandEvent(Server.getInstance().getConsoleSender(), line);
-                        Server.getInstance().getPluginManager().callEvent(event);
-                        if (!event.isCancelled()) {
-                            Server.getInstance().getScheduler().scheduleTask(() -> Server.getInstance().dispatchCommand(event.getSender(), event.getCommand()));
+                    if (!line.trim().isEmpty()) {
+                        try {
+                            ServerCommandEvent event = new ServerCommandEvent(Server.getInstance().getConsoleSender(), line);
+                            Server.getInstance().getPluginManager().callEvent(event);
+                            if (!event.isCancelled()) {
+                                Server.getInstance().getScheduler().scheduleTask(() -> Server.getInstance().dispatchCommand(event.getSender(), event.getCommand()));
+                            }
+                        } catch (Exception e) {
+                            Server.getInstance().getLogger().logException(e);
                         }
-                    } catch (Exception e) {
-                        Server.getInstance().getLogger().logException(e);
-                    }
 
-                } else if (System.currentTimeMillis() - lastLine <= 1) {
-                    try {
-                        sleep(250);
-                    } catch (InterruptedException e) {
-                        Server.getInstance().getLogger().logException(e);
+                    } else if (System.currentTimeMillis() - lastLine <= 1) {
+                        try {
+                            sleep(250);
+                        } catch (InterruptedException e) {
+                            Server.getInstance().getLogger().logException(e);
+                        }
                     }
+                    lastLine = System.currentTimeMillis();
                 }
-                lastLine = System.currentTimeMillis();
+            } catch (IOException e) {
+                Server.getInstance().getLogger().logException(e);
             }
-        } catch (IOException e) {
-            Server.getInstance().getLogger().logException(e);
         }
     }
 
