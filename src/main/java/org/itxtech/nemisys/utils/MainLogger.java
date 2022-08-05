@@ -125,14 +125,10 @@ public class MainLogger extends ThreadedLogger {
     }
 
     protected void send(String message) {
-        this.send(message, -1);
+        logBuffer.add(message);
         synchronized (this) {
             this.notify();
         }
-    }
-
-    protected void send(String message, int level) {
-        logBuffer.add(message);
     }
 
     @Override

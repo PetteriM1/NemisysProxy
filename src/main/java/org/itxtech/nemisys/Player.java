@@ -96,7 +96,7 @@ public class Player implements CommandSender {
             receivedPackets[packet.pid() & 0xff] = count + 1;
 
             if (!verified && packet.pid() != ProtocolInfo.LOGIN_PACKET && packet.pid() != ProtocolInfo.BATCH_PACKET) {
-                this.getServer().getLogger().warning("Ignoring data packet from " + getAddress() + " due to player not verified yet");
+                this.getServer().getLogger().warning("Ignoring data packet from " + getAddress() + " due to player not verified yet: " + packet.pid());
                 if (unverifiedPackets++ > 100) {
                     this.close("Too many failed login attempts");
                 }

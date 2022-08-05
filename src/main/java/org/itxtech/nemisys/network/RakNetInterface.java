@@ -77,11 +77,10 @@ public class RakNetInterface implements RakNetServerListener, AdvancedSourceInte
         Iterator<NukkitRakNetSession> iterator = this.sessions.values().iterator();
         while (iterator.hasNext()) {
             NukkitRakNetSession nukkitSession = iterator.next();
-            Player player = nukkitSession.player;
             if (nukkitSession.disconnectReason != null) {
-                player.close(nukkitSession.disconnectReason, false);
+                nukkitSession.player.close(nukkitSession.disconnectReason, false);
                 iterator.remove();
-                continue;
+                //continue;
             }
             /*DataPacket packet;
             while ((packet = nukkitSession.packets.poll()) != null) {
@@ -253,7 +252,6 @@ public class RakNetInterface implements RakNetServerListener, AdvancedSourceInte
                 byte[] packetBuffer = new byte[buffer.readableBytes()];
                 buffer.readBytes(packetBuffer);
                 batchPacket.setBuffer(packetBuffer);
-                batchPacket.protocol = player.protocol;
                 batchPacket.decode();
                 //this.packets.add(batchPacket);
                 this.player.addOutgoingPacket(batchPacket); // handleDataPacket on player ticker
