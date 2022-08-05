@@ -122,7 +122,7 @@ public class Network {
                 data = Zlib.inflate(packet.payload, 2097152);
             }
         } catch (Exception e) {
-            player.close("Corrupted Packet");
+            player.close("Corrupted packet");
             return;
         }
 

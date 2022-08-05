@@ -453,15 +453,15 @@ public class Server {
 
     private void tick() {
         long tickTime = System.currentTimeMillis();
-        long tickTimeNano = System.nanoTime();
-
-        this.network.processInterfaces(); // Always tick RakNetInterface
-
         if ((tickTime - this.nextTick) < -5) {
             return;
         }
+
+        long tickTimeNano = System.nanoTime();
+
         ++this.tickCounter;
 
+        this.network.processInterfaces();
         this.synapseInterface.process();
         this.scheduler.mainThreadHeartbeat(this.tickCounter);
 

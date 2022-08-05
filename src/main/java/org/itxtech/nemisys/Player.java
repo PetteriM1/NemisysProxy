@@ -36,7 +36,6 @@ public class Player implements CommandSender {
     private boolean verified;
     private boolean loggedIn;
     private boolean isFirstTimeLogin = true;
-    private int unverifiedPackets;
     private final int[] receivedPackets = new int[256];
     private final AtomicBoolean ticking = new AtomicBoolean();
     @Getter
@@ -96,10 +95,8 @@ public class Player implements CommandSender {
             receivedPackets[packet.pid() & 0xff] = count + 1;
 
             if (!verified && packet.pid() != ProtocolInfo.LOGIN_PACKET && packet.pid() != ProtocolInfo.BATCH_PACKET) {
-                this.getServer().getLogger().warning("Ignoring data packet from " + getAddress() + " due to player not verified yet: " + packet.pid());
-                if (unverifiedPackets++ > 100) {
-                    this.close("Too many failed login attempts");
-                }
+                this.getServer().getLogger().warning("Got a data packet before login packet from " + getAddress() + " (pid=" + packet.pid() + ")");
+                this.close("Invalid packet");
                 return;
             }
 
@@ -243,15 +240,15 @@ public class Player implements CommandSender {
     }
 
     public void redirectPacket(byte[] buffer) {
+        if (buffer.length >= 5242880) {
+            this.close("Too big data packet");
+            return;
+        }
         RedirectPacket pk = new RedirectPacket();
         pk.uuid = this.uuid;
         pk.direct = false;
         pk.mcpeBuffer = buffer;
-        if (pk.mcpeBuffer.length >= 5242880) {
-            this.close("Too big data packet");
-        } else {
-            this.client.sendDataPacket(pk);
-        }
+        this.client.sendDataPacket(pk);
     }
 
     public void addIncomingPacket(DataPacket pk) {
@@ -269,16 +266,19 @@ public class Player implements CommandSender {
     public void onUpdate(long currentTick) {
         ticking.set(true);
 
-        while (!synapseIncomingPackets.isEmpty()) {
-            handleIncomingPacket(synapseIncomingPackets.poll());
-        }
-
+        // To Synapse downstream
         while (!synapseOutgoingPackets.isEmpty()) {
             handleDataPacket(synapseOutgoingPackets.poll());
         }
 
+        // From Synapse downstream
+        while (!synapseIncomingPackets.isEmpty()) {
+            handleIncomingPacket(synapseIncomingPackets.poll());
+        }
+
+        // To player
         int tick = server.getTick();
-        if (tick % 5 == 0) {
+        if (tick % 5 == 0) { // Queue packets to be batched together
             if (!this.outgoingPacketQueue.isEmpty()) {
                 List<DataPacket> toBatch = new ArrayList<>();
                 DataPacket packet;
@@ -289,6 +289,7 @@ public class Player implements CommandSender {
             }
         }
 
+        // Clear packet counters
         if (tick % 100 == 0) {
             for (int i = 0; i < 256; i++) {
                 receivedPackets[i] = 0;
