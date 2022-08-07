@@ -29,14 +29,6 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
         InetAddress address = packet.sender().getAddress();
-        if (Server.customStuff) {
-            byte[] ip = address.getAddress();
-            if (ip != null && (ip[0] & 0xFF) == 10 && (ip[1] & 0xFF) == 0 && (ip[2] & 0xFF) == 117) {
-                Server.getInstance().getLogger().warning("Tried to handle a packet from local address " + address);
-                return;
-            }
-        }
-
         RakNetServerSession session = this.server.getSession(packet.sender());
 
         if (session == null) {
