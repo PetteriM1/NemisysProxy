@@ -111,7 +111,7 @@ public class Player implements CommandSender {
             switch (packet.pid()) {
                 case ProtocolInfo.LOGIN_PACKET:
                     if (loggedIn) {
-                        this.close("Invalid Login Packet");
+                        this.close("Invalid login packet");
                         return;
                     }
                     this.loggedIn = true;
@@ -132,7 +132,7 @@ public class Player implements CommandSender {
                         return;
                     } catch (Exception ex) {
                         getServer().getLogger().logException(ex);
-                        this.close("Invalid Client Chain Data");
+                        this.close("Invalid login data (skin?!)");
                         return;
                     }
 

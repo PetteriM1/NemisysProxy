@@ -3,7 +3,6 @@ package org.itxtech.nemisys.command;
 import org.itxtech.nemisys.Player;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.command.defaults.*;
-import org.itxtech.nemisys.event.TranslationContainer;
 import org.itxtech.nemisys.utils.MainLogger;
 import org.itxtech.nemisys.utils.TextFormat;
 import org.itxtech.nemisys.utils.Utils;
@@ -123,7 +122,7 @@ public class SimpleCommandMap implements CommandMap {
         try {
             target.execute(sender, sentCommandLabel, args);
         } catch (Exception e) {
-            sender.sendMessage(new TranslationContainer(TextFormat.RED + "An unknown error occurred while attempting to perform this command"));
+            sender.sendMessage(TextFormat.RED + "An unknown error occurred while attempting to perform this command");
             this.server.getLogger().critical(this.server.getLanguage().translateString("Unhandled exception executing command '{%0}' in {%1}: {%2}", new String[]{cmdLine, target.toString(), Utils.getExceptionMessage(e)}));
             MainLogger logger = sender.getServer().getLogger();
             if (logger != null) {

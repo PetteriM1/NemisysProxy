@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.itxtech.nemisys.command.*;
 import org.itxtech.nemisys.event.HandlerList;
-import org.itxtech.nemisys.event.TranslationContainer;
 import org.itxtech.nemisys.event.server.QueryRegenerateEvent;
 import org.itxtech.nemisys.lang.BaseLang;
 import org.itxtech.nemisys.math.NemisysMath;
@@ -314,7 +313,7 @@ public class Server {
         }
 
         if (notify)
-            sender.sendMessage(new TranslationContainer(TextFormat.RED + "Unknown command. Try /help for a list of commands"));
+            sender.sendMessage(TextFormat.RED + "Unknown command. Try /help for a list of commands");
 
         return false;
     }

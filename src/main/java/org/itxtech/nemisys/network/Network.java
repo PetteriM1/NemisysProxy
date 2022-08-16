@@ -159,7 +159,7 @@ public class Network {
                 player.addOutgoingPacket(pk);
             }
         } catch (Exception e) {
-            if (Nemisys.DEBUG > 0) {
+            if (Nemisys.DEBUG > 1) {
                 this.server.getLogger().debug("BatchPacket 0x" + Binary.bytesToHexString(packet.payload));
             }
             this.server.getLogger().logException(e);
