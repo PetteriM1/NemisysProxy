@@ -13,13 +13,9 @@ import org.itxtech.nemisys.Server;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,7 +30,6 @@ public class RakNetServer extends RakNet {
     private static final InternalLogger log = InternalLoggerFactory.getInstance(RakNetServer.class);
 
     private static final ConcurrentMap<InetAddress, Long> blockAddresses = new ConcurrentHashMap<>();
-    private static final Set<InetAddress> blockAddressesPermanent = new HashSet<>();
     final ConcurrentMap<InetSocketAddress, RakNetServerSession> sessionsByAddress = new ConcurrentHashMap<>();
     final ConcurrentMap<InetAddress, Integer> sessionCount = new ConcurrentHashMap<>();
     public final ConcurrentMap<InetAddress, Integer> packetsPerSecond = new ConcurrentHashMap<>();
@@ -66,41 +61,8 @@ public class RakNetServer extends RakNet {
         super(eventLoopGroup);
         this.bindThreads = bindThreads;
         this.bindAddress = bindAddress;
-        eventLoopGroup.scheduleAtFixedRate(packetsPerSecond::clear, 0, 1, TimeUnit.SECONDS);
-        if (Server.customStuff) {
-            loadIpBans();
-        }
-    }
-
-    public static void loadIpBans() {
-        blockAddressesPermanent.clear();
-        try {
-            FileReader fr = new FileReader("banned-ips.txt");
-            BufferedReader in = new BufferedReader(fr);
-            List<InetAddress> addresses = new ArrayList<>();
-            String line;
-            int loaded = 0;
-            while ((line = in.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    try {
-                        InetAddress address = InetAddress.getByName(line);
-                        if (address == null) {
-                            System.out.println("[banned-ips.txt] InetAddress is null: " + line);
-                            continue;
-                        }
-                        addresses.add(address);
-                        loaded++;
-                    } catch (UnknownHostException e) {
-                        System.out.println("[banned-ips.txt] Failed to get InetAddress: " + line);
-                    }
-                }
-            }
-            in.close();
-            blockAddressesPermanent.addAll(addresses);
-            Server.getInstance().getLogger().info("Loaded " + loaded + " banned IPs");
-        } catch (FileNotFoundException ignore) {
-        } catch (Exception e) {
-            throw new RuntimeException("Exception while loading banned-ips.txt", e);
+        if (!Server.customStuff) {
+            eventLoopGroup.scheduleAtFixedRate(packetsPerSecond::clear, 0, 1, TimeUnit.SECONDS);
         }
     }
 
@@ -174,15 +136,17 @@ public class RakNetServer extends RakNet {
         } else if (this.listener != null && !this.listener.onConnectionRequest(packet.sender(), packet.sender())) {
             this.sendConnectionBanned(ctx, packet.sender());
         } else if (session == null) {
-            Integer sessions = this.sessionCount.get(address);
-            if (sessions == null) {
-                this.sessionCount.put(address, 1);
-            } else {
-                if (sessions > Server.maxSessions) {
-                    Server.getInstance().getLogger().info(packet.sender() + " ocr1 too many sessions");
-                    return;
+            if (Server.maxSessions > 0) {
+                Integer sessions = this.sessionCount.get(address);
+                if (sessions == null) {
+                    this.sessionCount.put(address, 1);
+                } else {
+                    if (sessions > Server.maxSessions) {
+                        Server.getInstance().getLogger().info(packet.sender() + " ocr1 too many sessions");
+                        return;
+                    }
+                    this.sessionCount.put(address, sessions + 1);
                 }
-                this.sessionCount.put(address, sessions + 1);
             }
 
             // Passed all checks. Now create the session and send the first reply.
@@ -221,7 +185,7 @@ public class RakNetServer extends RakNet {
     }
 
     public boolean isBlocked(InetAddress address) {
-        return blockAddressesPermanent.contains(address) || blockAddresses.containsKey(address);
+        return blockAddresses.containsKey(address);
     }
 
     public int getSessionCount() {

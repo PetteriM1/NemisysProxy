@@ -85,7 +85,6 @@ public class Server {
     public static int dataLimit;
     public static int packetLimit;
     public static int maxSessions;
-    static boolean handleChat;
     static boolean callDataPkSendEv;
     static boolean callDataPkReceiveEv;
     public static boolean plusOnePlayerCount;
@@ -145,13 +144,12 @@ public class Server {
         this.motd = this.getPropertyString("motd", "Nemisys Proxy");
         this.ip = this.getPropertyString("server-ip", "0.0.0.0");
         this.port = this.getPropertyInt("server-port", 19132);
-        this.maxPlayers = this.getPropertyInt("max-players", 100);
-        this.queryVersion = this.getPropertyString("query-version", "1.19.10");
+        this.maxPlayers = this.getPropertyInt("max-players", 1000);
+        this.queryVersion = this.getPropertyString("query-version", "1.19.21");
         plusOnePlayerCount = this.getPropertyBoolean("plus-one-max-count", true);
         callDataPkSendEv = this.getPropertyBoolean("call-data-pk-send-ev", false);
         callDataPkReceiveEv = this.getPropertyBoolean("call-data-pk-receive-ev", false);
         dataLimit = this.getPropertyInt("data-limit", 2621440);
-        handleChat = this.getPropertyBoolean("handle-chat", true);
         packetLimit = this.getPropertyInt("packet-limit", 1000);
         maxSessions = this.getPropertyInt("max-sessions", 1000);
         customStuff = this.getPropertyBoolean("custom-stuff", false);
@@ -376,10 +374,6 @@ public class Server {
                 }
             }
             this.synapseInterface.getInterface().shutdown();
-
-            if (customStuff) {
-                IPBanLogger.shutdown = true;
-            }
         } catch (Exception e) {
             this.logger.logException(e);
             this.logger.emergency("Exception happened while shutting down, exit the process");
@@ -388,13 +382,11 @@ public class Server {
     }
 
     public void start() {
-        if (this.getPropertyBoolean("send-start-message", false)) {
-            this.getLogger().info("Done (" + (double) (System.currentTimeMillis() - Nemisys.START_TIME) / 1000 + "s)! For help, type \"help\"");
-        }
-
         if (enableQuery) {
             this.queryHandler = new QueryHandler();
         }
+
+        this.getLogger().info("Done (" + (double) (System.currentTimeMillis() - Nemisys.START_TIME) / 1000 + "s)! For help, type \"help\"");
 
         this.tickCounter = 0;
 
@@ -913,21 +905,19 @@ public class Server {
             put("synapse-port", 10305);
             put("password", "must16keyslength");
             put("async-workers", "auto");
-            put("max-players", 100);
+            put("max-players", 1000);
             put("plus-one-max-count", true);
             put("players-per-thread", 5);
             put("enable-query", true);
             put("debug", 1);
             put("enable-synapse-client", false);
             put("ansi", true);
-            put("send-start-message", false);
             put("compression-level", 6);
-            put("query-version", "1.19.10");
+            put("query-version", "1.19.21");
             put("data-limit", 2621440);
             put("thread-watchdog", true);
             put("call-data-pk-send-ev", false);
             put("call-data-pk-receive-ev", false);
-            put("handle-chat", true);
             put("min-mtu", 576);
             put("max-mtu", 1492);
             put("packet-limit", 1000);

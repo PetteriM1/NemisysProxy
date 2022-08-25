@@ -46,7 +46,9 @@ public class RakNetServerSession extends RakNetSession {
         InetAddress address = this.address.getAddress();
         Integer sessions = this.rakNet.sessionCount.get(address);
         if (sessions == null) {
-            Server.getInstance().getLogger().warning("Session was not found in session counts: " + this.address);
+            if (Server.maxSessions > 0) {
+                Server.getInstance().getLogger().warning("Session was not found in session counts: " + this.address);
+            }
         } else {
             if (sessions < 2) {
                 this.rakNet.sessionCount.remove(address);

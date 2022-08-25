@@ -32,23 +32,27 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
         RakNetServerSession session = this.server.getSession(packet.sender());
 
         if (session == null) {
-            Integer pps = this.server.packetsPerSecond.get(address);
-            if (pps == null) pps = 0;
-            pps++;
-            if (pps > Server.packetLimit) {
-                Server.getInstance().getLogger().warning("[Temp IP-Ban] No Session: Too many packets per second from " + address);
-                this.server.block(address, 120, TimeUnit.SECONDS);
-                return;
-            }
-            this.server.packetsPerSecond.put(address, pps);
-            if (pps > 200 && pps % 100 == 0) {
-                Server.getInstance().getLogger().info(address + " [No Session] pps=" + pps);
+            if (!Server.customStuff) {
+                Integer pps = this.server.packetsPerSecond.get(address);
+                if (pps == null) pps = 0;
+                pps++;
+                if (pps > Server.packetLimit) {
+                    Server.getInstance().getLogger().warning("[Temp IP-Ban] No Session: Too many packets per second from " + address);
+                    this.server.block(address, 120, TimeUnit.SECONDS);
+                    return;
+                }
+                this.server.packetsPerSecond.put(address, pps);
+                if (pps > 200 && pps % 100 == 0) {
+                    Server.getInstance().getLogger().info(address + " [No Session] pps=" + pps);
+                }
             }
         } else {
             int pps = session.pps + 1;
             if (pps > Server.packetLimit) {
                 Server.getInstance().getLogger().warning("[Temp IP-Ban] RakNetServerSession: Too many packets per second from " + address);
-                this.server.block(address, 120, TimeUnit.SECONDS);
+                if (!Server.customStuff) {
+                    this.server.block(address, 120, TimeUnit.SECONDS);
+                }
                 session.disconnect(DisconnectReason.BAD_PACKET);
                 return;
             }
