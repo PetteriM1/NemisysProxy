@@ -164,7 +164,7 @@ public class Player implements CommandSender {
                     this.getServer().getScheduler().scheduleAsyncTask(loginTask);
                     return;
                 case ProtocolInfo.TEXT_PACKET:
-                    if (!Server.customStuff) break;
+                    if (Server.customStuff) break;
                     TextPacket textPacket = (TextPacket) packet;
 
                     if (textPacket.type == TextPacket.TYPE_CHAT) {
