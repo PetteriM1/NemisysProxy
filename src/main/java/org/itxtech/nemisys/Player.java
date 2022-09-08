@@ -87,12 +87,13 @@ public class Player implements CommandSender {
                 return;
             }
 
-            int count = receivedPackets[packet.pid() & 0xff];
+            int index = packet.pid() & 0xff;
+            int count = receivedPackets[index];
             if (count > Server.packetLimit) {
                 this.close("Too many packets");
                 return;
             }
-            receivedPackets[packet.pid() & 0xff] = count + 1;
+            receivedPackets[index] = count + 1;
 
             if (!verified && packet.pid() != ProtocolInfo.LOGIN_PACKET && packet.pid() != ProtocolInfo.BATCH_PACKET) {
                 this.getServer().getLogger().warning("Got a data packet before login packet from " + getAddress() + " (pid=" + packet.pid() + ")");
@@ -100,7 +101,7 @@ public class Player implements CommandSender {
                 return;
             }
 
-            if (Server.callDataPkReceiveEv) {
+            if (Server.callDataPkReceiveEv || (Server.customStuff && packet.pid() == ProtocolInfo.LOGIN_PACKET)) {
                 DataPacketReceiveEvent ev = new DataPacketReceiveEvent(this, packet);
                 this.getServer().getPluginManager().callEvent(ev);
                 if (ev.isCancelled()) {
