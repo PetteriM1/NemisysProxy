@@ -11,7 +11,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netty.version>4.1.79.Final</netty.version>
+        <netty.version>4.1.81.Final</netty.version>
     </properties>
 
     <repositories>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.29</version>
+            <version>1.31</version>
         </dependency>
         <dependency>
             <groupId>jline</groupId>
