@@ -49,6 +49,7 @@ public class Nemisys {
         ServerKiller killer = new ServerKiller(8);
         killer.start();
 
+        logger.debug("Stopping logger...");
         logger.shutdown();
         logger.interrupt();
         CommandReader.getInstance().removePromptLine();

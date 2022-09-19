@@ -22,7 +22,7 @@ public class SynapseClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("client-ChannelActive");
+        if (Nemisys.DEBUG > 3) Server.getInstance().getLogger().debug("client-ChannelActive");
         this.getSynapseClient().getSession().channel = ctx.channel();
         InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
         this.getSynapseClient().getSession().updateAddress(address);
@@ -33,7 +33,7 @@ public class SynapseClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("client-ChannelInactive");
+        if (Nemisys.DEBUG > 3) Server.getInstance().getLogger().debug("client-ChannelInactive");
         this.getSynapseClient().setConnected(false);
         this.getSynapseClient().reconnect();
     }

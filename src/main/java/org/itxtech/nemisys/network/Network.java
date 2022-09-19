@@ -5,10 +5,12 @@ import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.Player;
 import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.network.protocol.mcpe.*;
-import org.itxtech.nemisys.utils.Binary;
 import org.itxtech.nemisys.utils.BinaryStream;
+import org.itxtech.nemisys.utils.VarInt;
 import org.itxtech.nemisys.utils.Zlib;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -116,12 +118,17 @@ public class Network {
     public void processBatch(BatchPacket packet, Player player) {
         byte[] data;
         try {
-            if (player.raknetProtocol >= 10) {
+            if (player.raknetProtocol >= 11 && !player.networkSettingsUpdated) {
+                data = packet.payload;
+            } else if (player.raknetProtocol >= 10) {
                 data = Zlib.inflateRaw(packet.payload, 2097152);
             } else {
                 data = Zlib.inflate(packet.payload, 2097152);
             }
         } catch (Exception e) {
+            if (Nemisys.DEBUG > 1) {
+                this.server.getLogger().debug("Error whilst decompressing batch packet from " + player.getName(), e);
+            }
             player.close("Corrupted packet");
             return;
         }
@@ -140,16 +147,10 @@ public class Network {
 
                 byte[] buf = stream.getByteArray();
                 if (buf.length > 0) {
-                    DataPacket pk;
-                    if ((pk = this.getPacket(buf[0])) != null) {
-                        pk.setBuffer(buf, 1);
-
-                        try {
-                            pk.protocol = player.protocol;
-                            pk.decode();
-                        } catch (Exception ignored) {
-                        }
-
+                    DataPacket pk = this.getPacketFromBuffer(player.protocol, buf);
+                    if (pk != null) {
+                        pk.protocol = player.protocol;
+                        pk.decode();
                         packets.add(pk);
                     }
                 }
@@ -159,11 +160,21 @@ public class Network {
                 player.addOutgoingPacket(pk);
             }
         } catch (Exception e) {
-            if (Nemisys.DEBUG > 1) {
-                this.server.getLogger().debug("BatchPacket 0x" + Binary.bytesToHexString(packet.payload));
-            }
-            this.server.getLogger().logException(e);
+            this.server.getLogger().error("Error whilst decoding batch packet from " + player.getName(), e);
         }
+    }
+
+    private DataPacket getPacketFromBuffer(int protocol, byte[] buffer) throws IOException {
+        ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
+        DataPacket pk = this.getPacket((byte) VarInt.readUnsignedVarInt(stream));
+        if (pk != null) {
+            if (protocol >= 388) {
+                pk.setBuffer(buffer, buffer.length - stream.available());
+            } else {
+                pk.setBuffer(buffer, 1);
+            }
+        }
+        return pk;
     }
 
     public DataPacket getPacket(byte id) {
@@ -225,5 +236,7 @@ public class Network {
         this.registerPacket(ProtocolInfo.SET_DISPLAY_OBJECTIVE_PACKET, SetDisplayObjectivePacket.class);
         this.registerPacket(ProtocolInfo.SET_SCORE_PACKET, SetScorePacket.class);
         this.registerPacket(ProtocolInfo.REMOVE_OBJECTIVE_PACKET, RemoveObjectivePacket.class);
+        this.registerPacket(ProtocolInfo.NETWORK_SETTINGS_PACKET, NetworkSettingsPacket.class);
+        this.registerPacket(ProtocolInfo.REQUEST_NETWORK_SETTINGS_PACKET, RequestNetworkSettingsPacket.class);
     }
 }

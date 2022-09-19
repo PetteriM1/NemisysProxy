@@ -72,7 +72,7 @@ public class SessionManager {
             Channel session = this.sessions.get(hash);
             if (session != null) {
                 session.writeAndFlush(data.getPacket());
-                if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("server-writeAndFlush: hash=" + hash);
+                if (Nemisys.DEBUG > 3) Server.getInstance().getLogger().debug("server-writeAndFlush: hash=" + hash);
             }
             return true;
         }

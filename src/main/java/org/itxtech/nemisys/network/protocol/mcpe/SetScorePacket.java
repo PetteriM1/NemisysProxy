@@ -13,6 +13,7 @@ public class SetScorePacket extends DataPacket {
     public Action action;
     public List<ScoreInfo> infos;
 
+    @Override
     public void encode() {
         reset();
         putByte((byte) action.ordinal());

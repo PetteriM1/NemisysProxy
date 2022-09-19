@@ -121,7 +121,7 @@ public class Session {
 
     public void writePacket(SynapseDataPacket pk) {
         if (this.channel != null) {
-            if (Nemisys.DEBUG > 1) Server.getInstance().getLogger().debug("client-ChannelWrite: pk=" + pk.getClass().getSimpleName() + " pkLen=" + pk.getBuffer().length);
+            if (Nemisys.DEBUG > 3) Server.getInstance().getLogger().debug("client-ChannelWrite: pk=" + pk.getClass().getSimpleName() + " pkLen=" + pk.getBuffer().length);
             this.channel.writeAndFlush(pk);
         }
     }

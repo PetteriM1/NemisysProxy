@@ -227,8 +227,9 @@ public class SynapseEntry {
                 this.getSynapse().getServer().getPluginManager().callEvent(ev);
                 Class<? extends SynapsePlayer> clazz = ev.getPlayerClass();
                 try {
-                    Constructor constructor = clazz.getConstructor(SourceInterface.class, SynapseEntry.class, long.class, String.class, int.class);
-                    SynapsePlayer player = (SynapsePlayer) constructor.newInstance(this.synLibInterface, this, ev.getClientId(), ev.getAddress(), ev.getPort());
+                    Constructor<? extends SynapsePlayer> constructor = clazz.getConstructor(SourceInterface.class, SynapseEntry.class, long.class, String.class, int.class);
+                    SynapsePlayer player = constructor.newInstance(this.synLibInterface, this, ev.getClientId(), ev.getAddress(), ev.getPort());
+                    player.networkSettingsUpdated = playerLoginPacket.raknetProtocol >= 11;
                     player.raknetProtocol = playerLoginPacket.raknetProtocol;
                     player.setUniqueId(playerLoginPacket.uuid);
                     this.players.put(playerLoginPacket.uuid, player);
@@ -249,8 +250,9 @@ public class SynapseEntry {
                         pk0.decode();
                         player.handleDataPacket(pk0);
                     } else {
-                        if (player.getClient() != null)
+                        if (player.getClient() != null) {
                             player.redirectPacket(redirectPacket.mcpeBuffer);
+                        }
                     }
                 }
                 break;

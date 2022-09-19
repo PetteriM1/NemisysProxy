@@ -47,10 +47,18 @@ public class Player implements CommandSender {
     private final InetSocketAddress socketAddress;
     @Getter
     private final long clientId;
-    @Getter
-    private long randomClientId;
-    public int protocol = -1;
-    public int raknetProtocol = -1;
+    /**
+     * Client protocol version
+     */
+    public int protocol = Integer.MAX_VALUE;
+    /**
+     * Client RakNet protocol version
+     */
+    public int raknetProtocol = Integer.MAX_VALUE;
+    /**
+     * Whether 1.19.30+ client is ready to receive compressed packets
+     */
+    public boolean networkSettingsUpdated;
     @Getter
     private final SourceInterface interfaz;
     @Getter
@@ -95,8 +103,8 @@ public class Player implements CommandSender {
             }
             receivedPackets[index] = count + 1;
 
-            if (!verified && packet.pid() != ProtocolInfo.LOGIN_PACKET && packet.pid() != ProtocolInfo.BATCH_PACKET) {
-                this.getServer().getLogger().warning("Got a data packet before login packet from " + getAddress() + " (pid=" + packet.pid() + ")");
+            if (!verified && packet.pid() != ProtocolInfo.LOGIN_PACKET && packet.pid() != ProtocolInfo.REQUEST_NETWORK_SETTINGS_PACKET && packet.pid() != ProtocolInfo.BATCH_PACKET) {
+                this.getServer().getLogger().warning("Got a data packet before logging in from " + this.getAddress() + " (pid=" + packet.pid() + ")");
                 this.close("Invalid packet");
                 return;
             }
@@ -109,21 +117,35 @@ public class Player implements CommandSender {
                 }
             }
 
+            if (Nemisys.DEBUG > 2) {
+                this.server.getLogger().debug("[" + this.protocol + "/" + this.raknetProtocol + "] Inbound " + (this.name.isEmpty() ? this.getAddress() : this.name) + ": " + packet.getClass().getSimpleName() + " (pid=" + packet.pid() + ")");
+            }
+
             switch (packet.pid()) {
+                case ProtocolInfo.REQUEST_NETWORK_SETTINGS_PACKET:
+                    if (this.loggedIn || this.raknetProtocol < 11) {
+                        return;
+                    }
+                    RequestNetworkSettingsPacket networkSettingsRequest = (RequestNetworkSettingsPacket) packet;
+                    this.protocol = networkSettingsRequest.protocolVersion;
+                    NetworkSettingsPacket settingsPacket = new NetworkSettingsPacket();
+                    settingsPacket.compressionAlgorithm = NetworkSettingsPacket.PacketCompressionAlgorithm.ZLIB;
+                    this.quickBatch(settingsPacket, true);
+                    this.networkSettingsUpdated = true;
+                    break;
                 case ProtocolInfo.LOGIN_PACKET:
-                    if (loggedIn) {
+                    if (this.loggedIn) {
                         this.close("Invalid login packet");
                         return;
                     }
-                    this.loggedIn = true;
+
                     LoginPacket loginPacket = (LoginPacket) packet;
                     this.cachedLoginPacket = loginPacket.cacheBuffer;
                     this.protocol = loginPacket.getProtocol();
                     this.name = loginPacket.username;
-                    this.randomClientId = loginPacket.clientId;
                     this.uuid = loginPacket.clientUUID;
-                    if (this.uuid == null) {
-                        this.close(TextFormat.RED + "Error");
+                    if (this.name == null || this.uuid == null) {
+                        this.close(TextFormat.RED + "Error: Invalid login data");
                         return;
                     }
                     try {
@@ -137,7 +159,9 @@ public class Player implements CommandSender {
                         return;
                     }
 
+                    this.loggedIn = true;
                     this.verified = true;
+
                     this.getServer().addOnlinePlayer(this.uuid, this);
 
                     AsyncTask loginTask = new AsyncTask() {
@@ -242,6 +266,9 @@ public class Player implements CommandSender {
 
     public void redirectPacket(byte[] buffer) {
         if (buffer.length >= 5242880) {
+            if (Nemisys.DEBUG > 1) {
+                this.server.getLogger().debug("redirectPacket buffer.length=" + buffer.length + " >= 5242880");
+            }
             this.close("Too big data packet");
             return;
         }
@@ -372,7 +399,7 @@ public class Player implements CommandSender {
     }
 
     public void sendDataPacket(DataPacket pk, boolean direct) {
-        if (protocol < 419 || direct || pk.pid() == ProtocolInfo.BATCH_PACKET) {
+        if (this.protocol < 419 || direct || pk.pid() == ProtocolInfo.BATCH_PACKET) {
             this.sendDataPacket(pk, true, false);
         } else {
             this.outgoingPacketQueue.offer(pk);
@@ -388,7 +415,7 @@ public class Player implements CommandSender {
             }
         }
 
-        this.interfaz.putPacket(this, pk, needACK, direct);
+        this.interfaz.putPacket(this, pk, false, direct);
     }
 
     public int getPing() {
@@ -409,7 +436,7 @@ public class Player implements CommandSender {
                 DisconnectPacket pk = new DisconnectPacket();
                 pk.hideDisconnectionScreen = false;
                 pk.message = reason;
-                this.sendDataPacket(pk, true, false);
+                this.quickBatch(pk, this.raknetProtocol >= 11 && !this.networkSettingsUpdated);
             }
 
             this.getServer().getPluginManager().callEvent(new PlayerLogoutEvent(this));
@@ -418,7 +445,11 @@ public class Player implements CommandSender {
             if (this.client != null) {
                 try {
                     this.client.removePlayer(this, reason);
-                } catch (Exception ignore) {}
+                } catch (Exception ex) {
+                    if (Nemisys.DEBUG > 1) {
+                        this.server.getLogger().debug("Ignored", ex);
+                    }
+                }
             }
 
             this.getServer().getLogger().info(this.getServer().getLanguage().translateString("{%0}[/{%1}:{%2}] logged out due to {%3}", new String[]{
@@ -434,14 +465,20 @@ public class Player implements CommandSender {
             try {
                 this.cachedLoginPacket = null;
                 this.scoreboards.clear();
-            } catch (Exception ignore) {}
+            } catch (Exception ex) {
+                if (Nemisys.DEBUG > 1) {
+                    this.server.getLogger().debug("Ignored", ex);
+                }
+            }
         }
     }
 
     protected void processIncomingBatch(BatchPacket packet) {
         try {
             byte[] decompressedPayload;
-            if (this.raknetProtocol >= 10) {
+            if (this.raknetProtocol >= 11 && !this.networkSettingsUpdated) {
+                decompressedPayload = packet.payload;
+            } else if (this.raknetProtocol >= 10) {
                 decompressedPayload = Zlib.inflateRaw(packet.payload, 2097152);
             } else {
                 decompressedPayload = Zlib.inflate(packet.payload, 2097152);
@@ -471,7 +508,6 @@ public class Player implements CommandSender {
         TextPacket pk = new TextPacket();
         pk.type = TextPacket.TYPE_RAW;
         pk.message = this.getServer().getLanguage().translateString(message);
-
         this.sendDataPacket(pk);
     }
 
@@ -618,5 +654,38 @@ public class Player implements CommandSender {
 
     public int getPort() {
         return this.socketAddress.getPort();
+    }
+
+    protected void quickBatch(DataPacket pk, boolean noCompression) {
+        pk.protocol = this.protocol;
+        if (Server.callDataPkSendEv) {
+            DataPacketSendEvent event = new DataPacketSendEvent(this, pk);
+            this.server.getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return;
+            }
+        }
+        pk.tryEncode();
+        BinaryStream stream = new BinaryStream();
+        byte[] buf = pk.getBuffer();
+        stream.putUnsignedVarInt(buf.length);
+        stream.put(buf);
+        try {
+            byte[] bytes = Binary.appendBytes(stream.getBuffer());
+            BatchPacket batched = new BatchPacket();
+            if (noCompression) {
+                batched.payload = bytes;
+            } else if (this.raknetProtocol >= 10) {
+                batched.payload = Zlib.deflateRaw(bytes, server.compressionLevel);
+            } else {
+                batched.payload = Zlib.deflate(bytes, server.compressionLevel);
+            }
+            if (Nemisys.DEBUG > 2) {
+                this.server.getLogger().debug("[" + this.protocol + "/" + this.raknetProtocol + "] Outbound " + (this.name.isEmpty() ? this.getAddress() : this.name) + ": " + pk.getClass().getSimpleName() + " (pid=" + pk.pid() + ")");
+            }
+            this.interfaz.putPacket(this, batched, false, true);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -16,7 +16,6 @@ public class LoginPacket extends DataPacket {
     public String username;
     private int protocol_;
     public UUID clientUUID;
-    public long clientId;
     public byte[] cacheBuffer;
 
     private static final Gson GSON = new Gson();

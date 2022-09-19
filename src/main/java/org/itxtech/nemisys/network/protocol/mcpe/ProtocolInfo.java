@@ -17,5 +17,7 @@ public interface ProtocolInfo {
     byte REMOVE_OBJECTIVE_PACKET = 0x6a;
     byte SET_DISPLAY_OBJECTIVE_PACKET = 0x6b;
     byte SET_SCORE_PACKET = 0x6c;
+    byte NETWORK_SETTINGS_PACKET = (byte) 0x8f;
+    byte REQUEST_NETWORK_SETTINGS_PACKET = (byte) 0xc1;
     byte BATCH_PACKET = (byte) 0xff;
 }

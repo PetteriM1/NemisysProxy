@@ -81,7 +81,7 @@ public class Server {
     private String clientDataJson = "";
     private final Map<String, Client> mainServers = new ConcurrentHashMap<>();
     private Synapse synapse;
-    private final int compressionLevel;
+    final int compressionLevel;
     public static int dataLimit;
     public static int packetLimit;
     public static int maxSessions;
@@ -310,9 +310,9 @@ public class Server {
             return true;
         }
 
-        if (notify)
+        if (notify) {
             sender.sendMessage(TextFormat.RED + "Unknown command. Try /help for a list of commands");
-
+        }
         return false;
     }
 
@@ -792,10 +792,10 @@ public class Server {
             return;
         }
 
-        BinaryStream batched = new BinaryStream();
         if (packet instanceof BatchPacket) {
             throw new RuntimeException("Cannot batch BatchPacket");
         }
+        BinaryStream batched = new BinaryStream();
         packet.protocol = player.protocol;
         packet.tryEncode();
         byte[] buf = packet.getBuffer();

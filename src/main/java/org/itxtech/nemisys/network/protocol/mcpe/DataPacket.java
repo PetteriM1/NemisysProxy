@@ -1,6 +1,8 @@
 package org.itxtech.nemisys.network.protocol.mcpe;
 
 import com.nukkitx.network.raknet.RakNetReliability;
+import org.itxtech.nemisys.Nemisys;
+import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.utils.BinaryStream;
 
 /**
@@ -9,7 +11,7 @@ import org.itxtech.nemisys.utils.BinaryStream;
  */
 public abstract class DataPacket extends BinaryStream implements Cloneable {
 
-    public int protocol = -1;
+    public int protocol = Integer.MAX_VALUE;
     public volatile boolean isEncoded = false;
     private int channel = 0;
 
@@ -24,7 +26,10 @@ public abstract class DataPacket extends BinaryStream implements Cloneable {
     @Override
     public void reset() {
         super.reset();
-        this.putUnsignedVarInt(this.pid());
+        if (Nemisys.DEBUG > 1 && protocol == Integer.MAX_VALUE) {
+            Server.getInstance().getLogger().debug("Warning: DataPacket#reset() was called before setting the protocol. To ensure multiversion compatibility make sure the protocol is set before trying to encode a packet.", new Throwable());
+        }
+        this.putUnsignedVarInt(this.pid() & 0xff);
     }
 
     public int getChannel() {
