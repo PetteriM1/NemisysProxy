@@ -235,7 +235,7 @@ public class RakNetServer extends RakNet {
     private void sendIncompatibleProtocolVersion(ChannelHandlerContext ctx, InetSocketAddress recipient) {
         ByteBuf buffer = ctx.alloc().ioBuffer(26, 26);
         buffer.writeByte(ID_INCOMPATIBLE_PROTOCOL_VERSION);
-        buffer.writeByte(RAKNET_PROTOCOL_VERSION);
+        buffer.writeByte(9);
         RakNetUtils.writeUnconnectedMagic(buffer);
         buffer.writeLong(this.guid);
         ctx.writeAndFlush(new DatagramPacket(buffer, recipient));
