@@ -130,6 +130,7 @@ public class Player implements CommandSender {
                     this.protocol = networkSettingsRequest.protocolVersion;
                     NetworkSettingsPacket settingsPacket = new NetworkSettingsPacket();
                     settingsPacket.compressionAlgorithm = NetworkSettingsPacket.PacketCompressionAlgorithm.ZLIB;
+                    settingsPacket.compressionThreshold = 1; // Compress everything
                     this.quickBatch(settingsPacket, true);
                     this.networkSettingsUpdated = true;
                     break;
