@@ -165,29 +165,32 @@ public class Player implements CommandSender {
 
                     this.getServer().addOnlinePlayer(this.uuid, this);
 
-                    AsyncTask loginTask = new AsyncTask() {
-                        final PlayerAsyncPreLoginEvent e = new PlayerAsyncPreLoginEvent(getName(), getUuid(), Player.this.getAddress(), Player.this.getPort());
+                    if (Server.customStuff) {
+                        this.completeLogin();
+                    } else {
+                        AsyncTask loginTask = new AsyncTask() {
+                            final PlayerAsyncPreLoginEvent e = new PlayerAsyncPreLoginEvent(getName(), getUuid(), Player.this.getAddress(), Player.this.getPort());
 
-                        @Override
-                        public void onRun() {
-                            getServer().getPluginManager().callEvent(e);
-                        }
-
-                        @Override
-                        public void onCompletion(Server server) {
-                            if (closed) {
-                                return;
+                            @Override
+                            public void onRun() {
+                                getServer().getPluginManager().callEvent(e);
                             }
 
-                            if (e.getLoginResult() != PlayerAsyncPreLoginEvent.LoginResult.SUCCESS) {
-                                Player.this.close(e.getKickMessage());
-                            } else {
-                                Player.this.completeLogin();
-                            }
-                        }
-                    };
+                            @Override
+                            public void onCompletion(Server server) {
+                                if (closed) {
+                                    return;
+                                }
 
-                    this.getServer().getScheduler().scheduleAsyncTask(loginTask);
+                                if (e.getLoginResult() != PlayerAsyncPreLoginEvent.LoginResult.SUCCESS) {
+                                    Player.this.close(e.getKickMessage());
+                                } else {
+                                    Player.this.completeLogin();
+                                }
+                            }
+                        };
+                        this.getServer().getScheduler().scheduleAsyncTask(loginTask);
+                    }
                     return;
                 case ProtocolInfo.TEXT_PACKET:
                     if (Server.customStuff) break;

@@ -1,5 +1,6 @@
 package org.itxtech.nemisys.utils;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.fusesource.jansi.AnsiConsole;
 import org.itxtech.nemisys.Nemisys;
 import org.itxtech.nemisys.command.CommandReader;
@@ -10,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -26,6 +29,7 @@ public class MainLogger extends ThreadedLogger {
     protected LogLevel logLevel = LogLevel.DEFAULT_LEVEL;
     private final List<String> nextBatch = new ArrayList<>();
     private long lastFlush;
+    private final ExecutorService executor;
 
     protected static MainLogger logger;
     private File logFile;
@@ -40,6 +44,7 @@ public class MainLogger extends ThreadedLogger {
         }
         logger = this;
         this.logPath = logFile;
+        this.executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("MainLogger Executor").build());
         this.setName("MainLogger");
         this.initialize();
         this.start();
@@ -126,9 +131,11 @@ public class MainLogger extends ThreadedLogger {
 
     protected void send(String message) {
         logBuffer.add(message);
-        synchronized (this) {
-            this.notify();
-        }
+        executor.execute(() -> {
+            synchronized (this) {
+                this.notify();
+            }
+        });
     }
 
     @Override

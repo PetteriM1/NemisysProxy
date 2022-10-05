@@ -4,6 +4,7 @@ import org.itxtech.nemisys.Server;
 import org.itxtech.nemisys.command.PluginCommand;
 import org.itxtech.nemisys.command.SimpleCommandMap;
 import org.itxtech.nemisys.event.*;
+import org.itxtech.nemisys.event.player.PlayerAsyncPreLoginEvent;
 import org.itxtech.nemisys.permission.Permissible;
 import org.itxtech.nemisys.permission.Permission;
 import org.itxtech.nemisys.utils.MainLogger;
@@ -556,6 +557,9 @@ public class PluginManager {
     public void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority, EventExecutor executor, Plugin plugin, boolean ignoreCancelled) throws PluginException {
         if (!plugin.isEnabled()) {
             throw new PluginException("Plugin attempted to register " + event + " while not enabled");
+        }
+        if (Server.customStuff && event == PlayerAsyncPreLoginEvent.class) {
+            Server.getInstance().getLogger().alert("Tried to register event listener for " + event.getSimpleName() + " but the event is not called");
         }
         try {
             this.getEventListeners(event).register(new RegisteredListener(listener, executor, priority, plugin, ignoreCancelled));
