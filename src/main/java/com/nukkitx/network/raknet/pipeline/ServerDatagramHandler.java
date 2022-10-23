@@ -28,37 +28,37 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
-        InetAddress address = packet.sender().getAddress();
         RakNetServerSession session = this.server.getSession(packet.sender());
 
         if (session == null) {
             if (!Server.customStuff) {
+                InetAddress address = packet.sender().getAddress();
                 Integer pps = this.server.packetsPerSecond.get(address);
                 if (pps == null) pps = 0;
                 pps++;
                 if (pps > Server.packetLimit) {
-                    Server.getInstance().getLogger().warning("[Temp IP-Ban] No Session: Too many packets per second from " + address);
+                    Server.getInstance().getLogger().warning("[Temp IP-Ban] No Session: Too many packets per second from " + packet.sender());
                     this.server.block(address, 120, TimeUnit.SECONDS);
                     return;
                 }
                 this.server.packetsPerSecond.put(address, pps);
                 if (pps > 200 && pps % 100 == 0) {
-                    Server.getInstance().getLogger().info(address + " [No Session] pps=" + pps);
+                    Server.getInstance().getLogger().info(packet.sender() + " [No Session] pps=" + pps);
                 }
             }
         } else {
             int pps = session.pps + 1;
             if (pps > Server.packetLimit) {
-                Server.getInstance().getLogger().warning("[Temp IP-Ban] RakNetServerSession: Too many packets per second from " + address);
+                Server.getInstance().getLogger().warning("[Temp IP-Ban] RakNetServerSession: Too many packets per second from " + packet.sender());
                 if (!Server.customStuff) {
-                    this.server.block(address, 120, TimeUnit.SECONDS);
+                    this.server.block(packet.sender().getAddress(), 120, TimeUnit.SECONDS);
                 }
                 session.disconnect(DisconnectReason.BAD_PACKET);
                 return;
             }
             session.pps = pps;
             if (pps > 200 && pps % 100 == 0) {
-                Server.getInstance().getLogger().info(address + " [RakNetServerSession] pps=" + pps);
+                Server.getInstance().getLogger().info(packet.sender() + " [RakNetServerSession] pps=" + pps);
             }
         }
 
