@@ -399,12 +399,14 @@ public class Server {
     public void handlePacket(InetSocketAddress address, ByteBuf payload) {
         try {
             if (!payload.isReadable(3)) {
+                Server.getInstance().getLogger().info(address + " query unreadable");
                 return;
             }
             byte[] prefix = new byte[2];
             payload.readBytes(prefix);
 
             if (!Arrays.equals(prefix, PREFIX)) {
+                Server.getInstance().getLogger().info(address + " bad query");
                 return;
             }
             if (this.queryHandler != null) {

@@ -80,6 +80,10 @@ public class Client {
     }
 
     public void handleDataPacket(SynapseDataPacket packet) {
+        if (packet.pid() != SynapseInfo.CONNECT_PACKET && !this.isVerified()) {
+            this.server.getLogger().warning("Unverified client " + this.getIp() + ':' + this.getPort() + " sent " + packet.pid());
+            return;
+        }
         switch (packet.pid()) {
             case SynapseInfo.BROADCAST_PACKET:
                 GenericPacket gPacket = new GenericPacket();
@@ -92,10 +96,6 @@ public class Client {
                 }
                 break;
             case SynapseInfo.HEARTBEAT_PACKET:
-                if (!this.isVerified()) {
-                    this.server.getLogger().error("Client " + this.getIp() + ':' + this.getPort() + " is not verified");
-                    return;
-                }
                 HeartbeatPacket heartbeatPacket = (HeartbeatPacket) packet;
                 this.lastUpdate = System.currentTimeMillis();
                 this.tps = heartbeatPacket.tps;
@@ -106,7 +106,6 @@ public class Client {
                 pk.type = InformationPacket.TYPE_CLIENT_DATA;
                 pk.message = this.server.getClientDataJson();
                 this.sendDataPacket(pk);
-
                 break;
             case SynapseInfo.CONNECT_PACKET:
                 ConnectPacket connectPacket = (ConnectPacket) packet;
@@ -166,7 +165,6 @@ public class Client {
                     send.protocol = pl.protocol;
                     send.decode();
                     send.isEncoded = true;
-
                     pl.addIncomingPacket(send);
                 }
                 break;
@@ -300,7 +298,6 @@ public class Client {
                         }
 
                         byte[] data = outputStream.getBuffer();
-
                         if (data.length > 0) {
                             this.sendPluginMessage(channel, data);
                         }

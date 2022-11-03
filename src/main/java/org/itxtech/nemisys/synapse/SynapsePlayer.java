@@ -21,9 +21,8 @@ public class SynapsePlayer extends Player {
     }
 
     public void handleLoginPacket(PlayerLoginPacket packet) {
-        boolean isFirstTimeLogin = packet.isFirstTime;
         SynapsePlayerConnectEvent ev;
-        this.getServer().getPluginManager().callEvent(ev = new SynapsePlayerConnectEvent(this, isFirstTimeLogin));
+        this.getServer().getPluginManager().callEvent(ev = new SynapsePlayerConnectEvent(this, packet.isFirstTime));
         if (!ev.isCancelled()) {
             DataPacket pk = this.getSynapseEntry().getSynapse().getPacket(packet.cachedLoginPacket);
             pk.setOffset(3);
