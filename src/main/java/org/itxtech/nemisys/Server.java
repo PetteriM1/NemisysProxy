@@ -196,7 +196,7 @@ public class Server {
             new Watchdog(this, 50000).start();
         }
 
-        enableQuery = this.getPropertyBoolean("enable-query", true);
+        enableQuery = this.getPropertyBoolean("enable-query");
 
         this.start();
     }
@@ -910,7 +910,7 @@ public class Server {
             put("max-players", 1000);
             put("plus-one-max-count", true);
             put("players-per-thread", 5);
-            put("enable-query", true);
+            put("enable-query", false);
             put("debug", 1);
             put("enable-synapse-client", false);
             put("ansi", true);

@@ -12,6 +12,7 @@ import io.netty.channel.socket.DatagramPacket;
 import org.itxtech.nemisys.Server;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import static com.nukkitx.network.raknet.RakNetConstants.*;
@@ -28,10 +29,11 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
-        RakNetServerSession session = this.server.getSession(packet.sender());
+        RakNetServerSession session = null;
 
-        if (session == null) {
-            if (!Server.customStuff) {
+        if (!Server.customStuff) {
+            session = this.server.getSession(packet.sender());
+            if (session == null) {
                 InetAddress address = packet.sender().getAddress();
                 Integer pps = this.server.packetsPerSecond.get(address);
                 if (pps == null) pps = 0;
@@ -45,20 +47,8 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
                 if (pps > 200 && pps % 100 == 0) {
                     Server.getInstance().getLogger().info(packet.sender() + " [No Session] pps=" + pps);
                 }
-            }
-        } else {
-            int pps = session.pps + 1;
-            if (pps > Server.packetLimit) {
-                Server.getInstance().getLogger().warning("[Temp IP-Ban] RakNetServerSession: Too many packets per second from " + packet.sender());
-                if (!Server.customStuff) {
-                    this.server.block(packet.sender().getAddress(), 120, TimeUnit.SECONDS);
-                }
-                session.disconnect(DisconnectReason.BAD_PACKET);
+            } else if (ppsKick(session, packet.sender())) {
                 return;
-            }
-            session.pps = pps;
-            if (pps > 200 && pps % 100 == 0) {
-                Server.getInstance().getLogger().info(packet.sender() + " [RakNetServerSession] pps=" + pps);
             }
         }
 
@@ -75,22 +65,46 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
                 return;
         }
 
-        if (session == null) {
+        if (Server.customStuff) {
+            session = this.server.getSession(packet.sender());
+            if (session == null || ppsKick(session, packet.sender())) {
+                return;
+            }
+        } else if (session == null) {
             if (Server.enableQuery) {
                 buffer.readerIndex(0);
                 if (this.server.getListener() != null) {
                     this.server.getListener().onUnhandledDatagram(ctx, packet);
                 }
             }
-        } else {
-            buffer.readerIndex(0);
-            if (session.getEventLoop().inEventLoop()) {
-                session.onDatagram(buffer.retain());
-            } else {
-                ByteBuf buf = buffer.retain();
-                session.getEventLoop().execute(() -> session.onDatagram(buf));
-            }
+            return;
         }
+
+        buffer.readerIndex(0);
+        if (session.getEventLoop().inEventLoop()) {
+            session.onDatagram(buffer.retain());
+        } else {
+            ByteBuf buf = buffer.retain();
+            RakNetServerSession finalSession = session;
+            session.getEventLoop().execute(() -> finalSession.onDatagram(buf));
+        }
+    }
+
+    private boolean ppsKick(RakNetServerSession session, InetSocketAddress sender) {
+        int pps = session.pps + 1;
+        if (pps > Server.packetLimit) {
+            Server.getInstance().getLogger().warning("[Temp IP-Ban] RakNetServerSession: Too many packets per second from " + sender);
+            if (!Server.customStuff) {
+                this.server.block(sender.getAddress(), 120, TimeUnit.SECONDS);
+            }
+            session.disconnect(DisconnectReason.BAD_PACKET);
+            return true;
+        }
+        session.pps = pps;
+        if (pps > 200 && pps % 100 == 0) {
+            Server.getInstance().getLogger().info(sender + " [RakNetServerSession] pps=" + pps);
+        }
+        return false;
     }
 
     private void onUnconnectedPing(ChannelHandlerContext ctx, DatagramPacket packet) {
