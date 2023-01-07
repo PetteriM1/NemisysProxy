@@ -140,8 +140,8 @@ public class Network {
             int count = 0;
             while (stream.offset < len) {
                 count++;
-                if (count > 780) {
-                    player.close("Illegal Batch Packet");
+                if (count > 800) {
+                    player.close("Too big batch packet");
                     return;
                 }
 

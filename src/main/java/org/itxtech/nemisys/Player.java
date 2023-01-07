@@ -90,18 +90,19 @@ public class Player implements CommandSender {
                 return;
             }
 
-            if (packet instanceof BatchPacket) {
-                this.getServer().getNetwork().processBatch((BatchPacket) packet, this);
-                return;
-            }
-
             int index = packet.pid() & 0xff;
             int count = receivedPackets[index];
             if (count > Server.packetLimit) {
+                this.getServer().getLogger().warning(this.name + " sent too many packets (pid=" + packet.pid() + ", index=" + index + ", count=" + count + ", max=" + Server.packetLimit + ")");
                 this.close("Too many packets");
                 return;
             }
             receivedPackets[index] = count + 1;
+
+            if (packet instanceof BatchPacket) {
+                this.getServer().getNetwork().processBatch((BatchPacket) packet, this);
+                return;
+            }
 
             if (!verified && packet.pid() != ProtocolInfo.LOGIN_PACKET && packet.pid() != ProtocolInfo.REQUEST_NETWORK_SETTINGS_PACKET && packet.pid() != ProtocolInfo.BATCH_PACKET) {
                 this.getServer().getLogger().warning("Got a data packet before logging in from " + this.getAddress() + " (pid=" + packet.pid() + ")");
