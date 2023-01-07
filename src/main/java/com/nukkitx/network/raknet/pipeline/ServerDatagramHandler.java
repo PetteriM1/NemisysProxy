@@ -93,8 +93,10 @@ public class ServerDatagramHandler extends SimpleChannelInboundHandler<DatagramP
     private boolean ppsKick(RakNetServerSession session, InetSocketAddress sender) {
         int pps = session.pps + 1;
         if (pps > Server.packetLimit) {
-            Server.getInstance().getLogger().warning("[Temp IP-Ban] RakNetServerSession: Too many packets per second from " + sender);
-            if (!Server.customStuff) {
+            if (Server.customStuff) {
+                Server.getInstance().getLogger().warning("[Kick] RakNetServerSession: Too many packets per second from " + sender);
+            } else {
+                Server.getInstance().getLogger().warning("[Temp IP-Ban] RakNetServerSession: Too many packets per second from " + sender);
                 this.server.block(sender.getAddress(), 120, TimeUnit.SECONDS);
             }
             session.disconnect(DisconnectReason.BAD_PACKET);
