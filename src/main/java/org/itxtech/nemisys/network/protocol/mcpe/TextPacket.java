@@ -1,5 +1,7 @@
 package org.itxtech.nemisys.network.protocol.mcpe;
 
+import org.itxtech.nemisys.Server;
+
 public class TextPacket extends DataPacket {
 
     @Override
@@ -29,6 +31,7 @@ public class TextPacket extends DataPacket {
 
     @Override
     public void decode() {
+        if (Server.customStuff) return;
         this.type = (byte) getByte();
         this.isLocalized = this.getBoolean() || this.type == TYPE_TRANSLATION;
         switch (type) {
