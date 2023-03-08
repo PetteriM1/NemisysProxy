@@ -921,7 +921,7 @@ public class Server {
             put("call-data-pk-send-ev", false);
             put("call-data-pk-receive-ev", false);
             put("min-mtu", 576);
-            put("max-mtu", 1492);
+            put("max-mtu", 1400);
             put("packet-limit", 1000);
             put("max-sessions", 1000);
         }

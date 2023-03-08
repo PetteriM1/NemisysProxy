@@ -11,7 +11,7 @@ import java.net.InetSocketAddress;
 public class RakNetConstants {
 
     public static final short MINIMUM_MTU_SIZE = (short) Server.getInstance().getPropertyInt("min-mtu", 576);
-    public static final short MAXIMUM_MTU_SIZE = (short) Server.getInstance().getPropertyInt("max-mtu", 1492);
+    public static final short MAXIMUM_MTU_SIZE = (short) Server.getInstance().getPropertyInt("max-mtu", 1400);
 
     /**
      * Maximum amount of ordering channels as defined in vanilla RakNet.
