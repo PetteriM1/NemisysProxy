@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    
+    working_directory: ~/NemisysProxy
+
+    docker:
+      - image: cimg/openjdk:8.0
+
+    steps:
+
+      - checkout
+
+      - run: mvn clean package
+
+      - store_artifacts:
+          path: target/Nemisys-PM1E.jar
